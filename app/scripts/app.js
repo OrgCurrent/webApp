@@ -4,7 +4,7 @@ angular.module('happyMeterApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
@@ -19,6 +19,11 @@ angular.module('happyMeterApp', [
       .when('/signup', {
         templateUrl: 'partials/signup',
         controller: 'SignupCtrl'
+      })
+      .when('/dashboard', {
+        templateUrl: 'partials/dashboard',
+        controller: 'DashboardCtrl',
+        authenticate: true
       })
       .when('/settings', {
         templateUrl: 'partials/settings',

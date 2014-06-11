@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('SettingsCtrl', function ($scope, User, Auth) {
+  .controller('SettingsCtrl', ['$scope', 'User', 'Auth', function ($scope, User, Auth) {
     $scope.errors = {};
 
     $scope.changePassword = function(form) {
@@ -18,4 +18,4 @@ angular.module('happyMeterApp')
         });
       }
 		};
-  });
+  }]);
