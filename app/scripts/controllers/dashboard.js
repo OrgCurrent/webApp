@@ -66,6 +66,8 @@ angular.module('happyMeterApp')
     // })
 
     // Add the clip path.
+
+
     var clip = svg.append("clipPath")
         .attr("id", "clip")
       .append("rect")
@@ -111,6 +113,15 @@ angular.module('happyMeterApp')
         .style("text-anchor", "end")
         .text(values[0].symbol);
 
+    var mousePosition = [0, 0];
+
+    var snapshotLine = svg.append("line")
+        .attr("class", "snapshot-line")
+        .attr("x1", 50)
+        .attr("x2", 50)
+        .attr("y1", 0)
+        .attr("y1", height);
+        
     // On click, update the x-axis.
     function click(event) {
       console.log(d3.mouse);

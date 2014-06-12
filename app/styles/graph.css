@@ -33,3 +33,8 @@ path.area {
   fill: none;
   stroke: #000;
 }
+
+.snapshot-line {
+  stroke: black;
+  stroke-width: 3px;
+}
