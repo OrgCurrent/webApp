@@ -1,38 +1,8 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('DashboardCtrl', ['$scope', '$http', 'scoresData', '$location', 'randomUser', function ($scope, $http, scoresData, $location, randomUser) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'randomUser', function ($scope, $http, $location, randomUser) {
 
-    // var values = scoresData.scores.reverse();
-
-    //n = number of users, s = scores per user
-    var generateUsers = function(n, s){
-
-      var newUsers = [];
-      for(var i = 0; i < n; i++){
-        newUsers.push(randomUser(s));
-      }
-
-      var newScores = [];
-      for(var i = 0; i < newUsers.length; i++){
-        for(var j = 0; j < newUsers[i].scores.length; j++){
-          var score = newUsers[i].scores[j];
-          score.user_id = newUsers[i]._id;
-          newScores.push(score);
-        }
-      }
-      newScores.sort(function(obj1,obj2){
-        return obj1.date - obj2.date;
-      });
-
-      console.log(newScores);
-      return [newUsers, newScores]; 
-    };
-
-    var data = generateUsers(10, 10);
-    var users = data[0];
-    var scores = data[1];
-    
     var margin = {top: 10, right: 80, bottom: 80, left: 80},
         width = $('.container').width() - margin.left - margin.right,
         height = 550 - margin.top - margin.bottom;
@@ -40,7 +10,65 @@ angular.module('happyMeterApp')
     var parse = d3.time.format("%d-%b-%y").parse;
     var format = d3.time.format("%d-%b-%y");
 
-    $scope.snapshotDate = format(scores[0].date); 
+    //n = number of users, s = scores per user
+    var generateUsers = function(n, s){
+
+      //generate random user data
+      var newUsers = [];
+      for(var i = 0; i < n; i++){
+        newUsers.push(randomUser(s));
+      }
+
+      var sortedScores = {};
+      for(var i = 0; i < newUsers.length; i++){
+        for(var j = 0; j < newUsers[i].scores.length; j++){
+          var score = newUsers[i].scores[j];
+          var dataStr = format(score.date);
+          if(sortedScores[dataStr]){
+
+            sortedScores[dataStr].push({
+              a: score.a,
+              b: score.b,
+              user_id: newUsers[i]._id
+            });
+          }else{
+            sortedScores[dataStr] = [{
+              a: score.a,
+              b: score.b,
+              user_id: newUsers[i]._id
+            }];
+          }
+        }
+      }
+      var averageScores = [];
+      for(var date in sortedScores){
+        var aSum = 0;
+        var bSum = 0;
+        var count = sortedScores[date].length;
+        for(var i = 0; i < count; i++){
+          aSum += sortedScores[date][i].a;
+          bSum += sortedScores[date][i].b;
+        }
+        averageScores.push({
+          date: parse(date),
+          a: aSum / count,
+          b: bSum / count
+        });
+      }
+
+      averageScores.sort(function(obj1,obj2){
+        return obj1.date - obj2.date;
+      });
+
+      return [newUsers, sortedScores, averageScores]; 
+    };
+
+    var data = generateUsers(100, 10);
+    var users = data[0];
+    var scores = data[1];
+    var averages = data[2];
+
+    $scope.snapshotDate = format(averages[0].date); 
 
     // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
     var x = d3.time.scale().range([0, width]),
@@ -60,7 +88,7 @@ angular.module('happyMeterApp')
     var lineA = d3.svg.line()
         .interpolate("monotone")
         .x(function(d) { return x(d.date); })
-        .y(function(d) { console.log(d.date); return y(d.a); });
+        .y(function(d) { return y(d.a); });
 
     var lineB = d3.svg.line()
         .interpolate("monotone")
@@ -68,8 +96,8 @@ angular.module('happyMeterApp')
         .y(function(d) { return y(d.b); });
 
     // Compute the minimum and maximum date, and the maximum a/b.
-    x.domain([scores[0].date, scores[scores.length - 1].date]);
-    y.domain([0, d3.max(scores, function(d) { return Math.max(d.a, d.b); })]).nice();
+    x.domain([averages[0].date, averages[averages.length - 1].date]);
+    y.domain([0, d3.max(averages, function(d) { return Math.max(d.a, d.b); })]).nice();
 
     // debugger;
 
@@ -83,12 +111,9 @@ angular.module('happyMeterApp')
         .on("mousemove", function(){
           mousePosition = d3.mouse(this);
           snapshotUpdate();
-          // console.log(d3.mouse(this));
+        })
+        .on('click', function(){
         });
-
-    // svg.on("mousemove", function(){
-    //   console.log(d3.mouse(this));
-    // })
 
     // Add the clip path.
 
@@ -103,7 +128,7 @@ angular.module('happyMeterApp')
     svg.append("path")
         .attr("class", "area")
         .attr("clip-path", "url(#clip)")
-        .attr("d", area(scores));
+        .attr("d", area(averages));
 
     // Add the x-axis.
     svg.append("g")
@@ -122,14 +147,14 @@ angular.module('happyMeterApp')
         .attr("class", "line")
         .attr("id", "lineA")
         .attr("clip-path", "url(#clip)")
-        .attr("d", lineA(scores));
+        .attr("d", lineA(averages));
 
     // Add the line path.
     svg.append("path")
         .attr("class", "line")
         .attr("id", "lineB")
         .attr("clip-path", "url(#clip)")
-        .attr("d", lineB(scores));
+        .attr("d", lineB(averages));
 
     // Add a small label for the symbol name.
     svg.append("text")
@@ -153,13 +178,15 @@ angular.module('happyMeterApp')
           .attr("x2", mousePosition[0]);
 
       var xRatio = mousePosition[0] / width;
-      var xIndex = Math.floor(scores.length * xRatio);
+      var xIndex = Math.floor(averages.length * xRatio);
+      var date = averages[xIndex].date;
+      var dateStr = format(date);
 
       $scope.$apply(function(){
-        $scope.snapshotDate = format(scores[xIndex].date);
+        $scope.snapshotDate = dateStr;
       });
 
-      console.log($scope.snapshotDate);
+      console.log(scores[dateStr]);
     };
 
     // d3.timer(snapshotUpdate);
@@ -169,100 +196,17 @@ angular.module('happyMeterApp')
     function click(event) {
       console.log(d3.mouse);
       console.log(123);
-      var n = scores.length - 1,
+      var n = averages.length - 1,
           i = Math.floor(Math.random() * n / 2),
           j = i + Math.floor(Math.random() * n / 2) + 1;
-      x.domain([scores[i].date, scores[j].date]);
+      x.domain([averages[i].date, averages[j].date]);
       var t = svg.transition().duration(750);
       t.select(".x.axis").call(xAxis);
-      t.select(".area").attr("d", area(scores));
-      t.select("#lineA").attr("d", lineA(scores));
-      t.select("#lineB").attr("d", lineB(scores));
+      t.select(".area").attr("d", area(averages));
+      t.select("#lineA").attr("d", lineA(averages));
+      t.select("#lineB").attr("d", lineB(averages));
     }
   }])
-
-  .constant('scoresData', {
-    scores: [
-      {date: '1-May-12', a: 40, b: 60},
-      {date: '30-Apr-12', a: 40, b: 60},
-      {date: '27-Apr-12', a: 40, b: 60},
-      {date: '26-Apr-12', a: 40, b: 60},
-      {date: '25-Apr-12', a: 40, b: 60},
-      {date: '24-Apr-12', a: 40, b: 60},
-      {date: '23-Apr-12', a: 40, b: 60},
-      {date: '20-Apr-12', a: 40, b: 60},
-      {date: '19-Apr-12', a: 50, b: 30},
-      {date: '18-Apr-12', a: 50, b: 30},
-      {date: '17-Apr-12', a: 50, b: 30},
-      {date: '16-Apr-12', a: 50, b: 30},
-      {date: '13-Apr-12', a: 50, b: 30},
-      {date: '12-Apr-12', a: 50, b: 30},
-      {date: '11-Apr-12', a: 50, b: 30},
-      {date: '10-Apr-12', a: 50, b: 30},
-      {date: '9-Apr-12', a: 50, b: 30},
-      {date: '5-Apr-12', a: 50, b: 30},
-      {date: '4-Apr-12', a: 50, b: 30},
-      {date: '3-Apr-12', a: 50, b: 30},
-      {date: '2-Apr-12', a: 50, b: 30},
-      {date: '30-Mar-12', a: 50, b: 30},
-      {date: '29-Mar-12', a: 50, b: 30},
-      {date: '28-Mar-12', a: 50, b: 30},
-      {date: '27-Mar-12', a: 50, b: 30},
-      {date: '26-Mar-12', a: 50, b: 30},
-      {date: '23-Mar-12', a: 50, b: 30},
-      {date: '22-Mar-12', a: 50, b: 30},
-      {date: '21-Mar-12', a: 50, b: 30},
-      {date: '20-Mar-12', a: 50, b: 30},
-      {date: '19-Mar-12', a: 50, b: 30},
-      {date: '16-Mar-12', a: 50, b: 30},
-      {date: '15-Mar-12', a: 50, b: 30},
-      {date: '14-Mar-12', a: 50, b: 30},
-      {date: '13-Mar-12', a: 50, b: 30},
-      {date: '12-Mar-12', a: 50, b: 30},
-      {date: '9-Mar-12', a: 50, b: 30},
-      {date: '8-Mar-12', a: 50, b: 30},
-      {date: '7-Mar-12', a: 50, b: 30},
-      {date: '6-Mar-12', a: 50, b: 30},
-      {date: '5-Mar-12', a: 50, b: 30},
-      {date: '2-Mar-12', a: 50, b: 30},
-      {date: '1-Mar-12', a: 50, b: 30},
-      {date: '29-Feb-12', a: 50, b: 30},
-      {date: '28-Feb-12', a: 50, b: 30},
-      {date: '27-Feb-12', a: 50, b: 30},
-      {date: '24-Feb-12', a: 50, b: 30},
-      {date: '23-Feb-12', a: 50, b: 30},
-      {date: '22-Feb-12', a: 50, b: 30},
-      {date: '21-Feb-12', a: 50, b: 30},
-      {date: '17-Feb-12', a: 50, b: 30},
-      {date: '16-Feb-12', a: 50, b: 30},
-      {date: '15-Feb-12', a: 50, b: 30},
-      {date: '14-Feb-12', a: 50, b: 30},
-      {date: '13-Feb-12', a: 50, b: 30},
-      {date: '10-Feb-12', a: 50, b: 30},
-      {date: '9-Feb-12', a: 50, b: 30},
-      {date: '8-Feb-12', a: 50, b: 30},
-      {date: '7-Feb-12', a: 50, b: 30},
-      {date: '6-Feb-12', a: 50, b: 30},
-      {date: '3-Feb-12', a: 50, b: 30},
-      {date: '2-Feb-12', a: 50, b: 30},
-      {date: '1-Feb-12', a: 50, b: 30},
-      {date: '31-Jan-12', a: 50, b: 30},
-      {date: '30-Jan-12', a: 50, b: 30},
-      {date: '27-Jan-12', a: 50, b: 30},
-      {date: '26-Jan-12', a: 50, b: 30},
-      {date: '25-Jan-12', a: 50, b: 30},
-      {date: '24-Jan-12', a: 50, b: 30},
-      {date: '23-Jan-12', a: 50, b: 30},
-      {date: '20-Jan-12', a: 50, b: 30},
-      {date: '19-Jan-12', a: 50, b: 30},
-      {date: '18-Jan-12', a: 50, b: 30},
-      {date: '17-Jan-12', a: 50, b: 30},
-      {date: '13-Jan-12', a: 50, b: 30},
-      {date: '12-Jan-12', a: 50, b: 30},
-      {date: '11-Jan-12', a: 50, b: 30},
-      {date: '10-Jan-12', a: 50, b: 30},
-    ]
-  })
 
   .factory('randomUser', function(){
     return function(numOfScores){
