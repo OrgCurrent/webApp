@@ -3,21 +3,21 @@
 angular.module('happyMeterApp')
   .controller('DashboardCtrl', ['$scope', '$http', 'scoresData', '$location', function ($scope, $http, scoresData, $location) {
 
-    var values = scoresData.scores;
+    var values = scoresData.scores.reverse();
 
     var zoomedIn = false;
+    $scope.snapshotDate = values[0].date; 
     
     var margin = {top: 80, right: 80, bottom: 80, left: 80},
         width = 700 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
     var parse = d3.time.format("%d-%b-%y").parse;
+    var format = d3.time.format("%d-%b-%y");
 
     angular.forEach(values, function(d){
       d.date = parse(d.date);
     });
-
-    values.reverse();
 
     // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
     var x = d3.time.scale().range([0, width]),
@@ -58,7 +58,9 @@ angular.module('happyMeterApp')
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .on("mousemove", function(){
-          console.log(d3.mouse(this));
+          mousePosition = d3.mouse(this);
+          snapshotUpdate();
+          // console.log(d3.mouse(this));
         });
 
     // svg.on("mousemove", function(){
@@ -113,7 +115,7 @@ angular.module('happyMeterApp')
         .style("text-anchor", "end")
         .text(values[0].symbol);
 
-    var mousePosition = [0, 0];
+    var mousePosition = [50, 0];
 
     var snapshotLine = svg.append("line")
         .attr("class", "snapshot-line")
@@ -121,6 +123,24 @@ angular.module('happyMeterApp')
         .attr("x2", 50)
         .attr("y1", 0)
         .attr("y1", height);
+
+    var snapshotUpdate = function(){
+      snapshotLine.data(mousePosition)
+          .attr("x1", mousePosition[0])
+          .attr("x2", mousePosition[0]);
+
+      var xRatio = mousePosition[0] / width;
+      var xIndex = Math.floor(values.length * xRatio);
+
+      $scope.$apply(function(){
+        $scope.snapshotDate = format(values[xIndex].date);
+      });
+
+      console.log($scope.snapshotDate);
+    };
+
+    // d3.timer(snapshotUpdate);
+
         
     // On click, update the x-axis.
     function click(event) {
