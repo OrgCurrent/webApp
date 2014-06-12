@@ -1,23 +1,46 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('DashboardCtrl', ['$scope', '$http', 'scoresData', '$location', function ($scope, $http, scoresData, $location) {
+  .controller('DashboardCtrl', ['$scope', '$http', 'scoresData', '$location', 'randomUser', function ($scope, $http, scoresData, $location, randomUser) {
 
-    var values = scoresData.scores.reverse();
+    // var values = scoresData.scores.reverse();
 
-    var zoomedIn = false;
-    $scope.snapshotDate = values[0].date; 
+    //n = number of users, s = scores per user
+    var generateUsers = function(n, s){
+
+      var newUsers = [];
+      for(var i = 0; i < n; i++){
+        newUsers.push(randomUser(s));
+      }
+
+      var newScores = [];
+      for(var i = 0; i < newUsers.length; i++){
+        for(var j = 0; j < newUsers[i].scores.length; j++){
+          var score = newUsers[i].scores[j];
+          score.user_id = newUsers[i]._id;
+          newScores.push(score);
+        }
+      }
+      newScores.sort(function(obj1,obj2){
+        return obj1.date - obj2.date;
+      });
+
+      console.log(newScores);
+      return [newUsers, newScores]; 
+    };
+
+    var data = generateUsers(10, 10);
+    var users = data[0];
+    var scores = data[1];
     
-    var margin = {top: 80, right: 80, bottom: 80, left: 80},
-        width = 700 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+    var margin = {top: 10, right: 80, bottom: 80, left: 80},
+        width = $('.container').width() - margin.left - margin.right,
+        height = 550 - margin.top - margin.bottom;
 
     var parse = d3.time.format("%d-%b-%y").parse;
     var format = d3.time.format("%d-%b-%y");
 
-    angular.forEach(values, function(d){
-      d.date = parse(d.date);
-    });
+    $scope.snapshotDate = format(scores[0].date); 
 
     // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
     var x = d3.time.scale().range([0, width]),
@@ -37,7 +60,7 @@ angular.module('happyMeterApp')
     var lineA = d3.svg.line()
         .interpolate("monotone")
         .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.a); });
+        .y(function(d) { console.log(d.date); return y(d.a); });
 
     var lineB = d3.svg.line()
         .interpolate("monotone")
@@ -45,8 +68,8 @@ angular.module('happyMeterApp')
         .y(function(d) { return y(d.b); });
 
     // Compute the minimum and maximum date, and the maximum a/b.
-    x.domain([values[0].date, values[values.length - 1].date]);
-    y.domain([0, d3.max(values, function(d) { return Math.max(d.a, d.b); })]).nice();
+    x.domain([scores[0].date, scores[scores.length - 1].date]);
+    y.domain([0, d3.max(scores, function(d) { return Math.max(d.a, d.b); })]).nice();
 
     // debugger;
 
@@ -80,7 +103,7 @@ angular.module('happyMeterApp')
     svg.append("path")
         .attr("class", "area")
         .attr("clip-path", "url(#clip)")
-        .attr("d", area(values));
+        .attr("d", area(scores));
 
     // Add the x-axis.
     svg.append("g")
@@ -99,21 +122,21 @@ angular.module('happyMeterApp')
         .attr("class", "line")
         .attr("id", "lineA")
         .attr("clip-path", "url(#clip)")
-        .attr("d", lineA(values));
+        .attr("d", lineA(scores));
 
     // Add the line path.
     svg.append("path")
         .attr("class", "line")
         .attr("id", "lineB")
         .attr("clip-path", "url(#clip)")
-        .attr("d", lineB(values));
+        .attr("d", lineB(scores));
 
     // Add a small label for the symbol name.
     svg.append("text")
         .attr("x", width - 6)
         .attr("y", height - 6)
         .style("text-anchor", "end")
-        .text(values[0].symbol);
+        .text('hihi');
 
     var mousePosition = [50, 0];
 
@@ -130,10 +153,10 @@ angular.module('happyMeterApp')
           .attr("x2", mousePosition[0]);
 
       var xRatio = mousePosition[0] / width;
-      var xIndex = Math.floor(values.length * xRatio);
+      var xIndex = Math.floor(scores.length * xRatio);
 
       $scope.$apply(function(){
-        $scope.snapshotDate = format(values[xIndex].date);
+        $scope.snapshotDate = format(scores[xIndex].date);
       });
 
       console.log($scope.snapshotDate);
@@ -146,15 +169,15 @@ angular.module('happyMeterApp')
     function click(event) {
       console.log(d3.mouse);
       console.log(123);
-      var n = values.length - 1,
+      var n = scores.length - 1,
           i = Math.floor(Math.random() * n / 2),
           j = i + Math.floor(Math.random() * n / 2) + 1;
-      x.domain([values[i].date, values[j].date]);
+      x.domain([scores[i].date, scores[j].date]);
       var t = svg.transition().duration(750);
       t.select(".x.axis").call(xAxis);
-      t.select(".area").attr("d", area(values));
-      t.select("#lineA").attr("d", lineA(values));
-      t.select("#lineB").attr("d", lineB(values));
+      t.select(".area").attr("d", area(scores));
+      t.select("#lineA").attr("d", lineA(scores));
+      t.select("#lineB").attr("d", lineB(scores));
     }
   }])
 
@@ -240,6 +263,27 @@ angular.module('happyMeterApp')
       {date: '10-Jan-12', a: 50, b: 30},
     ]
   })
+
+  .factory('randomUser', function(){
+    return function(numOfScores){
+      var user = {
+        _id: Math.floor(Math.random() * 10000000000).toString(),
+        // date: new Date(2011, month, date),
+        scores: []
+      };
+      for(var i = 0; i < numOfScores; i++){
+        var month = Math.floor(Math.random() * 5);
+        var day = Math.floor(Math.random() * 31) + 1;
+        var date = new Date(2011, month, day);
+        user.scores.push({
+          date: date,
+          a: Math.random() * 100,
+          b: Math.random() * 100          
+        });
+      }
+      return user;
+    };
+  });
 
   /*{
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
