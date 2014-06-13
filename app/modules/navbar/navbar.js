@@ -1,10 +1,13 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('NavbarCtrl', function ($scope, $location, Auth) {
+  .controller('NavbarCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
+    }, {
+      'title': 'Dashboard',
+      'link': '/dashboard'
     }, {
       'title': 'Settings',
       'link': '/settings'
@@ -20,4 +23,4 @@ angular.module('happyMeterApp')
     $scope.isActive = function(route) {
       return route === $location.path();
     };
-  });
+  }]);

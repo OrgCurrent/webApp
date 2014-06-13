@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title></title>
+    <title>HappyMeter</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -18,6 +18,8 @@
     <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/graph.css">
+    <link rel="stylesheet" href="styles/fisheye.css">
     <!-- endbuild -->
   </head>
   <body ng-app="happyMeterApp">
@@ -53,20 +55,24 @@
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/navbar.js"></script>
-        <script src="scripts/controllers/login.js"></script>
-        <script src="scripts/controllers/signup.js"></script>
-        <script src="scripts/controllers/settings.js"></script>
-        <script src="scripts/services/auth.js"></script>
-        <script src="scripts/services/session.js"></script>
-        <script src="scripts/services/user.js"></script>
-        <script src="scripts/directives/mongooseError.js"></script>
+        <!-- // <script src="scripts/services/d3.js"></script> -->
+
+        <script src="modules/application/app.js"></script>
+        <script src="modules/home/home.js"></script>
+        <script src="modules/navbar/navbar.js"></script>
+        <script src="modules/login/login.js"></script>
+        <script src="modules/signup/signup.js"></script>
+        <script src="modules/dashboard/dashboard.js"></script>
+        <script src="modules/settings/settings.js"></script>
+        <script src="modules/application/services/auth.js"></script>
+        <script src="modules/application/services/session.js"></script>
+        <script src="modules/application/services/user.js"></script>
+        <script src="modules/application/directives/mongooseError.js"></script>
         <!-- endbuild -->
 </body>
 </html>
