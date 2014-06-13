@@ -9,6 +9,7 @@ var should = require('should'),
 var user;
 var bob;
 var cachedUserId;
+var cachedCompanyId;
 
 describe('User Model', function() {
   before(function(done) {
@@ -82,9 +83,9 @@ describe('User Routes', function() {
     bob = new User({
       provider: 'local',
       name: 'bob',
-      email: 'bob@geldof.com',
+      email: 'bob@testing.com',
       password: 'password',
-      domainName: 'geldof.com'
+      domainName: 'testing.com'
     });
 
     // Clear users before testing
@@ -94,7 +95,7 @@ describe('User Routes', function() {
 
   describe('POST /api/users', function(){
 
-    it('should correctly create a new user', function(done) {
+    it('should correctly create a new user, and a new company if required', function(done) {
       request(app)
         .post('/api/users')
         .send(user)
@@ -105,6 +106,27 @@ describe('User Routes', function() {
           res.body.role.should.equal('user');
           res.body.provider.should.equal('local');
           cachedUserId = res.body.id;
+          cachedCompanyId = res.body.company;
+          done();
+        });
+
+    /*
+    TODO - add get request to fetch the user to the make sure the user is actually created
+    */
+    });
+
+    it('should create a new user at an existing company', function(done) {
+      request(app)
+        .post('/api/users')
+        .send(bob)
+        .expect(200)  
+        .end(function(err, res) {
+          if (err) return done(err);
+          // TODO - test for the company name in the response, change from profile info?
+          res.body.name.should.equal('bob');
+          res.body.role.should.equal('user');
+          res.body.provider.should.equal('local');
+          res.body.company.should.equal(cachedCompanyId);
           done();
         });
 
@@ -116,21 +138,7 @@ describe('User Routes', function() {
       TODO - add POST request to check if a company has been created, when a new user is created
       when that company is new
     */
-    xit('should correctly create a new company, when a new user is created', function(done) {
-      request(app)
-        .post('/api/users')
-        .send(bob)
-        .expect(200)  
-        .end(function(err, res) {
-          if (err) return done(err);
-          res.body.name.should.equal('test');
-          res.body.role.should.equal('user');
-          res.body.provider.should.equal('local');
-          cachedUserId = res.body.id;
-          done();
-        });
-    });
-    
+
   });
 
 
