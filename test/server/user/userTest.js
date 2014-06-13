@@ -7,6 +7,7 @@ var should = require('should'),
     User = mongoose.model('User');
 
 var user;
+var bob;
 var cachedUserId;
 
 describe('User Model', function() {
@@ -78,6 +79,14 @@ describe('User Routes', function() {
       domainName: 'testing.com'
     });
 
+    bob = new User({
+      provider: 'local',
+      name: 'bob',
+      email: 'bob@geldof.com',
+      password: 'password',
+      domainName: 'geldof.com'
+    });
+
     // Clear users before testing
     User.remove().exec();
     done();
@@ -98,15 +107,32 @@ describe('User Routes', function() {
           cachedUserId = res.body.id;
           done();
         });
+
     /*
     TODO - add get request to fetch the user to the make sure the user is actually created
     */
     });
+    /*
+      TODO - add POST request to check if a company has been created, when a new user is created
+      when that company is new
+    */
+    xit('should correctly create a new company, when a new user is created', function(done) {
+      request(app)
+        .post('/api/users')
+        .send(bob)
+        .expect(200)  
+        .end(function(err, res) {
+          if (err) return done(err);
+          res.body.name.should.equal('test');
+          res.body.role.should.equal('user');
+          res.body.provider.should.equal('local');
+          cachedUserId = res.body.id;
+          done();
+        });
+    });
+    
   });
 
-  /*
-    TODO - add POST request to attempt to create an existing user
-  */
 
 
   /*
