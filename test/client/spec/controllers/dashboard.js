@@ -15,7 +15,7 @@ describe('Controller: DashboardCtrl', function () {
     $httpBackend.expectGET('/api/awesomeThings')
       .respond(['HTML5 Boilerplate', 'AngularJS', 'Karma', 'Express']);
     scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
+    MainCtrl = $controller('HomeCtrl', {
       $scope: scope
     });
   }));
