@@ -15,7 +15,19 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: [],
+    files: [
+        '../app/bower_components/angular/angular.min.js',
+        '../app/bower_components/angular-cookies/angular-cookies.min.js',
+        '../app/bower_components/angular-mocks/angular-mocks.js',
+        '../app/bower_components/angular-resource/angular-resource.min.js',
+        '../app/bower_components/angular-route/angular-route.min.js',
+        '../app/bower_components/angular-sanitize/angular-sanitize.min.js',
+        // '../app/bower_components/angular-scenario/angular-scenario.js',
+        // '../app/bower_components/d3/d3.min.js',
+        '../app/modules/**/*.js',
+        'karma_test.js',
+        'client/**/*.js'
+    ],
 
     // list of files / patterns to exclude
     exclude: [],
@@ -32,12 +44,12 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'PhantomJS'
+      'Chrome'
     ],
 
     // Which plugins to enable
     plugins: [
-      'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-jasmine'
     ],
 
