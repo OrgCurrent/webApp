@@ -120,36 +120,30 @@ describe('User Routes', function() {
   /*
   TODO - create test for testing the /api/users/me endpoint GET (users.me)
   */
-  xdescribe('GET /api/users/me', function() {
-      //simulate a login
-      // request(app)
-      //   .post('/api/session')
-      //   .send({
-      //     email: 'test1@testor.com',
-      //     password: 'password1'
-      //   });
-        // .set('Accept', 'application/json')
+  // xdescribe('GET /api/users/me', function() {
+  //     request(app)
+  //       .post('/api/session')
+  //       .send({
+  //         email: 'test1@testor.com',
+  //         password: 'password1'
+  //       })
+  //       .set('Accept', 'application/json');
 
-      // Clear users before testing
-      // User.remove().exec();
-      // done();
-    // });
+  //     User.remove().exec();
+  //     done();
    
-    it('should return the user _id, name, scores, verified status and email', function(done) {
-      request(app)
-        .get('/api/users/me')
-        .expect(200)  
-        .end(function(err, res) {
-          if (err) return done(err);
-          // res.body.user.should.equal('test');
-          // res.body.role.should.equal('user');
-          // res.body.provider.should.equal('local');
-          done();
-        });
+  //   it('should return the user _id, name, scores, verified status and email', function(done) {
+  //     request(app)
+  //       .get('/api/users/me')
+  //       .expect(200)  
+  //       .end(function(err, res) {
+  //         if (err) return done(err);
+  //         done();
+  //       });
 
-    });
+  //   });
 
-  });
+  // });
 
   describe('GET /api/users/:id', function() {
     
@@ -163,8 +157,6 @@ describe('User Routes', function() {
           profile.name.should.equal('test');
           profile.role.should.equal('user');
           profile.verified.should.be.false;
-          // profile.lastLogin.should.equal('user');
-          // profile.company.should.equal('testing');
           done();
         });
     });
@@ -218,7 +210,3 @@ describe('User Routes', function() {
   });
 
 });
-
-
-
-
