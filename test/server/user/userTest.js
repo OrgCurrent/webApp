@@ -7,7 +7,9 @@ var should = require('should'),
     User = mongoose.model('User');
 
 var user;
+var bob;
 var cachedUserId;
+var cachedCompanyId;
 
 describe('User Model', function() {
   before(function(done) {
@@ -78,6 +80,14 @@ describe('User Routes', function() {
       domainName: 'testing.com'
     });
 
+    bob = new User({
+      provider: 'local',
+      name: 'bob',
+      email: 'bob@testing.com',
+      password: 'password',
+      domainName: 'testing.com'
+    });
+
     // Clear users before testing
     User.remove().exec();
     done();
@@ -85,7 +95,7 @@ describe('User Routes', function() {
 
   describe('POST /api/users', function(){
 
-    it('should correctly create a new user', function(done) {
+    it('should correctly create a new user, and a new company if required', function(done) {
       request(app)
         .post('/api/users')
         .send(user)
@@ -93,20 +103,44 @@ describe('User Routes', function() {
         .end(function(err, res) {
           if (err) return done(err);
           res.body.name.should.equal('test');
-          res.body.role.should.equal('user');
+          res.body.role.should.equal('employee');
           res.body.provider.should.equal('local');
           cachedUserId = res.body.id;
+          cachedCompanyId = res.body.company;
           done();
         });
+
     /*
     TODO - add get request to fetch the user to the make sure the user is actually created
     */
     });
+
+    it('should create a new user at an existing company', function(done) {
+      request(app)
+        .post('/api/users')
+        .send(bob)
+        .expect(200)  
+        .end(function(err, res) {
+          if (err) return done(err);
+          // TODO - test for the company name in the response, change from profile info?
+          res.body.name.should.equal('bob');
+          res.body.role.should.equal('employee');
+          res.body.provider.should.equal('local');
+          res.body.company.should.equal(cachedCompanyId);
+          done();
+        });
+
+    /*
+    TODO - add get request to fetch the user to the make sure the user is actually created
+    */
+    });
+    /*
+      TODO - add POST request to check if a company has been created, when a new user is created
+      when that company is new
+    */
+
   });
 
-  /*
-    TODO - add POST request to attempt to create an existing user
-  */
 
 
   /*
@@ -155,7 +189,7 @@ describe('User Routes', function() {
           if (err) return done(err);
           var profile = res.body.profile;
           profile.name.should.equal('test');
-          profile.role.should.equal('user');
+          profile.role.should.equal('employee');
           profile.verified.should.be.false;
           done();
         });

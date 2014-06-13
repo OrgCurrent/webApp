@@ -4,13 +4,16 @@ var should = require('should'),
     app = require('../../../server'),
     request = require('supertest'),
     mongoose = require('mongoose'),
-    Company = mongoose.model('Company');
+    Company = mongoose.model('Company'),
+    User = mongoose.model('User');;
 
 var company;
 var cachedCompanyId;
+var cachedUserId;
 
 describe('Company Model', function() {
   before(function(done) {
+
     company = new Company({
       domainName : 'test.com'
     });
@@ -55,20 +58,44 @@ describe('Company Model', function() {
  *  Testing the users create user endpoint
  */
 
-xdescribe('Company Routes', function() {
+describe('Company Routes', function() {
 
   before(function(done) {
-    user = new User({
+    var user = new User({
       provider: 'local',
-      name: 'test',
-      email: 'test@testing.com',
+      name: 'comptest',
+      email: 'comptest@testing.com',
       password: 'password',
       domainName: 'testing.com'
     });
 
-    // Clear users before testing
-    User.remove().exec();
-    done();
+    request(app)
+        .post('/api/users')
+        .send(user)
+        .expect(200)  
+        .end(function(err, res) {
+          if (err) return done(err);
+          cachedUserId = res.body.id;
+          cachedCompanyId = res.body.company;
+          // done();
+          request(app)
+            .post('/api/users/' + cachedUserId + '/scores')
+            .send({
+              x: 10,
+              y: 20
+            })
+            .expect(200)  
+            .end(function(err, res) {
+              if (err) return console.log(err);
+              done();
+            });
+        });
+
+    
+
+    // // Clear users before testing
+    // User.remove().exec();
+    
   });
 
   xdescribe('POST /api/companies', function(){
@@ -118,18 +145,29 @@ xdescribe('Company Routes', function() {
 
   });
 
-  xdescribe('GET /api/companies/:id/scores', function() {
-   
-    it('should return all the scores for a recent company', function(done) {
+  describe('GET /api/companies/:id/scores', function() {
+
+    it('should return all the recent scores for a company', function(done) {
       request(app)
         .get('/api/companies/' + cachedCompanyId + '/scores')
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
+          console.log(res.body[0][0])
+          res.body[0][0].x.should.be.exactly(10);
+          res.body[0][0].y.should.be.exactly(20);
           done();
         });
 
     });
+
+    //first create users with scores
+    //then create users which are assigned to a company
+    //then get scores for that company
+
+     /*
+  TODO - get companies GET all recent scores for a company
+  */
 
   });
 
