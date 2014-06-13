@@ -103,7 +103,7 @@ describe('User Routes', function() {
         .end(function(err, res) {
           if (err) return done(err);
           res.body.name.should.equal('test');
-          res.body.role.should.equal('user');
+          res.body.role.should.equal('employee');
           res.body.provider.should.equal('local');
           cachedUserId = res.body.id;
           cachedCompanyId = res.body.company;
@@ -124,7 +124,7 @@ describe('User Routes', function() {
           if (err) return done(err);
           // TODO - test for the company name in the response, change from profile info?
           res.body.name.should.equal('bob');
-          res.body.role.should.equal('user');
+          res.body.role.should.equal('employee');
           res.body.provider.should.equal('local');
           res.body.company.should.equal(cachedCompanyId);
           done();
@@ -189,7 +189,7 @@ describe('User Routes', function() {
           if (err) return done(err);
           var profile = res.body.profile;
           profile.name.should.equal('test');
-          profile.role.should.equal('user');
+          profile.role.should.equal('employee');
           profile.verified.should.be.false;
           done();
         });
