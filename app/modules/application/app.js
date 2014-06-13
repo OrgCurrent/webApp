@@ -25,6 +25,11 @@ angular.module('happyMeterApp', [
         controller: 'DashboardCtrl',
         authenticate: true
       })
+      .when('/rating', {
+        templateUrl: 'partials/rating',
+        controller: 'RatingCtrl',
+        authenticate: true
+      })
       .when('/settings', {
         templateUrl: 'partials/settings',
         controller: 'SettingsCtrl',
