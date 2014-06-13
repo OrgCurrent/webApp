@@ -15,7 +15,7 @@ describe('Company Model', function() {
       domainName : 'test.com'
     });
 
-    // Clear users before testing
+    // Clear companies before testing
     Company.remove().exec();
     done();
   });
