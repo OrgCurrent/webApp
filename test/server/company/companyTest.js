@@ -63,8 +63,8 @@ describe('Company Routes', function() {
   before(function(done) {
     var user = new User({
       provider: 'local',
-      name: 'test',
-      email: 'test@testing.com',
+      name: 'comptest',
+      email: 'comptest@testing.com',
       password: 'password',
       domainName: 'testing.com'
     });
@@ -77,23 +77,25 @@ describe('Company Routes', function() {
           if (err) return done(err);
           cachedUserId = res.body.id;
           cachedCompanyId = res.body.company;
-          done();
+          // done();
+          request(app)
+            .post('/api/users/' + cachedUserId + '/scores')
+            .send({
+              x: 10,
+              y: 20
+            })
+            .expect(200)  
+            .end(function(err, res) {
+              if (err) return console.log(err);
+              done();
+            });
         });
 
-    // request(app)
-    //     .post('/api/users/' + cachedUserId + '/scores')
-    //     .send({
-    //       x: 10,
-    //       y: 20
-    //     })
-    //     .expect(200)  
-    //     .end(function(err, res) {
-    //       if (err) return done(err);
-    //     });
+    
 
-    // Clear users before testing
+    // // Clear users before testing
     // User.remove().exec();
-    // done();
+    
   });
 
   xdescribe('POST /api/companies', function(){
@@ -143,7 +145,7 @@ describe('Company Routes', function() {
 
   });
 
-  xdescribe('GET /api/companies/:id/scores', function() {
+  describe('GET /api/companies/:id/scores', function() {
 
     it('should return all the recent scores for a company', function(done) {
       request(app)
@@ -151,7 +153,9 @@ describe('Company Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
-          console.log(res.body);
+          console.log(res.body[0][0])
+          res.body[0][0].x.should.be.exactly(10);
+          res.body[0][0].y.should.be.exactly(20);
           done();
         });
 
