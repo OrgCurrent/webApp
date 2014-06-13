@@ -9,8 +9,8 @@ angular.module('happyMeterApp', [
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/main',
-        controller: 'MainCtrl'
+        templateUrl: 'partials/home',
+        controller: 'HomeCtrl'
       })
       .when('/login', {
         templateUrl: 'partials/login',
