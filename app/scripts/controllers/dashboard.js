@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'randomUser', function ($scope, $http, $location, randomUser) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'randomUser', 'generateUsers', function ($scope, $http, $location, randomUser, generateUsers) {
 
     var margin = {top: 10, right: 80, bottom: 80, left: 80},
         width = $('.container').width() - margin.left - margin.right,
@@ -10,60 +10,7 @@ angular.module('happyMeterApp')
     var parse = d3.time.format("%d-%b-%y").parse;
     var format = d3.time.format("%d-%b-%y");
 
-    //n = number of users, s = scores per user
-    var generateUsers = function(n, s){
-
-      //generate random user data
-      var newUsers = [];
-      for(var i = 0; i < n; i++){
-        newUsers.push(randomUser(s));
-      }
-
-      var sortedScores = {};
-      for(var i = 0; i < newUsers.length; i++){
-        for(var j = 0; j < newUsers[i].scores.length; j++){
-          var score = newUsers[i].scores[j];
-          var dataStr = format(score.date);
-          if(sortedScores[dataStr]){
-
-            sortedScores[dataStr].push({
-              a: score.a,
-              b: score.b,
-              user_id: newUsers[i]._id
-            });
-          }else{
-            sortedScores[dataStr] = [{
-              a: score.a,
-              b: score.b,
-              user_id: newUsers[i]._id
-            }];
-          }
-        }
-      }
-      var averageScores = [];
-      for(var date in sortedScores){
-        var aSum = 0;
-        var bSum = 0;
-        var count = sortedScores[date].length;
-        for(var i = 0; i < count; i++){
-          aSum += sortedScores[date][i].a;
-          bSum += sortedScores[date][i].b;
-        }
-        averageScores.push({
-          date: parse(date),
-          a: aSum / count,
-          b: bSum / count
-        });
-      }
-
-      averageScores.sort(function(obj1,obj2){
-        return obj1.date - obj2.date;
-      });
-
-      return [newUsers, sortedScores, averageScores]; 
-    };
-
-    var data = generateUsers(100, 10);
+    var data = generateUsers(50, 10);
     var users = data[0];
     var scores = data[1];
     var averages = data[2];
@@ -99,7 +46,71 @@ angular.module('happyMeterApp')
     x.domain([averages[0].date, averages[averages.length - 1].date]);
     y.domain([0, d3.max(averages, function(d) { return Math.max(d.a, d.b); })]).nice();
 
-    // debugger;
+    //FISHEYE
+
+    var userScoresByDate = users.slice();
+    // for(var i = 0; i < userScoresByDate.length)
+
+    var fisheyeData = {};
+
+    var randomColor = function(){
+      return 'rgb(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ')';
+    };
+
+    var updateFisheye = function(date){
+
+      // fisheye.attr('transform', 'translate()')
+      var scorePoints = fisheye.selectAll('circle')
+          .data(userScoresByDate);
+
+      scorePoints.enter()
+          .append('circle')
+          .attr('fill', function(d){return randomColor();})
+          .attr('cx', function(d){
+            for(var i = 0; i < d.scores.length; i++){
+              if(d.scores[i].date - date > 0){
+                return i > 0 ? d.scores[i-1].a * 2: d.scores[i].a * 2;
+              }
+            }
+            return d.scores[d.scores.length - 1].a * 2;
+          })
+          .attr('cy', function(d){
+            for(var i = 0; i < d.scores.length; i++){
+              if(d.scores[i].date - date > 0){
+                return i > 0 ? 200 - d.scores[i-1].b * 2: 200 - d.scores[i].b * 2;
+              }
+            }
+            return 200 - d.scores[d.scores.length - 1].b * 2;
+          })
+          .attr('r', 5);
+
+      scorePoints.transition()
+          .attr('cx', function(d){
+            for(var i = 0; i < d.scores.length; i++){
+              if(d.scores[i].date - date > 0){
+                return i > 0 ? d.scores[i-1].a * 2: d.scores[i].a * 2;;
+              }
+            }
+            return d.scores[d.scores.length - 1].a * 2;
+          })
+          .attr('cy', function(d){
+            for(var i = 0; i < d.scores.length; i++){
+              if(d.scores[i].date - date > 0){
+                return i > 0 ? 200 - d.scores[i-1].b * 2: 200 - d.scores[i].b * 2;
+              }
+            }
+            return 200 - d.scores[d.scores.length - 1].b * 2;
+          })
+          .duration(100);
+
+      scorePoints.exit()
+          .transition()
+          .attr('opacity', 0)
+          .duration(500)
+          .remove()
+    };
+
+    //MAIN BOARD
 
     // Add an SVG element with the desired dimensions and margin.
     var svg = d3.select(".board").append("svg")
@@ -113,11 +124,11 @@ angular.module('happyMeterApp')
           snapshotUpdate();
         })
         .on('click', function(){
+          var fisheye = svg.select('.fisheye');
+          if(fisheye.attr()){}
         });
 
     // Add the clip path.
-
-
     var clip = svg.append("clipPath")
         .attr("id", "clip")
       .append("rect")
@@ -172,10 +183,18 @@ angular.module('happyMeterApp')
         .attr("y1", 0)
         .attr("y1", height);
 
+    var fisheye = d3.select('.board').append('svg')
+        .attr('id', 'fisheye')
+        // .style('display', 'none')
+        .attr('width', 200)
+        .attr('height', 200);
+
     var snapshotUpdate = function(){
       snapshotLine.data(mousePosition)
           .attr("x1", mousePosition[0])
           .attr("x2", mousePosition[0]);
+
+      console.log(snapshotLine.attr('x1'));
 
       var xRatio = mousePosition[0] / width;
       var xIndex = Math.floor(averages.length * xRatio);
@@ -185,6 +204,8 @@ angular.module('happyMeterApp')
       $scope.$apply(function(){
         $scope.snapshotDate = dateStr;
       });
+
+      updateFisheye(date);
 
       console.log(scores[dateStr]);
     };
@@ -224,10 +245,71 @@ angular.module('happyMeterApp')
           a: Math.random() * 100,
           b: Math.random() * 100          
         });
+        user.scores.sort(function(s1, s2){
+          return s1.date - s2.date;
+        });
       }
       return user;
     };
-  });
+  })
+
+  .factory('generateUsers', ['randomUser', function(randomUser){
+    return function(n, s){
+
+      var parse = d3.time.format("%d-%b-%y").parse;
+      var format = d3.time.format("%d-%b-%y");
+
+      //generate random user data
+      var newUsers = [];
+      for(var i = 0; i < n; i++){
+        newUsers.push(randomUser(s));
+      }
+
+      var sortedScores = {};
+      for(var i = 0; i < newUsers.length; i++){
+        for(var j = 0; j < newUsers[i].scores.length; j++){
+          var score = newUsers[i].scores[j];
+          var dataStr = format(score.date);
+          if(sortedScores[dataStr]){
+
+            sortedScores[dataStr].push({
+              a: score.a,
+              b: score.b,
+              user_id: newUsers[i]._id
+            });
+          }else{
+            sortedScores[dataStr] = [{
+              a: score.a,
+              b: score.b,
+              user_id: newUsers[i]._id
+            }];
+          }
+        }
+      }
+      var averageScores = [];
+      for(var date in sortedScores){
+        var aSum = 0;
+        var bSum = 0;
+        var count = sortedScores[date].length;
+        for(var i = 0; i < count; i++){
+          aSum += sortedScores[date][i].a;
+          bSum += sortedScores[date][i].b;
+        }
+        averageScores.push({
+          date: parse(date),
+          a: aSum / count,
+          b: bSum / count
+        });
+      }
+
+      averageScores.sort(function(obj1,obj2){
+        return obj1.date - obj2.date;
+      });
+
+      return [newUsers, sortedScores, averageScores]; 
+    };
+  }]);
+
 
   /*{
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
