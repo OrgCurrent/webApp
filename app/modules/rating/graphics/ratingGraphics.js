@@ -17,13 +17,13 @@ angular.module('ratingGraphics', [])
          */ 
 
         // setup x 
-        var xValue = function(d) { return d.a;}, // data -> value
+        var xValue = function(d) { return d.x;}, // data -> value
             xScale = d3.scale.linear().range([0, width]), // value -> display
             xMap = function(d) { return xScale(xValue(d));}, // data -> display
             xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
         // setup y
-        var yValue = function(d) { return d.b;}, // data -> value
+        var yValue = function(d) { return d.y;}, // data -> value
             yScale = d3.scale.linear().range([height, 0]), // value -> display
             yMap = function(d) { return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -150,10 +150,10 @@ angular.module('ratingGraphics', [])
             if(scope.allowedToVote){
               var mousePos = d3.mouse(this);
               if(mousePos[0] >= 50 && mousePos[0] <= 550 && mousePos[1] >= 50 && mousePos[1] <= 550){
-                var newA = (mousePos[0] - margin.left) / 5;
-                var newB = (600 - margin.top - mousePos[1]) / 5;
-                console.log([newA, newB]);
-                scope.userData =[{a: newA, b: newB}];                
+                var newX = (mousePos[0] - margin.left) / 5;
+                var newY = (600 - margin.top - mousePos[1]) / 5;
+                console.log([newX, newY]);
+                scope.userData =[{x: newX, y: newY}];                
                 console.log(scope.userData);
                 updateUserDots();
               }
@@ -161,8 +161,13 @@ angular.module('ratingGraphics', [])
           });
 
           scope.submitScore = function(){
+            //$http POST call
+            graphApiHelper.submitUserScore().
+              .success(function(data){
+                //load All Dots
+              });
+
             scope.allowedToVote = false;
-            //$http post
             loadAllDots();
           };
 
@@ -193,5 +198,27 @@ angular.module('ratingGraphics', [])
   }])
   .factory('ratingGraph', function(){
 
-  });
-  
+  })
+  .factory('graphApiHelper', ['$rootScope', '$http', function($rootScope, $http){
+
+    var domain = 'http://0.0.0.0:9000/';
+
+    return {
+      submitUserScore: function(score){
+        return $http({
+          method: 'POST',
+          url: domain + 'api/users/' + $rootScope.currentUser.id + '/scores',
+          data: {
+            x: score.x,
+            y: score.y
+          }
+        });
+      },
+      getCompanyScores: function(){
+        return $http({
+          method: 'GET',
+          url: domain + 'api/users/' + $rootScope.currentUser.id + '/scores'
+        })
+      }
+    };
+  }]);

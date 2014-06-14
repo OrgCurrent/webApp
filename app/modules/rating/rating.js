@@ -6,14 +6,15 @@ angular.module('app.rating', ['ratingGraphics'])
     console.log('here in rating');
 
     var data = [
-      {a: 50, b: 70},
-      {a: 30, b: 55},
-      {a: 80, b: 10}
+      {x: 50, y: 70},
+      {x: 30, y: 55},
+      {x: 80, y: 10}
     ];
 
     $scope.userData = [];
 
     var voted = true;
+    //replace with time check
     if(voted){
       $scope.allowedToVote = true;
     }
