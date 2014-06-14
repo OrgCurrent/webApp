@@ -5,6 +5,8 @@ angular.module('happyMeterApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'app.dashboard',
+  'mockData'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
@@ -23,6 +25,11 @@ angular.module('happyMeterApp', [
       .when('/dashboard', {
         templateUrl: 'partials/dashboard',
         controller: 'DashboardCtrl',
+        authenticate: true
+      })
+      .when('/rating', {
+        templateUrl: 'partials/rating',
+        controller: 'RatingCtrl',
         authenticate: true
       })
       .when('/settings', {

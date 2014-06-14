@@ -53,6 +53,17 @@
         </p>
       </div>
 
+      <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
+                                          'has-error': form.password.$invalid && submitted }">
+        <label>Type of account</label>
+        <select class="form-control" ng-model='user.role'>
+          <option value='executive'>Executive Account</option>
+          <option value='employee'>Employee Account</option>
+        </select>
+
+      </div>
+
+
       <button class="btn btn-lg btn-primary" type="submit">Sign up</button>
     </form>
   </div>

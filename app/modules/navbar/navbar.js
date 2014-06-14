@@ -2,12 +2,22 @@
 
 angular.module('happyMeterApp')
   .controller('NavbarCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
+
+    var role = $scope.currentUser ? $scope.currentUser.role : undefined;
+
+    console.log(role);
+
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
     }, {
       'title': 'Dashboard',
-      'link': '/dashboard'
+      'link': '/dashboard',
+      'hide': (role === 'employee')
+    }, {
+      'title': 'Rating',
+      'link': '/rating',
+      'hide': (role === 'executive')
     }, {
       'title': 'Settings',
       'link': '/settings'
