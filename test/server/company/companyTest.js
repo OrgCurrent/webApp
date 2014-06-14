@@ -113,7 +113,7 @@ describe('Company Routes', function() {
 
     userCreate(user, 10, 20);
     setTimeout(function(){
-      userCreate(user2, 20, 30);
+      userCreate(user2, 20, 50);
     }, 10);
     //this is posting on behalf of user 2
     setTimeout(function(){
@@ -182,7 +182,7 @@ describe('Company Routes', function() {
           if (err) return done(err);
           res.body[0].scores[0].x.should.be.exactly(10);
           res.body[1].scores[0].y.should.be.exactly(40);
-          res.body[1].scores[1].y.should.be.exactly(30);
+          res.body[1].scores[1].y.should.be.exactly(50);
           done();
         });
 
@@ -194,8 +194,8 @@ describe('Company Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
-          res.body[0].score.x.should.be.exactly(30);
-          res.body[1].score.y.should.be.exactly(20);
+          res.body[0].score.x.should.be.exactly(10);
+          res.body[1].score.y.should.be.exactly(40);
           done();
         });
 
