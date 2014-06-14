@@ -5,7 +5,8 @@ angular.module('app.dashboard', ['dashboardGraphics','mockData'])
 
     var margin = {top: 10, right: 80, bottom: 80, left: 80};
 
-    var data = generateUsers(50, 10);
+    //async call to be implemented
+    var data = generateUsers(10, 200);
     mainChart.initialize(data, 0, $scope); 
 
     //Deprecated
