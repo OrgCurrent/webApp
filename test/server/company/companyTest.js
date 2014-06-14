@@ -153,9 +153,8 @@ describe('Company Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
-          console.log(res.body[0][0])
-          res.body[0][0].x.should.be.exactly(10);
-          res.body[0][0].y.should.be.exactly(20);
+          res.body[0].scores[0].x.should.be.exactly(10);
+          res.body[0].scores[0].y.should.be.exactly(20);
           done();
         });
 
