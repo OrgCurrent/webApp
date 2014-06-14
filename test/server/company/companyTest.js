@@ -11,6 +11,53 @@ var company;
 var cachedCompanyId;
 var cachedUserId;
 
+var user = new User({
+      provider: 'local',
+      name: 'comptest',
+      email: 'comptest@testing.com',
+      password: 'password',
+      domainName: 'testing.com'
+    });
+
+var user2 = new User({
+      provider: 'local',
+      name: 'comptest2',
+      email: 'comptest2@testing.com',
+      password: 'password',
+      domainName: 'testing.com'
+    });
+
+var userCreate = function(userObj, x, y, done) {
+  request(app)
+        .post('/api/users')
+        .send(userObj)
+        .expect(200)  
+        .end(function(err, res) {
+          if (err) return done(err);
+          cachedUserId = res.body.id;
+          cachedCompanyId = res.body.company;
+          // done();
+          postScore(x, y, done)
+        });
+};
+
+var postScore = function(x, y, done) {
+   request(app)
+      .post('/api/users/' + cachedUserId + '/scores')
+      .send({
+        x: x,
+        y: y
+      })
+      .expect(200)  
+      .end(function(err, res) {
+        if (err) return console.log(err);
+
+        if(done){
+          done();
+        }
+      });
+    };
+
 describe('Company Model', function() {
   before(function(done) {
 
@@ -48,7 +95,9 @@ describe('Company Model', function() {
     company.domainName = '';
     company.save(function(err) {
       should.exist(err);
-      done();
+      if(done){
+        done();
+      }
     });
   });
 
@@ -61,37 +110,15 @@ describe('Company Model', function() {
 describe('Company Routes', function() {
 
   before(function(done) {
-    var user = new User({
-      provider: 'local',
-      name: 'comptest',
-      email: 'comptest@testing.com',
-      password: 'password',
-      domainName: 'testing.com'
-    });
 
-    request(app)
-        .post('/api/users')
-        .send(user)
-        .expect(200)  
-        .end(function(err, res) {
-          if (err) return done(err);
-          cachedUserId = res.body.id;
-          cachedCompanyId = res.body.company;
-          // done();
-          request(app)
-            .post('/api/users/' + cachedUserId + '/scores')
-            .send({
-              x: 10,
-              y: 20
-            })
-            .expect(200)  
-            .end(function(err, res) {
-              if (err) return console.log(err);
-              done();
-            });
-        });
-
-    
+    userCreate(user, 10, 20);
+    setTimeout(function(){
+      userCreate(user2, 20, 30);
+    }, 10);
+    //this is posting on behalf of user 2
+    setTimeout(function(){
+      postScore(30, 40, done);
+    }, 300);
 
     // // Clear users before testing
     // User.remove().exec();
@@ -147,27 +174,32 @@ describe('Company Routes', function() {
 
   describe('GET /api/companies/:id/scores', function() {
 
-    it('should return all the recent scores for a company', function(done) {
+    it('should return all the scores for a company', function(done) {
       request(app)
         .get('/api/companies/' + cachedCompanyId + '/scores')
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
-          console.log(res.body[0][0])
-          res.body[0][0].x.should.be.exactly(10);
-          res.body[0][0].y.should.be.exactly(20);
+          res.body[0].scores[0].x.should.be.exactly(10);
+          res.body[1].scores[0].y.should.be.exactly(40);
+          res.body[1].scores[1].y.should.be.exactly(30);
           done();
         });
 
     });
 
-    //first create users with scores
-    //then create users which are assigned to a company
-    //then get scores for that company
+    it('should return all the recent scores for a company', function(done) {
+      request(app)
+        .get('/api/companies/' + cachedCompanyId + '/scores/mostrecent')
+        .expect(200)  
+        .end(function(err, res) {
+          if (err) return done(err);
+          res.body[0].score.x.should.be.exactly(30);
+          res.body[1].score.y.should.be.exactly(20);
+          done();
+        });
 
-     /*
-  TODO - get companies GET all recent scores for a company
-  */
+    });
 
   });
 
