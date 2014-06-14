@@ -212,10 +212,9 @@ describe('User Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
-          var scoreItem = res.body.scores[0];
+          var scoreItem = res.body.userInfo.scores[0];
           var timeDiff = Date.now() - Date.parse(scoreItem.date);
           var timeDiffBool = timeDiff < 5000;
-
           //should return the posted score, and the timestamp of the posted score should be
           //accurate to 5 seconds (5000ms)
           scoreItem.x.should.equal(10);
