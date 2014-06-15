@@ -115,7 +115,7 @@ describe('Company Routes', function() {
     setTimeout(function(){
       userCreate(user2, 20, 50);
     }, 10);
-    //this is posting on behalf of user 2
+    //this is posting again on behalf of user 2 (this post should not be allowed)
     setTimeout(function(){
       postScore(30, 40, done);
     }, 300);
@@ -181,8 +181,7 @@ describe('Company Routes', function() {
         .end(function(err, res) {
           if (err) return done(err);
           res.body[0].scores[0].x.should.be.exactly(10);
-          res.body[1].scores[0].y.should.be.exactly(40);
-          res.body[1].scores[1].y.should.be.exactly(50);
+          res.body[1].scores[0].y.should.be.exactly(50);
           done();
         });
 
@@ -193,9 +192,9 @@ describe('Company Routes', function() {
         .get('/api/companies/' + cachedCompanyId + '/scores/mostrecent')
         .expect(200)  
         .end(function(err, res) {
-          if (err) return done(err);
+          if (err) return done(err);  
           res.body[0].score.x.should.be.exactly(10);
-          res.body[1].score.y.should.be.exactly(40);
+          res.body[1].score.y.should.be.exactly(50);
           done();
         });
 
