@@ -1,13 +1,13 @@
 "use strict";
 
 angular.module('ratingGraphics', [])
-  .factory('scoresGraph', [function(){
+  .factory('scoresGraph', ['graphApiHelper', function(graphApiHelper){
     return {
       initialize: function(data, scope){
         
         var margin = {top: 50, right: 50, bottom: 50, left: 50},
-            width = 600 - margin.left - margin.right,
-            height = 600 - margin.top - margin.bottom;
+            width = 500 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
 
         /* 
          * value accessor - returns the value to encode for a given data object.
@@ -89,7 +89,9 @@ angular.module('ratingGraphics', [])
               .style("text-anchor", "end")
               .text("Personal success");
 
-          var loadAllDots = function(){
+          var loadAllDots = function(data){
+
+            console.log(data);
 
             //$http get
 
@@ -123,9 +125,11 @@ angular.module('ratingGraphics', [])
                 // });            
           };
 
-          var updateUserDots = function(){
+          var updateUserDots = function(data){
             var userDots = svg.selectAll(".user-dot")
                 .data(scope.userData);
+                // .data(data);
+            // userDots.select('circle').remove();
 
             userDots
               .enter().append("circle")
@@ -149,12 +153,10 @@ angular.module('ratingGraphics', [])
           board.on("mousedown", function(){
             if(scope.allowedToVote){
               var mousePos = d3.mouse(this);
-              if(mousePos[0] >= 50 && mousePos[0] <= 550 && mousePos[1] >= 50 && mousePos[1] <= 550){
+              if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
                 var newX = (mousePos[0] - margin.left) / 5;
-                var newY = (600 - margin.top - mousePos[1]) / 5;
-                console.log([newX, newY]);
+                var newY = (500 - margin.top - mousePos[1]) / 5;
                 scope.userData =[{x: newX, y: newY}];                
-                console.log(scope.userData);
                 updateUserDots();
               }
             }
@@ -162,13 +164,28 @@ angular.module('ratingGraphics', [])
 
           scope.submitScore = function(){
             //$http POST call
-            graphApiHelper.submitUserScore().
+            var score = scope.userData;
+            graphApiHelper.submitUserScore(score[0])
               .success(function(data){
                 //load All Dots
+                scope.allowedToVote = false;
+                console.log('submitScore success');
+                console.log(data);
+                graphApiHelper.getCompanyScores()
+                  .success(function(data){
+                    console.log(data);
+                    var scores = [];
+                    for(var i = 0; i < data.length; i++){
+                      if(data[i].score){
+                        scores.push({x: data[i].score.x, y: data[i].score.y});
+                      }
+                    }
+                    loadAllDots(scores);
+                    scope.userData.push(scope.userData[0]);
+                    updateUserDots();
+                  });
               });
 
-            scope.allowedToVote = false;
-            loadAllDots();
           };
 
           // draw legend
@@ -205,6 +222,7 @@ angular.module('ratingGraphics', [])
 
     return {
       submitUserScore: function(score){
+        console.log(score);
         return $http({
           method: 'POST',
           url: domain + 'api/users/' + $rootScope.currentUser.id + '/scores',
@@ -217,7 +235,7 @@ angular.module('ratingGraphics', [])
       getCompanyScores: function(){
         return $http({
           method: 'GET',
-          url: domain + 'api/users/' + $rootScope.currentUser.id + '/scores'
+          url: domain + 'api/companies/' + $rootScope.currentUser.company + '/scores/mostrecent'
         })
       }
     };
