@@ -99,7 +99,7 @@ describe('User Routes', function() {
       request(app)
         .post('/api/users')
         .send(user)
-        .expect(200)  
+        .expect(201)  
         .end(function(err, res) {
           if (err) return done(err);
           res.body.name.should.equal('test');
@@ -119,7 +119,7 @@ describe('User Routes', function() {
       request(app)
         .post('/api/users')
         .send(bob)
-        .expect(200)  
+        .expect(201)  
         .end(function(err, res) {
           if (err) return done(err);
           // TODO - test for the company name in the response, change from profile info?
@@ -141,8 +141,6 @@ describe('User Routes', function() {
 
   });
 
-
-
   /*
   TODO - create test for changing password
   */  
@@ -154,30 +152,6 @@ describe('User Routes', function() {
   /*
   TODO - create test for testing the /api/users/me endpoint GET (users.me)
   */
-  // xdescribe('GET /api/users/me', function() {
-  //     request(app)
-  //       .post('/api/session')
-  //       .send({
-  //         email: 'test1@testor.com',
-  //         password: 'password1'
-  //       })
-  //       .set('Accept', 'application/json');
-
-  //     User.remove().exec();
-  //     done();
-   
-  //   it('should return the user _id, name, scores, verified status and email', function(done) {
-  //     request(app)
-  //       .get('/api/users/me')
-  //       .expect(200)  
-  //       .end(function(err, res) {
-  //         if (err) return done(err);
-  //         done();
-  //       });
-
-  //   });
-
-  // });
 
   describe('GET /api/users/:id', function() {
     
@@ -209,7 +183,7 @@ describe('User Routes', function() {
           x: 10,
           y: 20
         })
-        .expect(200)  
+        .expect(201)  
         .end(function(err, res) {
           if (err) return done(err);
           var scoreItem = res.body.userInfo.scores[0];
@@ -220,6 +194,20 @@ describe('User Routes', function() {
           scoreItem.x.should.equal(10);
           scoreItem.y.should.equal(20);
           timeDiffBool.should.equal(true);
+          done();
+        });
+    });
+
+    it('should limit each user to one post every 24 hours', function(done) {
+      request(app)
+        .post('/api/users/' + cachedUserId + '/scores')
+        .send({
+          x: 30,
+          y: 40
+        })
+        .expect(429)  
+        .end(function(err, res) {
+          if (err) return done(err);
           done();
         });
     });
