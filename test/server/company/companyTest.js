@@ -31,7 +31,7 @@ var userCreate = function(userObj, x, y, done) {
   request(app)
         .post('/api/users')
         .send(userObj)
-        .expect(200)  
+        .expect(201)  
         .end(function(err, res) {
           if (err) return done(err);
           cachedUserId = res.body.id;
@@ -48,7 +48,7 @@ var postScore = function(x, y, done) {
         x: x,
         y: y
       })
-      .expect(200)  
+      .expect(201)  
       .end(function(err, res) {
         if (err) return console.log(err);
 
@@ -56,7 +56,7 @@ var postScore = function(x, y, done) {
           done();
         }
       });
-    };
+};
 
 describe('Company Model', function() {
   before(function(done) {
@@ -113,12 +113,8 @@ describe('Company Routes', function() {
 
     userCreate(user, 10, 20);
     setTimeout(function(){
-      userCreate(user2, 20, 50);
+      userCreate(user2, 20, 50, done);
     }, 10);
-    //this is posting again on behalf of user 2 (this post should not be allowed)
-    setTimeout(function(){
-      postScore(30, 40, done);
-    }, 300);
 
     // // Clear users before testing
     // User.remove().exec();
