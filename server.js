@@ -23,6 +23,9 @@ fs.readdirSync(modelsPath).forEach(function (file) {
   }
 });
 
+// Populate Dummy Data
+require('./lib/config/dataGenerator');
+
 // Passport Configuration
 var passport = require('./lib/config/passport');
 
