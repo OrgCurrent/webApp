@@ -157,29 +157,48 @@ angular.module('ratingGraphics', [])
             }
           });
 
-          scope.submitScore = function(){
-            //$http POST call
-            var score = scope.userData;
-            graphApiHelper.submitUserScore(score[0])
+          if(scope.scored){
+            graphApiHelper.getCompanyScores()
               .success(function(data){
-                //load All Dots
-                scope.allowedToVote = false;
-                console.log('submitScore success');
-                graphApiHelper.getCompanyScores()
-                  .success(function(data){
-                    var scores = [];
-                    for(var i = 0; i < data.length; i++){
-                      if(data[i].score){
-                        scores.push({x: data[i].score.x, y: data[i].score.y});
-                      }
-                    }
-                    loadAllDots(scores);
-                    scope.userData.push(scope.userData[0]);
-                    updateUserDots();
-                  });
+                var scores = [];
+                for(var i = 0; i < data.length; i++){
+                  if(data[i].score){
+                    scores.push({x: data[i].score.x, y: data[i].score.y});
+                  }
+                }
+                loadAllDots(scores);
+                //get user last score from scope.currentUser
+                var userScore = scope.currentUser.scores[0];
+                scope.userData = [{x: userScore.x, y: userScore.y}];
+                updateUserDots();
               });
 
-          };
+          }else{
+
+            scope.submitScore = function(){
+              //$http POST call
+              var score = scope.userData;
+              graphApiHelper.submitUserScore(score[0])
+                .success(function(data){
+                  //load All Dots
+                  scope.allowedToVote = false;
+                  console.log('submitScore success');
+                  graphApiHelper.getCompanyScores()
+                    .success(function(data){
+                      var scores = [];
+                      for(var i = 0; i < data.length; i++){
+                        if(data[i].score){
+                          scores.push({x: data[i].score.x, y: data[i].score.y});
+                        }
+                      }
+                      loadAllDots(scores);
+                      scope.userData.push(scope.userData[0]);
+                      updateUserDots();
+                    });
+                });
+            };
+          }
+
 
           // draw legend
           // var legend = svg.selectAll(".legend")
