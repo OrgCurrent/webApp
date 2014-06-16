@@ -13,5 +13,4 @@ angular.module('app.rating', ['ratingGraphics'])
     }
 
     scoresGraph.initialize($scope);
-
   }]);

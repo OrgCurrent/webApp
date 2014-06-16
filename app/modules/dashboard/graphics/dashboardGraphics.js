@@ -5,8 +5,6 @@ angular.module('dashboardGraphics', [])
   .factory('mainChart', ['fisheyeChart', 'timeFormat', function(fisheyeChart, timeFormat){
     return {
       initialize: function(data, margin, scope){
-
-        console.log(data);
       
         var margin = {top: 10, right: 80, bottom: 80, left: 80},
             width = $('.container').width() - margin.left - margin.right,
@@ -164,6 +162,9 @@ angular.module('dashboardGraphics', [])
           var xRatio = mousePosition[0] / width;
           var xIndex = Math.floor(smoothAverages.length * xRatio);
           var date = smoothAverages[xIndex].date;
+          //weekly unit
+          // var xIndex = Math.floor(averages.length * xRatio / 7) * 7;
+          // var date = averages[xIndex].date;
           var dateStr = timeFormat.format(date);
 
           scope.$apply(function(){
@@ -287,6 +288,7 @@ angular.module('dashboardGraphics', [])
           //   }
           //   return 200 - d.scores[d.scores.length - 1].y * 2;
           // })
+
           .duration(100);
 
         //old score exit
@@ -322,5 +324,4 @@ angular.module('dashboardGraphics', [])
   //     link: link,
   //     scope: true
   //   };
-
   // });

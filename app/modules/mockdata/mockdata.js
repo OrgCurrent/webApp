@@ -14,7 +14,7 @@ angular.module('mockData', [])
         user.scores.push({
           date: date,
           x: Math.random() * 100,
-          y: Math.random() * 100          
+          y: Math.random() * 100
         });
         user.scores.sort(function(s1, s2){
           return s1.date - s2.date;
@@ -143,4 +143,3 @@ angular.module('mockData', [])
       return [newUsers, sortedScores, averageScores]; 
     };
   }]);
-

@@ -25,7 +25,6 @@ angular.module('app.dashboard', ['dashboardGraphics','mockData'])
       console.error(err);
     });
 
-
     //Deprecated
     // // On click, update the x-axis.
     // function click(event) {

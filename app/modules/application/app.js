@@ -6,8 +6,7 @@ angular.module('happyMeterApp', [
   'ngSanitize',
   'ngRoute',
   'app.dashboard',
-  'app.rating',
-  'mockData'
+  'app.rating'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
