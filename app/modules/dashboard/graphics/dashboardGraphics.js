@@ -15,13 +15,41 @@ angular.module('dashboardGraphics', [])
         var averages = data[2];
 
         console.log(averages);
-        //weekly averages test
-        var weeklyAverages = [];
-        for(var i = 0; i < averages.length; i++){
 
+        //weekly averages test
+        // var weeklyAverages = [];
+        // for(var i = 6; i < averages.length; i+= 7){
+        //   var weekAverageA = 0;
+        //   var weekAverageB = 0;
+        //   for(var j = i - 6; j <= i; j++){
+        //     weekAverageA += averages[j].a / 7;
+        //     weekAverageB += averages[j].b / 7;
+        //   }
+        //   weeklyAverages.push({
+        //     a: weekAverageA,
+        //     b: weekAverageB,
+        //     date: averages[i].date
+        //   });
+        // }
+        var smoothAverages = [];
+        for(var i = 0; i < averages.length; i++){
+          var avgNumber = Math.min(i+1, 7);
+          var weekAverageX = 0;
+          var weekAverageY = 0;
+          for(var j = i - avgNumber + 1; j <= i; j++){
+            weekAverageX += averages[j].x / avgNumber;
+            weekAverageY += averages[j].y / avgNumber;
+          }
+          smoothAverages.push({
+            x: weekAverageX,
+            y: weekAverageY,
+            date: averages[i].date
+          });
         }
 
-        scope.snapshotDate = timeFormat.format(averages[0].date);
+        console.log(smoothAverages);
+
+        scope.snapshotDate = timeFormat.format(smoothAverages[0].date);
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, width]),
@@ -35,34 +63,23 @@ angular.module('dashboardGraphics', [])
             .interpolate("monotone")
             .x(function(d) { return x(d.date); })
             .y0(height)
-            .y1(function(d) { return y(d.b); });
+            .y1(function(d) { return y(d.y); });
 
         // A line generator
         var lineA = d3.svg.line()
             .interpolate("monotone")
             .x(function(d) { return x(d.date); })
-            .y(function(d) { return y(d.a); });
-
-        // var lineA = d3.svg.line()
-        //     .interpolate("monotone")
-        //     .x(function(d, i) {
-        //       if(i % 7 === 0){
-        //         return x(d.date);
-        //       }else{
-        //         return x(d)
-        //       }
-        //     })
-        //     .y(function(d) { return y(d.a); });
+            .y(function(d) { return y(d.x); });
 
         //B line generator
         var lineB = d3.svg.line()
             .interpolate("monotone")
             .x(function(d) { return x(d.date); })
-            .y(function(d) { return y(d.b); });
+            .y(function(d) { return y(d.y); });
 
         // Compute the minimum and maximum date, and the maximum a/b.
-        x.domain([averages[0].date, averages[averages.length - 1].date]);
-        y.domain([0, d3.max(averages, function(d) { return Math.max(d.a, d.b); })]).nice();
+        x.domain([smoothAverages[0].date, smoothAverages[smoothAverages.length - 1].date]);
+        y.domain([0, d3.max(smoothAverages, function(d) { return Math.max(d.x, d.y); })]).nice();
 
         // Add an SVG element with the desired dimensions and margin.
         var svg = d3.select(".board").append("svg")
@@ -91,7 +108,7 @@ angular.module('dashboardGraphics', [])
         svg.append("path")
             .attr("class", "area")
             .attr("clip-path", "url(#clip)")
-            .attr("d", area(averages));
+            .attr("d", area(smoothAverages));
 
         // Add the x-axis.
         svg.append("g")
@@ -110,14 +127,14 @@ angular.module('dashboardGraphics', [])
             .attr("class", "line")
             .attr("id", "lineA")
             .attr("clip-path", "url(#clip)")
-            .attr("d", lineA(averages));
+            .attr("d", lineA(smoothAverages));
 
         // Add the line path.
         svg.append("path")
             .attr("class", "line")
             .attr("id", "lineB")
             .attr("clip-path", "url(#clip)")
-            .attr("d", lineB(averages));
+            .attr("d", lineB(smoothAverages));
 
         // Add a small label for the symbol name.
         svg.append("text")
@@ -143,9 +160,11 @@ angular.module('dashboardGraphics', [])
               .attr("x2", mousePosition[0]);
 
           var xRatio = mousePosition[0] / width;
+          var xIndex = Math.floor(smoothAverages.length * xRatio);
+          var date = smoothAverages[xIndex].date;
           //weekly unit
-          var xIndex = Math.floor(averages.length * xRatio / 7) * 7;
-          var date = averages[xIndex].date;
+          // var xIndex = Math.floor(averages.length * xRatio / 7) * 7;
+          // var date = averages[xIndex].date;
           var dateStr = timeFormat.format(date);
 
           scope.$apply(function(){
@@ -187,41 +206,89 @@ angular.module('dashboardGraphics', [])
           .append('circle')
           .attr('fill', function(d){return randomColor();})
           .attr('cx', function(d){
+            var xSum = 0;
+            var count = 0;
             for(var i = 0; i < d.scores.length; i++){
-              if(d.scores[i].date - date > 0){
-                return i > 0 ? d.scores[i-1].a * 2: d.scores[i].a * 2;
+              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+                xSum += d.scores[i].x;
+                count++;
               }
             }
-            return d.scores[d.scores.length - 1].a * 2;
+            return count > 0 ? xSum / count * 2 : 100;
           })
+          // .attr('cx', function(d){
+          //   for(var i = 0; i < d.scores.length; i++){
+          //     var 
+          //     if(d.scores[i].date - date > 0){
+          //       return i > 0 ? d.scores[i-1].x * 2: d.scores[i].x * 2;
+          //     }
+          //   }
+          //   return d.scores[d.scores.length - 1].x * 2;
+          // })
           .attr('cy', function(d){
+            var ySum = 0;
+            var count = 0;
             for(var i = 0; i < d.scores.length; i++){
-              if(d.scores[i].date - date > 0){
-                return i > 0 ? 200 - d.scores[i-1].b * 2: 200 - d.scores[i].b * 2;
+              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+                ySum += d.scores[i].y;
+                count++;
               }
             }
-            return 200 - d.scores[d.scores.length - 1].b * 2;
+            return count > 0 ? 200 - ySum / count * 2 : 100;
           })
+          // .attr('cy', function(d){
+          //   for(var i = 0; i < d.scores.length; i++){
+          //     if(d.scores[i].date - date > 0){
+          //       return i > 0 ? 200 - d.scores[i-1].y * 2: 200 - d.scores[i].y * 2;
+          //     }
+          //   }
+          //   return 200 - d.scores[d.scores.length - 1].y * 2;
+          // })
           .attr('r', 5);
+
 
         //score updates
         scorePoints.transition()
           .attr('cx', function(d){
+            var xSum = 0;
+            var count = 0;
             for(var i = 0; i < d.scores.length; i++){
-              if(d.scores[i].date - date > 0){
-                return i > 0 ? d.scores[i-1].a * 2: d.scores[i].a * 2;;
+              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+                xSum += d.scores[i].x;
+                count++;
               }
             }
-            return d.scores[d.scores.length - 1].a * 2;
+            return count > 0 ? xSum / count * 2 : 100;
           })
+          // .attr('cx', function(d){
+          //   for(var i = 0; i < d.scores.length; i++){
+          //     var 
+          //     if(d.scores[i].date - date > 0){
+          //       return i > 0 ? d.scores[i-1].a * 2: d.scores[i].a * 2;
+          //     }
+          //   }
+          //   return d.scores[d.scores.length - 1].a * 2;
+          // })
           .attr('cy', function(d){
+            var ySum = 0;
+            var count = 0;
             for(var i = 0; i < d.scores.length; i++){
-              if(d.scores[i].date - date > 0){
-                return i > 0 ? 200 - d.scores[i-1].b * 2: 200 - d.scores[i].b * 2;
+              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+                ySum += d.scores[i].y;
+                count++;
               }
             }
-            return 200 - d.scores[d.scores.length - 1].b * 2;
+            return count > 0 ? 200 - ySum / count * 2 : 100;
           })
+          // .attr('cy', function(d){
+          //   for(var i = 0; i < d.scores.length; i++){
+          //     if(d.scores[i].date - date > 0){
+          //       return i > 0 ? 200 - d.scores[i-1].y * 2: 200 - d.scores[i].y * 2;
+          //     }
+          //   }
+          //   return 200 - d.scores[d.scores.length - 1].y * 2;
+          // })
+
           .duration(100);
 
         //old score exit
@@ -257,5 +324,4 @@ angular.module('dashboardGraphics', [])
   //     link: link,
   //     scope: true
   //   };
-
   // });
