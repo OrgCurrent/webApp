@@ -168,11 +168,7 @@ describe('User Routes', function() {
           done();
         });
     });
-  });
-
-  /*
-  TODO - create test for testing the /api/users/:id endpoint POST (users.postScore)
-  */
+  }); 
 
   describe('POST /api/users/:id/score', function() {
     
@@ -214,10 +210,14 @@ describe('User Routes', function() {
   });
 
   /*
+  TODO - Add test to ensure it is possible for user to post 24 hours after their initial post
+  */
+
+  /*
   TODO - create test for testing the /api/users/:id/score endpoint GET (users.getScore)
   */
 
-  xdescribe('GET /api/users/:id/score', function() {
+  describe('GET /api/users/:id/scores', function() {
     
     it('should get all scores for a particular user', function(done) {
       request(app)
@@ -225,6 +225,8 @@ describe('User Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
+          res.body.scores[0].x.should.equal(10);
+          res.body.scores[0].y.should.equal(20);
           done();
         });
     });
