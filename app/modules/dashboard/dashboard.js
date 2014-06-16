@@ -1,13 +1,30 @@
 'use strict';
 
 angular.module('app.dashboard', ['dashboardGraphics','mockData'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'mainChart', 'generateUsers', function ($scope, $http, $location, mainChart, generateUsers) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'mainChart', 'generateUsers', 'formatUsers', function ($scope, $http, $location, mainChart, generateUsers, formatUsers) {
+
+    console.log($scope.currentUser);
 
     var margin = {top: 10, right: 80, bottom: 80, left: 80};
 
-    //async call to be implemented
-    var data = generateUsers(10, 200);
-    mainChart.initialize(data, 0, $scope); 
+    //mock data
+    // var data = generateUsers(10, 20);
+    // mainChart.initialize(data, 0, $scope);
+
+    //backend data
+    $http({
+      method: 'GET',
+      url: 'api/companies/' + $scope.currentUser.company + '/scores'
+    })
+    .success(function(data){
+      console.log(data);
+      var users = formatUsers(data);
+      mainChart.initialize(users, 0, $scope);
+    })
+    .error(function(err){
+      console.error(err);
+    });
+
 
     //Deprecated
     // // On click, update the x-axis.

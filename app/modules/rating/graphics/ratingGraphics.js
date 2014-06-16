@@ -90,11 +90,6 @@ angular.module('ratingGraphics', [])
               .text("Personal success");
 
           var loadAllDots = function(data){
-
-            console.log(data);
-
-            //$http get
-
             // draw dots
             svg.selectAll(".dot")
                 .data(data)
@@ -170,10 +165,8 @@ angular.module('ratingGraphics', [])
                 //load All Dots
                 scope.allowedToVote = false;
                 console.log('submitScore success');
-                console.log(data);
                 graphApiHelper.getCompanyScores()
                   .success(function(data){
-                    console.log(data);
                     var scores = [];
                     for(var i = 0; i < data.length; i++){
                       if(data[i].score){
@@ -222,7 +215,6 @@ angular.module('ratingGraphics', [])
 
     return {
       submitUserScore: function(score){
-        console.log(score);
         return $http({
           method: 'POST',
           url: domain + 'api/users/' + $rootScope.currentUser.id + '/scores',
