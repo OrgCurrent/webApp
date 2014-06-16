@@ -26,7 +26,7 @@ describe('User Model', function() {
     done();
   });
 
-  afterEach(function(done) {
+  after(function(done) {
     User.remove().exec();
     done();
   });

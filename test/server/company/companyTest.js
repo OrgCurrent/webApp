@@ -111,14 +111,17 @@ describe('Company Routes', function() {
 
   before(function(done) {
 
-    userCreate(user, 10, 20);
+    userCreate(user, 15, 25);
     setTimeout(function(){
       userCreate(user2, 20, 50, done);
     }, 10);
 
     // // Clear users before testing
     // User.remove().exec();
-    
+    after(function(done) {
+      User.remove().exec();
+      done();
+    });
   });
 
   xdescribe('POST /api/companies', function(){
@@ -153,14 +156,15 @@ describe('Company Routes', function() {
 
   });
 
-  xdescribe('GET /api/companies/:id', function() {
+  describe('GET /api/companies/:id', function() {
    
-    it('should return details about a specifc company', function(done) {
+    it('should return details about a specific company', function(done) {
       request(app)
         .get('/api/companies/' + cachedCompanyId)
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
+          res.body.domainName.should.be.exactly('testing.com');
           done();
         });
 
@@ -176,7 +180,7 @@ describe('Company Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);
-          res.body[0].scores[0].x.should.be.exactly(10);
+          res.body[0].scores[0].x.should.be.exactly(15);
           res.body[1].scores[0].y.should.be.exactly(50);
           done();
         });
@@ -189,7 +193,7 @@ describe('Company Routes', function() {
         .expect(200)  
         .end(function(err, res) {
           if (err) return done(err);  
-          res.body[0].score.x.should.be.exactly(10);
+          res.body[0].score.x.should.be.exactly(15);
           res.body[1].score.y.should.be.exactly(50);
           done();
         });
