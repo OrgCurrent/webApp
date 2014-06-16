@@ -3,7 +3,7 @@
 angular.module('ratingGraphics', [])
   .factory('scoresGraph', ['graphApiHelper', function(graphApiHelper){
     return {
-      initialize: function(data, scope){
+      initialize: function(scope){
         
         var margin = {top: 50, right: 50, bottom: 50, left: 50},
             width = 500 - margin.left - margin.right,
