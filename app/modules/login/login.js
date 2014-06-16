@@ -3,7 +3,7 @@
 angular.module('happyMeterApp')
   .controller('LoginCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
     $scope.user = {
-      email: 'slave@company.com',
+      email: 'employee1@test.com',
       password: 'test'
     };
     $scope.errors = {};
