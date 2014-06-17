@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('LoginCtrl', function ($scope, Auth, $location) {
-    $scope.user = {};
+  .controller('LoginCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
     $scope.errors = {};
 
     $scope.login = function(form) {
@@ -23,4 +22,4 @@ angular.module('happyMeterApp')
         });
       }
     };
-  });
+  }]);

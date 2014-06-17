@@ -4,13 +4,15 @@ angular.module('happyMeterApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'app.dashboard',
+  'app.rating'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/main',
-        controller: 'MainCtrl'
+        templateUrl: 'partials/home',
+        controller: 'HomeCtrl'
       })
       .when('/login', {
         templateUrl: 'partials/login',
@@ -19,6 +21,16 @@ angular.module('happyMeterApp', [
       .when('/signup', {
         templateUrl: 'partials/signup',
         controller: 'SignupCtrl'
+      })
+      .when('/dashboard', {
+        templateUrl: 'partials/dashboard',
+        controller: 'DashboardCtrl',
+        authenticate: true
+      })
+      .when('/rating', {
+        templateUrl: 'partials/rating',
+        controller: 'RatingCtrl',
+        authenticate: true
       })
       .when('/settings', {
         templateUrl: 'partials/settings',

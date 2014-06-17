@@ -1,9 +1,12 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('SignupCtrl', function ($scope, Auth, $location) {
+  .controller('SignupCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
     $scope.user = {};
     $scope.errors = {};
+
+    //default account type: employee
+    $scope.user.role = 'employee';
 
     $scope.register = function(form) {
       $scope.submitted = true;
@@ -12,10 +15,12 @@ angular.module('happyMeterApp')
         Auth.createUser({
           name: $scope.user.name,
           email: $scope.user.email,
-          password: $scope.user.password
+          password: $scope.user.password,
+          role: $scope.user.role
         })
         .then( function() {
           // Account created, redirect to home
+          //if user is 
           $location.path('/');
         })
         .catch( function(err) {
@@ -30,4 +35,4 @@ angular.module('happyMeterApp')
         });
       }
     };
-  });
+  }]);
