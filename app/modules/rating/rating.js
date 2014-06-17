@@ -16,4 +16,9 @@ angular.module('app.rating', ['ratingGraphics'])
     }
 
     scoresGraph.initialize($scope);
+
+    d3.select(window).on('resize', function(){
+      d3.select("svg").remove();
+      scoresGraph.initialize($scope);
+    });
   }]);

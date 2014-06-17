@@ -4,10 +4,15 @@ angular.module('ratingGraphics', [])
   .factory('scoresGraph', ['graphApiHelper', function(graphApiHelper){
     return {
       initialize: function(scope){
-        
-        var margin = {top: 50, right: 50, bottom: 50, left: 50},
-            width = 500 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+        var pageWidth = parseInt(d3.select(".board").style("width"));
+        var pageHeight = window.innerHeight;
+        var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
+
+        // console.log(pageWidth, pageHeight);
+
+        var margin = {top: pageHeight/10, right: pageWidth/15, bottom: pageHeight/5, left: pageWidth/15},
+            width = pageWidth/1.75 - margin.left - margin.right,
+            height = pageHeight - 150 - margin.top - margin.bottom;
 
         /* 
          * value accessor - returns the value to encode for a given data object.
@@ -91,11 +96,12 @@ angular.module('ratingGraphics', [])
 
           var loadAllDots = function(data){
             // draw dots
+
             svg.selectAll(".dot")
                 .data(data)
               .enter().append("circle")
                 .attr("class", "dot")
-                .attr("r", 10)
+                .attr("r", dotSize)
                 .attr("cx", xMap)
                 .attr("cy", yMap)
                 // .style("fill", function(d) { return color(cValue(d));}) 
@@ -129,14 +135,14 @@ angular.module('ratingGraphics', [])
             userDots
               .enter().append("circle")
                 .attr("class", "user-dot")
-                .attr("r", 30)
+                .attr("r", dotSize*2)
                 .attr("cx", xMap)
                 .attr("cy", yMap)
                 .style("fill", "blue");
 
             userDots
                 .attr("class", "user-dot")
-                .attr("r", 30)
+                .attr("r", dotSize*2)
                 .attr("cx", xMap)
                 .attr("cy", yMap)
                 .style("fill", "blue");
@@ -159,7 +165,9 @@ angular.module('ratingGraphics', [])
             }
           });
 
-          if(scope.scored){
+          // if page hasn't initialized and the player has already scored today
+          // retrieve the company scores immediately and display them
+          if(scope.scored && !scope.initialized){
             graphApiHelper.getCompanyScores()
               .success(function(data){
                 var scores = [];
@@ -168,6 +176,9 @@ angular.module('ratingGraphics', [])
                     scores.push({x: data[i].score.x, y: data[i].score.y});
                   }
                 }
+                scope.colleagueScores = scores;
+                // console.log('successfully got colleague scores');
+                // console.log(scope.colleagueScores);
                 loadAllDots(scores);
                 //get user last score from scope.currentUser
                 var userScore = scope.currentUser.scores[0];
@@ -175,33 +186,47 @@ angular.module('ratingGraphics', [])
                 updateUserDots();
               });
 
-          }else{
+          } else if(scope.scored){
+            updateUserDots();
+            loadAllDots(scope.colleagueScores);
+          } else {
+            // loadAllDots(scope.colleagueScores);
+            updateUserDots();
 
-            scope.submitScore = function(){
-              //$http POST call
-              var score = scope.userData;
-              graphApiHelper.submitUserScore(score[0])
-                .success(function(data){
-                  //load All Dots
-                  scope.allowedToVote = false;
-                  console.log('submitScore success');
-                  graphApiHelper.getCompanyScores()
-                    .success(function(data){
-                      var scores = [];
-                      for(var i = 0; i < data.length; i++){
-                        if(data[i].score){
-                          scores.push({x: data[i].score.x, y: data[i].score.y});
-                        }
-                      }
-                      loadAllDots(scores);
-                      scope.userData.push(scope.userData[0]);
-                      updateUserDots();
-                    });
-                });
-            };
           }
 
 
+
+          scope.submitScore = function(){
+            //$http POST call
+            var score = scope.userData;
+            graphApiHelper.submitUserScore(score[0])
+              .success(function(data){
+                //load All Dots
+                scope.allowedToVote = false;
+                console.log('submitScore success');
+                graphApiHelper.getCompanyScores()
+                  .success(function(data){
+                    var scores = [];
+                    for(var i = 0; i < data.length; i++){
+                      if(data[i].score){
+                        scores.push({x: data[i].score.x, y: data[i].score.y});
+                      }
+                    }
+                    console.log(data);
+                    // after a successful POST mark set the scope score property to true
+                    scope.scored = true;
+                    scope.colleagueScores = scores;
+                    // console.log('successfully got colleague after submit scores');
+                    // console.log(scope.colleagueScores);
+                    loadAllDots(scores);
+                    scope.userData.push(scope.userData[0]);
+                    updateUserDots();
+                  });
+              });
+          };
+
+        scope.initialized = true;
           // draw legend
           // var legend = svg.selectAll(".legend")
           //     .data(color.domain())
