@@ -1,11 +1,25 @@
 'use strict';
 
 angular.module('app.dashboard', ['dashboardGraphics','mockData'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'mainChart', 'generateUsers', 'formatUsers', function ($scope, $http, $location, mainChart, generateUsers, formatUsers) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'mainChart', 'generateUsers', 'formatUsers', function ($scope, $http, $location, $window, mainChart, generateUsers, formatUsers) {
 
     console.log($scope.currentUser);
 
-    var margin = {top: 10, right: 80, bottom: 80, left: 80};
+    var sizing = {
+      margin: {top: 10, right: 80, bottom: 40, left: 80},
+    };
+    sizing.width = $('.board').width() - sizing.margin.left - sizing.margin.right;
+    sizing.height = ($window.innerHeight - 240) - sizing.margin.top - sizing.margin.bottom;
+    console.log('here here');
+    console.log($('.board').height());
+
+    //listener for window resizing
+    $window.addEventListener('resize', function(){
+      sizing.width = $('.board').width() - sizing.margin.left - sizing.margin.right;
+      sizing.height = ($window.innerHeight - 240) - sizing.margin.top - sizing.margin.bottom;
+      mainChart.render($scope.users, sizing, $scope);
+    });
+
 
     //mock data
     // var data = generateUsers(10, 20);
@@ -18,8 +32,8 @@ angular.module('app.dashboard', ['dashboardGraphics','mockData'])
     })
     .success(function(data){
       console.log(data);
-      var users = formatUsers(data);
-      mainChart.initialize(users, 0, $scope);
+      $scope.users = formatUsers(data);
+      mainChart.render($scope.users, sizing, $scope);
     })
     .error(function(err){
       console.error(err);

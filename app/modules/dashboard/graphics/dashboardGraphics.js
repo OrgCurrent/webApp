@@ -2,13 +2,9 @@
 
 angular.module('dashboardGraphics', [])
 
-  .factory('mainChart', ['fisheyeChart', 'timeFormat', function(fisheyeChart, timeFormat){
+  .factory('mainChart', ['$window', 'fisheyeChart', 'timeFormat', function($window, fisheyeChart, timeFormat){
     return {
-      initialize: function(data, margin, scope){
-      
-        var margin = {top: 10, right: 80, bottom: 80, left: 80},
-            width = $('.container').width() - margin.left - margin.right,
-            height = 550 - margin.top - margin.bottom;
+      render: function(data, sizing, scope){
 
         var users = data[0];
         var scores = data[1];
@@ -52,8 +48,8 @@ angular.module('dashboardGraphics', [])
         scope.snapshotDate = timeFormat.format(smoothAverages[0].date);
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
-        var x = d3.time.scale().range([0, width]),
-            y = d3.scale.linear().range([height, 0]),
+        var x = d3.time.scale().range([0, sizing.width]),
+            y = d3.scale.linear().range([sizing.height, 0]),
             // xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true),
             xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true),
             yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
@@ -62,7 +58,7 @@ angular.module('dashboardGraphics', [])
         var area = d3.svg.area()
             .interpolate("monotone")
             .x(function(d) { return x(d.date); })
-            .y0(height)
+            .y0(sizing.height)
             .y1(function(d) { return y(d.y); });
 
         // A line generator
@@ -82,12 +78,13 @@ angular.module('dashboardGraphics', [])
         y.domain([0, d3.max(smoothAverages, function(d) { return Math.max(d.x, d.y); })]).nice();
 
         // Add an SVG element with the desired dimensions and margin.
-        var svg = d3.select(".board").append("svg")
-            .attr("id", "board")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+
+        //clear html of .board before updating new SVG
+        var svg = d3.select('.board').html('').append('svg').attr("id", "board")
+            .attr("width", sizing.width + sizing.margin.left + sizing.margin.right)
+            .attr("height", sizing.height + sizing.margin.top + sizing.margin.bottom)
           .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + sizing.margin.left + "," + sizing.margin.top + ")")
             .on("mousemove", function(){
               mousePosition = d3.mouse(this);
               snapshotUpdate();
@@ -101,8 +98,8 @@ angular.module('dashboardGraphics', [])
         var clip = svg.append("clipPath")
             .attr("id", "clip")
           .append("rect")
-            .attr("width", width)
-            .attr("height", height);
+            .attr("width", sizing.width)
+            .attr("height", sizing.height);
 
         // Add the area path.
         svg.append("path")
@@ -113,13 +110,13 @@ angular.module('dashboardGraphics', [])
         // Add the x-axis.
         svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
+            .attr("transform", "translate(0," + sizing.height + ")")
             .call(xAxis);
 
         // Add the y-axis.
         svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(" + width + ",0)")
+            .attr("transform", "translate(" + sizing.width + ",0)")
             .call(yAxis);
 
         // Add the lineA path.
@@ -138,8 +135,8 @@ angular.module('dashboardGraphics', [])
 
         // Add a small label for the symbol name.
         svg.append("text")
-            .attr("x", width - 6)
-            .attr("y", height - 6)
+            .attr("x", sizing.width - 6)
+            .attr("y", sizing.height - 6)
             .style("text-anchor", "end")
             .text('hihi');
 
@@ -150,7 +147,7 @@ angular.module('dashboardGraphics', [])
             .attr("x1", 50)
             .attr("x2", 50)
             .attr("y1", 0)
-            .attr("y1", height);
+            .attr("y1", sizing.height);
 
         fisheyeChart.initialize();
 
@@ -159,7 +156,7 @@ angular.module('dashboardGraphics', [])
               .attr("x1", mousePosition[0])
               .attr("x2", mousePosition[0]);
 
-          var xRatio = mousePosition[0] / width;
+          var xRatio = mousePosition[0] / sizing.width;
           var xIndex = Math.floor(smoothAverages.length * xRatio);
           var date = smoothAverages[xIndex].date;
           //weekly unit
