@@ -176,35 +176,33 @@ angular.module('ratingGraphics', [])
                     scores.push({x: data[i].score.x, y: data[i].score.y});
                   }
                 }
+                // store colleague scores on the scope, so they can be 
+                // redrawn when the page is resized (instead of another GET)
                 scope.colleagueScores = scores;
-                // console.log('successfully got colleague scores');
-                // console.log(scope.colleagueScores);
                 loadAllDots(scores);
                 //get user last score from scope.currentUser
                 var userScore = scope.currentUser.scores[0];
                 scope.userData = [{x: userScore.x, y: userScore.y}];
                 updateUserDots();
               });
-
           } else if(scope.scored){
+            // if page has loaded and user has posted a score load / render
+            // both colleague and user scores
             updateUserDots();
             loadAllDots(scope.colleagueScores);
           } else {
-            // loadAllDots(scope.colleagueScores);
+            // if the page has loaded, but the user hasn't posted
+            // update the user dot prior to submission 
             updateUserDots();
-
           }
 
-
-
           scope.submitScore = function(){
-            //$http POST call
+            // $http POST call
             var score = scope.userData;
             graphApiHelper.submitUserScore(score[0])
               .success(function(data){
                 //load All Dots
                 scope.allowedToVote = false;
-                console.log('submitScore success');
                 graphApiHelper.getCompanyScores()
                   .success(function(data){
                     var scores = [];
@@ -213,12 +211,11 @@ angular.module('ratingGraphics', [])
                         scores.push({x: data[i].score.x, y: data[i].score.y});
                       }
                     }
-                    console.log(data);
-                    // after a successful POST mark set the scope score property to true
+                    // after a successful POST mark set the scope scored property to true
                     scope.scored = true;
+                    // store colleague scores on the scope, so they can be 
+                    // redrawn when the page is resized (instead of another GET)
                     scope.colleagueScores = scores;
-                    // console.log('successfully got colleague after submit scores');
-                    // console.log(scope.colleagueScores);
                     loadAllDots(scores);
                     scope.userData.push(scope.userData[0]);
                     updateUserDots();
