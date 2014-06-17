@@ -14,7 +14,7 @@ angular.module('app.dashboard', ['dashboardGraphics','mockData'])
     //backend data
     $http({
       method: 'GET',
-      url: 'api/companies/' + $scope.currentUser.company + '/scores'
+      url: '/api/companies/' + $scope.currentUser.company + '/scores'
     })
     .success(function(data){
       console.log(data);
