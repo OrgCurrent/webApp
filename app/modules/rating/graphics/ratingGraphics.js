@@ -1,11 +1,11 @@
 "use strict";
 
 angular.module('ratingGraphics', [])
-  .factory('scoresGraph', ['graphApiHelper', function(graphApiHelper){
+  .factory('scoresGraph', ['$window', 'graphApiHelper', function($window, graphApiHelper){
     return {
       initialize: function(scope){
         var pageWidth = parseInt(d3.select(".board").style("width"));
-        var pageHeight = window.innerHeight;
+        var pageHeight = $window.innerHeight;
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
 
         // console.log(pageWidth, pageHeight);
@@ -13,6 +13,14 @@ angular.module('ratingGraphics', [])
         var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
             height = pageHeight - margin.top - margin.bottom - 150,
             width =   pageWidth - margin.left - margin.right - 50;
+
+            // set the height and the width to be equal (to the smaller of the two)
+
+            if(height > width) {
+              height = width;
+            } else {
+              width = height;
+            }
 
         /* 
          * value accessor - returns the value to encode for a given data object.
