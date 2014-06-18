@@ -128,7 +128,6 @@ angular.module('ratingGraphics', [])
 
           var loadAllDots = function(data){
             // draw dots
-
             svg.selectAll(".dot")
                 .data(data)
               .enter().append("circle")
@@ -141,7 +140,12 @@ angular.module('ratingGraphics', [])
                 .attr('opacity', 0)
                 .transition()
                 .duration(1000)
-                .attr('opacity', 1);
+                .attr('opacity', function(d) { 
+                  // this makes the dots / posts more transparent the older they are
+                  var date = d.date;  
+                  var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                  return 1 / ( postAgeDays + 1);
+                });
                 // .on("mouseover", function(d) {
                 //     tooltip.transition()
                 //          .duration(200)
@@ -206,7 +210,7 @@ angular.module('ratingGraphics', [])
                 var scores = [];
                 for(var i = 0; i < data.length; i++){
                   if(data[i].score){
-                    scores.push({x: data[i].score.x, y: data[i].score.y});
+                    scores.push({x: data[i].score.x, y: data[i].score.y,  date: data[i].score.date});
                   }
                 }
                 // store colleague scores on the scope, so they can be 
@@ -241,7 +245,7 @@ angular.module('ratingGraphics', [])
                     var scores = [];
                     for(var i = 0; i < data.length; i++){
                       if(data[i].score){
-                        scores.push({x: data[i].score.x, y: data[i].score.y});
+                        scores.push({x: data[i].score.x, y: data[i].score.y, date: data[i].score.date});
                       }
                     }
                     // after a successful POST mark set the scope scored property to true
