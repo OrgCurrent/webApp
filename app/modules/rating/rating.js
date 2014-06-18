@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.rating', ['ratingGraphics'])
-  .controller('RatingCtrl', ['$scope', '$http', 'scoresGraph', function ($scope, $http, scoresGraph) {
+  .controller('RatingCtrl', ['$window','$scope', '$http', 'scoresGraph', function ($window ,$scope, $http, scoresGraph) {
     console.log($scope.currentUser);
 
     $scope.userData = [];
@@ -15,7 +15,7 @@ angular.module('app.rating', ['ratingGraphics'])
 
     scoresGraph.initialize($scope);
 
-    d3.select(window).on('resize', function(){
+    d3.select($window).on('resize', function(){
       d3.select("svg").remove();
       scoresGraph.initialize($scope);
     });
