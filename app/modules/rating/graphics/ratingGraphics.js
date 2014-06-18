@@ -1,13 +1,23 @@
 "use strict";
 
 angular.module('ratingGraphics', [])
-  .factory('scoresGraph', ['graphApiHelper', function(graphApiHelper){
+  .factory('scoresGraph', ['$window', 'graphApiHelper', function($window, graphApiHelper){
     return {
       initialize: function(scope){
-        
-        var margin = {top: 50, right: 50, bottom: 50, left: 50},
-            width = 500 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+        var pageWidth = parseInt(d3.select(".board").style("width"));
+        var pageHeight = $window.innerHeight;
+        var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
+
+        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
+            height = pageHeight - margin.top - margin.bottom - 150,
+            width =   pageWidth - margin.left - margin.right - 50;
+
+            // set the height and the width to be equal (to the smaller of the two)
+        if(height > width) {
+          height = width;
+        } else {
+          width = height;
+        }
 
         /* 
          * value accessor - returns the value to encode for a given data object.
@@ -28,208 +38,178 @@ angular.module('ratingGraphics', [])
             yMap = function(d) { return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-        // setup fill color
-        // var cValue = function(d) { return d.Manufacturer;},
-        //     color = d3.scale.category10();
-
         // add the graph canvas to the body of the webpage
-        // var ratingSvg = d3.select(".board").append("svg");
 
         var svg = d3.select(".board").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-          .append("g")
+            .on("mousedown", function( ){
+              if(scope.allowedToVote){
+                var mousePos = d3.mouse(this);
+                // if the page is wider, graph is wider 
+                var yaxis = document.getElementsByClassName("y axis")[0].getBoundingClientRect();
+                var yaxisPosition = yaxis.left + yaxis.width / 2;
+
+                var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
+                var xaxisPosition = xaxis.top + xaxis.height/2; //xaxis.bottom + xaxis.height / 2;
+                var topBoard = document.getElementsByClassName("board")[0].getBoundingClientRect().top;
+
+                var newX = ((mousePos[0] - yaxisPosition - 4)*100)/width;
+                var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
+
+                if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
+                  scope.userData =[{x: newX, y: newY}];
+                  updateUserDots();
+                }           
+              }
+            })
+           .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        // add the tooltip area to the webpage
-        var tooltip = d3.select(".board").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
+        xScale.domain([0, 100]);
+        yScale.domain([0, 100]);
+        xAxis.ticks(Math.max(width/50, 2));
+        yAxis.ticks(Math.max(height/50, 2));
 
-        // load data
+        xAxis.tickSize(1,1);
+        yAxis.tickSize(1,1);
 
-        // d3.csv("cereal.csv", function(error, data) {
+        // x-axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+          .append("text")
+            .attr("class", "label")
+            .attr("x", width)
+            .attr("y", -6)
+            .style("text-anchor", "end")
+            .text("Company success");
 
-          // change string (from CSV) into number format
-        //   data.forEach(function(d) {
-        //     d.Calories = +d.Calories;
-        //     d["Protein (g)"] = +d["Protein (g)"];
-        // //    console.log(d);
-        //   });
+        // y-axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Personal success");
 
-          // don't want dots overlapping axis, so add in buffer to data domain
-          // xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
-          // yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+        var loadAllDots = function(data){
+          // draw dots
+          svg.selectAll(".dot")
+              .data(data)
+            .enter().append("circle")
+              .attr("class", "dot")
+              .attr("r", dotSize)
+              .attr("cx", xMap)
+              .attr("cy", yMap)
+              .style("fill", "red")
+              .attr('opacity', 0)
+            .transition()
+              .duration(1000)
+              .attr('opacity', function(d) { 
+                // this makes the dots / posts more transparent the older they are
+                var date = d.date;  
+                var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                return 1 / ( postAgeDays + 1);
+              });  
+        };
 
+        var updateUserDots = function(data){
+          var userDots = svg.selectAll(".user-dot")
+              .data(scope.userData);
+              // .data(data);
+          // userDots.select('circle').remove();
 
-          xScale.domain([0, 100]);
-          yScale.domain([0, 100]);
+          userDots
+            .enter().append("circle")
+              .attr("class", "user-dot")
+                .transition().duration(1000).ease('linear')
+              .attr("r", dotSize*2)
+              .attr("cx", xMap)
+              .attr("cy", yMap)
+              .style("fill", "blue");
 
-          // x-axis
-          svg.append("g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + height + ")")
-              .call(xAxis)
-            .append("text")
-              .attr("class", "label")
-              .attr("x", width)
-              .attr("y", -6)
-              .style("text-anchor", "end")
-              .text("Company success");
+          userDots
+              .attr("class", "user-dot")
+              .attr("r", dotSize*2)
+              .attr("cx", xMap)
+              .attr("cy", yMap)
+              .style("fill", "blue");
+        };
 
-          // y-axis
-          svg.append("g")
-              .attr("class", "y axis")
-              .call(yAxis)
-            .append("text")
-              .attr("class", "label")
-              .attr("transform", "rotate(-90)")
-              .attr("y", 6)
-              .attr("dy", ".71em")
-              .style("text-anchor", "end")
-              .text("Personal success");
-
-          var loadAllDots = function(data){
-            // draw dots
-            svg.selectAll(".dot")
-                .data(data)
-              .enter().append("circle")
-                .attr("class", "dot")
-                .attr("r", 10)
-                .attr("cx", xMap)
-                .attr("cy", yMap)
-                // .style("fill", function(d) { return color(cValue(d));}) 
-                .style("fill", "red")
-                .attr('opacity', 0)
-                .transition()
-                .duration(1000)
-                .attr('opacity', 1);
-                // .on("mouseover", function(d) {
-                //     tooltip.transition()
-                //          .duration(200)
-                //          .style("opacity", .9);
-                //     tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
-                //     + ", " + yValue(d) + ")")
-                //          .style("left", (d3.event.pageX + 5) + "px")
-                //          .style("top", (d3.event.pageY - 28) + "px");
-                // })
-                // .on("mouseout", function(d) {
-                //     tooltip.transition()
-                //          .duration(500)
-                //          .style("opacity", 0);
-                // });            
-          };
-
-          var updateUserDots = function(data){
-            var userDots = svg.selectAll(".user-dot")
-                .data(scope.userData);
-                // .data(data);
-            // userDots.select('circle').remove();
-
-            userDots
-              .enter().append("circle")
-                .attr("class", "user-dot")
-                .attr("r", 30)
-                .attr("cx", xMap)
-                .attr("cy", yMap)
-                .style("fill", "blue");
-
-            userDots
-                .attr("class", "user-dot")
-                .attr("r", 30)
-                .attr("cx", xMap)
-                .attr("cy", yMap)
-                .style("fill", "blue");
-          };
-
-          //testing click rating functionality
-
-          var board = d3.select('.board').select('svg');
-          board.on("mousedown", function(){
-            if(scope.allowedToVote){
-              var mousePos = d3.mouse(this);
-              if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
-                console.log(mousePos);
-                var newX = (mousePos[0] - margin.left) / 4;
-                var newY = (500 - margin.top - mousePos[1]) / 4;
-                console.log(newX, newY);
-                scope.userData =[{x: newX, y: newY}];                
-                updateUserDots();
-              }
-            }
-          });
-
-          if(scope.scored){
-            graphApiHelper.getCompanyScores()
-              .success(function(data){
-                var scores = [];
-                for(var i = 0; i < data.length; i++){
-                  if(data[i].score){
-                    scores.push({x: data[i].score.x, y: data[i].score.y});
-                  }
+        // if page hasn't initialized and the player has already scored today
+        // retrieve the company scores immediately and display them
+        if(scope.scored && !scope.initialized){
+          graphApiHelper.getCompanyScores()
+            .success(function(data){
+              var scores = [];
+              for(var i = 0; i < data.length; i++){
+                if(data[i].score){
+                  scores.push({x: data[i].score.x, y: data[i].score.y,  date: data[i].score.date});
                 }
-                loadAllDots(scores);
-                //get user last score from scope.currentUser
-                var userScore = scope.currentUser.scores[0];
-                scope.userData = [{x: userScore.x, y: userScore.y}];
-                updateUserDots();
-              });
+              }
+              // store colleague scores on the scope, so they can be 
+              // redrawn when the page is resized (instead of another GET)
+              scope.colleagueScores = scores;
+              loadAllDots(scores);
+              //get user last score from scope.currentUser
+              var userScore = scope.currentUser.scores[0];
+              scope.userData = [{x: userScore.x, y: userScore.y}];
+              updateUserDots();
+            });
+        } else if(scope.scored){
+          // if page has loaded and user has posted a score load / render
+          // both colleague and user scores
+          updateUserDots();
+          loadAllDots(scope.colleagueScores);
+        } else {
+          // if the page has loaded, but the user hasn't posted
+          // update the user dot prior to submission 
+          updateUserDots();
+        }
 
-          }else{
+        scope.submitScore = function(){
+          // $http POST call
+          var score = scope.userData;
+          graphApiHelper.submitUserScore(score[0])
+            .success(function(data){
 
-            scope.submitScore = function(){
-              //$http POST call
-              var score = scope.userData;
-              graphApiHelper.submitUserScore(score[0])
+              //load All Dots
+              scope.allowedToVote = false;
+
+              graphApiHelper.getCompanyScores()
                 .success(function(data){
-                  //load All Dots
-                  scope.allowedToVote = false;
-                  console.log('submitScore success');
-                  graphApiHelper.getCompanyScores()
-                    .success(function(data){
-                      var scores = [];
-                      for(var i = 0; i < data.length; i++){
-                        if(data[i].score){
-                          scores.push({x: data[i].score.x, y: data[i].score.y});
-                        }
-                      }
-                      loadAllDots(scores);
-                      scope.userData.push(scope.userData[0]);
-                      updateUserDots();
-                    });
+                  var scores = [];
+                  for(var i = 0; i < data.length; i++){
+                    if(data[i].score){
+                      scores.push({x: data[i].score.x, y: data[i].score.y, date: data[i].score.date});
+                    }
+                  }
+                  // after a successful POST mark set the scope scored property to true
+                  scope.scored = true;
+
+                  // store colleague scores on the scope, so they can be 
+                  // redrawn when the page is resized (instead of another GET)
+                  scope.colleagueScores = scores;
+
+                  loadAllDots(scores);
+
+                  scope.userData.push(scope.userData[0]);
+
+                  updateUserDots();
                 });
-            };
-          }
+            });
+        };
 
-
-          // draw legend
-          // var legend = svg.selectAll(".legend")
-          //     .data(color.domain())
-          //   .enter().append("g")
-          //     .attr("class", "legend")
-          //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-          // // draw legend colored rectangles
-          // legend.append("rect")
-          //     .attr("x", width - 18)
-          //     .attr("width", 18)
-          //     .attr("height", 18)
-          //     .style("fill", color);
-
-          // // draw legend text
-          // legend.append("text")
-          //     .attr("x", width - 24)
-          //     .attr("y", 9)
-          //     .attr("dy", ".35em")
-          //     .style("text-anchor", "end")
-          //     .text(function(d) { return d;})
-        // });
+        scope.initialized = true;
       }
     }
   }])
-  .factory('ratingGraph', function(){
-
-  })
   .factory('graphApiHelper', ['$rootScope', '$http', function($rootScope, $http){
 
     return {
