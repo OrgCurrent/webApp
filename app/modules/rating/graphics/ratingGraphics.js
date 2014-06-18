@@ -10,7 +10,7 @@ angular.module('ratingGraphics', [])
 
         // console.log(pageWidth, pageHeight);
 
-        var margin = {top: pageHeight/10, right: pageWidth/15, bottom: pageHeight/10, left: pageWidth/15},
+        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/15},
             width = pageWidth - margin.left - margin.right,
             height = pageHeight - 100 - margin.top - margin.bottom;
 
@@ -53,12 +53,14 @@ angular.module('ratingGraphics', [])
                   var yaxisPosition = yaxis.left + yaxis.width / 2;
 
                   var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
-                  var xaxisPosition = xaxis.bottom + xaxis.height / 2;
+                  var xaxisPosition = xaxis.top + xaxis.height/2; //xaxis.bottom + xaxis.height / 2;
+                  var topBoard = document.getElementsByClassName("board")[0].getBoundingClientRect().top;
 
-                  var newX = ((mousePos[0] - yaxisPosition)*100)/width;
-                  var newY =  ((xaxisPosition - document.getElementsByTagName("h2")[0].getBoundingClientRect().bottom - mousePos[1])*73)/height;
-                  //console.log('newy');
-                  //console.log(newy); // newY);
+                  var newX = ((mousePos[0] - yaxisPosition - 4)*100)/width;
+                  var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
+                  // var newY =  ((xaxisPosition - document.getElementsByTagName("h2")[0].getBoundingClientRect().bottom - mousePos[1])*73)/height;
+                  console.log('newy');
+                  console.log(newY); // newY);
                   // console.log('pageWidth Height');
                   // console.log(pageWidth, pageHeight);
                   scope.userData =[{x: newX, y: newY}];                
@@ -94,6 +96,10 @@ angular.module('ratingGraphics', [])
           yScale.domain([0, 100]);
           xAxis.ticks(Math.max(width/50, 2));
           yAxis.ticks(Math.max(height/50, 2));
+
+          xAxis.tickSize(1,1);
+          yAxis.tickSize(1,1);
+
           // x-axis
           svg.append("g")
               .attr("class", "x axis")
@@ -159,6 +165,7 @@ angular.module('ratingGraphics', [])
             userDots
               .enter().append("circle")
                 .attr("class", "user-dot")
+                  .transition().duration(1000).ease('linear')
                 .attr("r", dotSize*2)
                 .attr("cx", xMap)
                 .attr("cy", yMap)
