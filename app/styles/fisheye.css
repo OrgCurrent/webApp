@@ -1,11 +1,17 @@
-#fisheye {
+.fisheye-show{
   position: absolute;
   left: 0;
   top: 0;
   background-color: white;
   border: 2px solid black;
 }
+.fisheye-hide{
+  border: 0;
+  /*display: none;*/
+
+}
 
 #fisheye circle {
   /*fill: black;*/
 }
+

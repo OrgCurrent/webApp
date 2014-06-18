@@ -10,7 +10,7 @@ angular.module('dashboardGraphics', [])
         var scores = data[1];
         var averages = data[2];
 
-        console.log(averages);
+        // console.log(averages);
 
         //weekly averages test
         // var weeklyAverages = [];
@@ -54,13 +54,6 @@ angular.module('dashboardGraphics', [])
             xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true),
             yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
 
-        // An area generator, for the light fill.
-        var area = d3.svg.area()
-            .interpolate("monotone")
-            .x(function(d) { return x(d.date); })
-            .y0(sizing.height)
-            .y1(function(d) { return y(d.y); });
-
         // A line generator
         var lineA = d3.svg.line()
             .interpolate("monotone")
@@ -75,7 +68,7 @@ angular.module('dashboardGraphics', [])
 
         // Compute the minimum and maximum date, and the maximum a/b.
         x.domain([smoothAverages[0].date, smoothAverages[smoothAverages.length - 1].date]);
-        y.domain([0, d3.max(smoothAverages, function(d) { return Math.max(d.x, d.y); })]).nice();
+        y.domain([0, 100]).nice();
 
         // Add an SVG element with the desired dimensions and margin.
 
@@ -86,12 +79,18 @@ angular.module('dashboardGraphics', [])
           .append("g")
             .attr("transform", "translate(" + sizing.margin.left + "," + sizing.margin.top + ")")
             .on("mousemove", function(){
-              mousePosition = d3.mouse(this);
+              scope.mousePosition = d3.mouse(this);
               snapshotUpdate();
             })
             .on('click', function(){
-              var fisheye = svg.select('.fisheye');
-              if(fisheye.attr()){}
+              if(scope.showFisheye){
+                d3.select('#fisheye')
+                    .attr('class', 'fisheye-hide')
+              }else{
+                d3.select('#fisheye')
+                    .attr('class', 'fisheye-show');
+              }
+              scope.showFisheye = !scope.showFisheye;
             });
 
         // Add the clip path.
@@ -100,12 +99,12 @@ angular.module('dashboardGraphics', [])
           .append("rect")
             .attr("width", sizing.width)
             .attr("height", sizing.height);
-
-        // Add the area path.
-        svg.append("path")
-            .attr("class", "area")
-            .attr("clip-path", "url(#clip)")
-            .attr("d", area(smoothAverages));
+            
+        // Add 'background' for the fisheye scroll
+        var background = svg.append('rect')
+            .attr('width', sizing.width)
+            .attr('height', sizing.height)
+            .attr('fill', 'transparent');
 
         // Add the x-axis.
         svg.append("g")
@@ -133,63 +132,117 @@ angular.module('dashboardGraphics', [])
             .attr("clip-path", "url(#clip)")
             .attr("d", lineB(smoothAverages));
 
-        // Add a small label for the symbol name.
+        // Add 'Company success' x-label
         svg.append("text")
-            .attr("x", sizing.width - 6)
-            .attr("y", sizing.height - 6)
-            .style("text-anchor", "end")
-            .text('hihi');
+            .attr('id', 'xText')
+            .attr("x", scope.mousePosition[0] + 5)
+            .attr("y", sizing.height * (100 - smoothAverages[0].x) / 100 - 10)
+            .style("text-anchor", "start")
+            .text('Company success: ' + smoothAverages[0].x.toFixed(1));
 
-        var mousePosition = [50, 0];
+        // Add 'Self success' y-label
+        svg.append("text")
+            .attr('id', 'yText')
+            .attr("x", scope.mousePosition[0] + 5)
+            .attr("y", sizing.height * (100 - smoothAverages[0].y) / 100 - 10)
+            .style("text-anchor", "start")
+            .text('Self success: ' + smoothAverages[0].y.toFixed(1));
 
         var snapshotLine = svg.append("line")
             .attr("class", "snapshot-line")
-            .attr("x1", 50)
-            .attr("x2", 50)
+            .attr("x1", scope.mousePosition[0])
+            .attr("x2", scope.mousePosition[0])
             .attr("y1", 0)
             .attr("y1", sizing.height);
 
-        fisheyeChart.initialize();
+        fisheyeChart.render(smoothAverages[0].date, users, scope);
 
         var snapshotUpdate = function(){
-          snapshotLine.data(mousePosition)
-              .attr("x1", mousePosition[0])
-              .attr("x2", mousePosition[0]);
 
-          var xRatio = mousePosition[0] / sizing.width;
-          var xIndex = Math.floor(smoothAverages.length * xRatio);
-          var date = smoothAverages[xIndex].date;
-          //weekly unit
-          // var xIndex = Math.floor(averages.length * xRatio / 7) * 7;
-          // var date = averages[xIndex].date;
-          var dateStr = timeFormat.format(date);
+          if(scope.mousePosition[0] < sizing.width){
 
-          scope.$apply(function(){
-            scope.snapshotDate = dateStr;
-          });
-          
-          fisheyeChart.update(date, users, mousePosition);
+            snapshotLine.data(scope.mousePosition)
+                .attr("x1", scope.mousePosition[0])
+                .attr("x2", scope.mousePosition[0]);
+
+            var xRatio = scope.mousePosition[0] / sizing.width;
+            //swift xPos left slightly to accommodate last date
+            var xPos = (smoothAverages.length - 1) * xRatio + 0.2;
+            var xIndex = Math.floor(xPos);
+            var date = smoothAverages[xIndex].date;
+            var dateStr = timeFormat.format(date);
+
+            //xText tag
+            svg.select('#xText')
+                .attr('x', scope.mousePosition[0] + 5)
+                .attr('y', function(d, i){
+                  var lastHeight = sizing.height * (100 - smoothAverages[xIndex].x) / 100;
+                  if(xIndex < smoothAverages.length - 1){
+                    var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].x) / 100;
+                    var displacement = xPos - xIndex;
+
+                  //substract 10 to swift it upwards
+                    return lastHeight + displacement * (nextHeight - lastHeight) - 10;
+                  }else{
+                    return lastHeight - 10;
+                  }
+                })
+                .text('Company success: ' + smoothAverages[xIndex].x.toFixed(1));
+
+            //yText tag
+            svg.select('#yText')
+                .attr('x', scope.mousePosition[0] + 5)
+                .attr('y', function(d, i){
+                  var lastHeight = sizing.height * (100 - smoothAverages[xIndex].y) / 100;
+                  if(xIndex < smoothAverages.length - 1){
+                    var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].y) / 100;
+                    var displacement = xPos - xIndex;
+
+                    //substract 10 to swift it upwards
+                    return lastHeight + displacement * (nextHeight - lastHeight) - 10;
+                  }else{
+                    return lastHeight - 10;
+                  }
+                })
+                .text('Self success: ' + smoothAverages[xIndex].y.toFixed(1));
+
+            scope.$apply(function(){
+              scope.snapshotDate = dateStr;
+            });
+            
+            fisheyeChart.render(date, users, scope);
+          }
         };
+
       }
     };
   }])
 
-  .factory('fisheyeChart', function(){
+  .factory('fisheyeChart', ['timeFormat', function(timeFormat){
     return {
-      initialize: function(){
-        var fisheye = d3.select('.board').append('svg')
-          .attr('id', 'fisheye')
-          // .style('display', 'none')
-          .attr('width', 200)
-          .attr('height', 200);
-      },
-      update: function(date, users, mousePosition){
+      render: function(date, users, scope){
 
         var fisheye = d3.select('#fisheye');
+        if(fisheye[0][0] === null){
+          fisheye = d3.select('.board').append('svg')
+            .attr('id', 'fisheye')
+            //hide on page load
+            .attr('class', 'fisheye-hide')
+            .attr('width', 200)
+            .attr('height', 200);
+
+          fisheye.append('text');
+        }
+
+        fisheye.select("text")
+            .attr("x", 5)
+            .attr("y", 15)
+            .style("text-anchor", "start")
+            .text(timeFormat.format(date));
 
         // fisheye.style('background-color', 'red');
         // to be refactored
-        fisheye.style('left', mousePosition[0]);
+        fisheye.style('left', Math.max(90, Math.min(scope.mousePosition[0], scope.sizing.width - 100)));
 
         var randomColor = function(){
           return 'rgb(' + Math.floor(Math.random() * 256) + ',' + 255 + ',' + Math.floor(Math.random() * 256) + ')';
@@ -203,90 +256,144 @@ angular.module('dashboardGraphics', [])
           .append('circle')
           .attr('fill', function(d){return randomColor();})
           .attr('cx', function(d){
-            var xSum = 0;
-            var count = 0;
-            for(var i = 0; i < d.scores.length; i++){
-              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-                xSum += d.scores[i].x;
-                count++;
-              }
-            }
-            return count > 0 ? xSum / count * 2 : 100;
-          })
-          // .attr('cx', function(d){
-          //   for(var i = 0; i < d.scores.length; i++){
-          //     var 
-          //     if(d.scores[i].date - date > 0){
-          //       return i > 0 ? d.scores[i-1].x * 2: d.scores[i].x * 2;
-          //     }
-          //   }
-          //   return d.scores[d.scores.length - 1].x * 2;
-          // })
-          .attr('cy', function(d){
-            var ySum = 0;
-            var count = 0;
-            for(var i = 0; i < d.scores.length; i++){
-              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-                ySum += d.scores[i].y;
-                count++;
-              }
-            }
-            return count > 0 ? 200 - ySum / count * 2 : 100;
-          })
-          // .attr('cy', function(d){
-          //   for(var i = 0; i < d.scores.length; i++){
-          //     if(d.scores[i].date - date > 0){
-          //       return i > 0 ? 200 - d.scores[i-1].y * 2: 200 - d.scores[i].y * 2;
-          //     }
-          //   }
-          //   return 200 - d.scores[d.scores.length - 1].y * 2;
-          // })
-          .attr('r', 5);
+            // 7 day average
+            // var xSum = 0;
+            // var count = 0;
+            // for(var i = 0; i < d.scores.length; i++){
+            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+            //     xSum += d.scores[i].x;
+            //     count++;
+            //   }
+            // }
+            // return count > 0 ? xSum / count * 2 : d.scores[0].x * 2;
 
+            //instant score
+            for(var i = d.scores.length - 1; i >= 0; i--){
+              if(date - d.scores[i].date < 0){
+                //same date but later
+                return d.scores[i].x * 2;
+              }
+            }
+          })
+          .attr('cy', function(d){
+            // 7 day average
+            // var ySum = 0;
+            // var count = 0;
+            // for(var i = 0; i < d.scores.length; i++){
+            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+            //     ySum += d.scores[i].y;
+            //     count++;
+            //   }
+            // }
+            // return count > 0 ? 200 - ySum / count * 2 : 200 - d.scores[0].y * 2;
+
+            //instant score
+            for(var i = d.scores.length - 1; i >= 0; i--){
+              if(date - d.scores[i].date < 0){
+                //same date but later
+                return 200 - d.scores[i].y * 2;
+              }
+            }
+          })
+          .attr('r', 5);
 
         //score updates
         scorePoints.transition()
           .attr('cx', function(d){
-            var xSum = 0;
-            var count = 0;
-            for(var i = 0; i < d.scores.length; i++){
-              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-                xSum += d.scores[i].x;
-                count++;
-              }
-            }
-            return count > 0 ? xSum / count * 2 : 100;
-          })
-          // .attr('cx', function(d){
-          //   for(var i = 0; i < d.scores.length; i++){
-          //     var 
-          //     if(d.scores[i].date - date > 0){
-          //       return i > 0 ? d.scores[i-1].a * 2: d.scores[i].a * 2;
-          //     }
-          //   }
-          //   return d.scores[d.scores.length - 1].a * 2;
-          // })
-          .attr('cy', function(d){
-            var ySum = 0;
-            var count = 0;
-            for(var i = 0; i < d.scores.length; i++){
-              if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-                ySum += d.scores[i].y;
-                count++;
-              }
-            }
-            return count > 0 ? 200 - ySum / count * 2 : 100;
-          })
-          // .attr('cy', function(d){
-          //   for(var i = 0; i < d.scores.length; i++){
-          //     if(d.scores[i].date - date > 0){
-          //       return i > 0 ? 200 - d.scores[i-1].y * 2: 200 - d.scores[i].y * 2;
-          //     }
-          //   }
-          //   return 200 - d.scores[d.scores.length - 1].y * 2;
-          // })
+            // 7 day average
+            // var xSum = 0;
+            // var count = 0;
+            // for(var i = 0; i < d.scores.length; i++){
+            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+            //     xSum += d.scores[i].x;
+            //     count++;
+            //   }
+            // }
+            // return count > 0 ? xSum / count * 2 : d.scores[0].x * 2;
 
+            //instant score
+            for(var i = d.scores.length - 1; i >= 0; i--){
+              if(date - d.scores[i].date < 0){
+                //same date but later
+                return d.scores[i].x * 2;
+              }
+            }
+          })
+          .attr('cy', function(d){
+            // 7 day average
+            // var ySum = 0;
+            // var count = 0;
+            // for(var i = 0; i < d.scores.length; i++){
+            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
+            //     ySum += d.scores[i].y;
+            //     count++;
+            //   }
+            // }
+            // return count > 0 ? 200 - ySum / count * 2 : 200 - d.scores[0].y * 2;
+
+            //instant score
+            for(var i = d.scores.length - 1; i >= 0; i--){
+              if(date - d.scores[i].date < 0){
+                //same date but later
+                return 200 - d.scores[i].y * 2;
+              }
+            }
+          })
+          .attr('fill', function(d){
+            for(var i = d.scores.length - 1; i >= 0; i--){
+              if(date - d.scores[i].date < 0 && i < d.scores.length - 1){
+                // console.log(users);
+                // console.log(date);
+                // console.log(d.scores[i+1].date);
+                var x1 = d.scores[i].x
+                var x0 = d.scores[i+1].x;
+                var y1 = d.scores[i].y;
+                var y0 = d.scores[i+1].y;
+
+                var dx = x1 - x0;
+                var dy = y1 - y0;
+
+                var d = dx + dy;
+
+                var redness = Math.max(0, Math.min(255, (100-d) * (255/200)));
+                var blueness = Math.max(0, Math.min(255, (d+100) * (255/200)));
+
+                //d 200 => 
+                //d 0 => 127.5
+                //d -200 => 255
+
+                //d -200
+
+                //redness and blueness of dot
+
+                return 'rgb(' + redness + ',0,' + blueness + ')';
+
+                if(dx + dy){
+                  return 'rgb(0,0,255)';
+                }else{
+                  return 'rgb(255,0,0)';
+                }
+              }
+            }
+          })
+          // .on('click', function(){
+          //   console.log('d');
+          // })
+ 
           .duration(100);
+
+        scorePoints.on('mouseover', function(d){
+          for(var i = d.scores.length - 1; i >= 0; i--){
+            if(date - d.scores[i].date < 0 && i < d.scores.length - 1){
+              var x1 = d.scores[i].x
+              var y1 = d.scores[i].y;
+
+              var i1 = Math.pow(x1 * x1 + y1 * y1, 0.5);
+              console.log([x1, y1]);
+              break;
+            }
+          }
+        });
 
         //old score exit
         scorePoints.exit()
@@ -296,7 +403,7 @@ angular.module('dashboardGraphics', [])
           .remove();
       }
     };
-  })
+  }])
 
   .factory('timeFormat', function(){
     return {
@@ -304,21 +411,3 @@ angular.module('dashboardGraphics', [])
       format: d3.time.format("%d-%b-%y")
     };
   });
-
-  //not used now
-  // .directive('mainChart', function(){
-  //   var link = function(scope, element, attr){
-  //     var svg = d3.select(element[0])
-  //       .append('svg')
-  //       .attr('class', 'main-chart');
-  //       // .attr("width", width + margin.left + margin.right)
-        
-  //     console.log(svg);
-  //   };
-
-  //   return {
-  //     restrict: 'E',
-  //     link: link,
-  //     scope: true
-  //   };
-  // });

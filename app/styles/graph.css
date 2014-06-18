@@ -5,8 +5,15 @@
 */
 path.line {
   fill: none;
-  stroke: #666;
   stroke-width: 1.5px;
+}
+
+#lineA{
+  stroke: green;
+}
+
+#lineB{
+  stroke: blue;
 }
 
 path.area {
@@ -26,7 +33,9 @@ path.area {
 }
 
 .x.axis path {
-  display: none;
+  /*display: none;*/
+  fill: none;
+  stroke: #000;
 }
 
 .y.axis line, .y.axis path {

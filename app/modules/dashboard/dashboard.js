@@ -1,25 +1,25 @@
 'use strict';
 
-angular.module('app.dashboard', ['dashboardGraphics','mockData'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'mainChart', 'generateUsers', 'formatUsers', function ($scope, $http, $location, $window, mainChart, generateUsers, formatUsers) {
+angular.module('app.dashboard', ['dashboardGraphics'])
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'mainChart', 'formatUsers', function ($scope, $http, $location, $window, mainChart, formatUsers) {
 
     console.log($scope.currentUser);
 
-    var sizing = {
+    $scope.sizing = {
       margin: {top: 10, right: 80, bottom: 40, left: 80},
     };
-    sizing.width = $('.board').width() - sizing.margin.left - sizing.margin.right;
-    sizing.height = ($window.innerHeight - 240) - sizing.margin.top - sizing.margin.bottom;
-    console.log('here here');
-    console.log($('.board').height());
+    $scope.sizing.width = $('.board').width() - $scope.sizing.margin.left - $scope.sizing.margin.right;
+    $scope.sizing.height = ($window.innerHeight - 120) - $scope.sizing.margin.top - $scope.sizing.margin.bottom;
 
-    //listener for window resizing
+    //listener for window re$scope.sizing
     $window.addEventListener('resize', function(){
-      sizing.width = $('.board').width() - sizing.margin.left - sizing.margin.right;
-      sizing.height = ($window.innerHeight - 240) - sizing.margin.top - sizing.margin.bottom;
-      mainChart.render($scope.users, sizing, $scope);
+      $scope.sizing.width = $('.board').width() - $scope.sizing.margin.left - $scope.sizing.margin.right;
+      $scope.sizing.height = ($window.innerHeight - 120) - $scope.sizing.margin.top - $scope.sizing.margin.bottom;
+      mainChart.render($scope.users, $scope.sizing, $scope);
     });
 
+    $scope.mousePosition = [50, 0];
+    $scope.showFisheye = false;
 
     //mock data
     // var data = generateUsers(10, 20);
@@ -31,9 +31,8 @@ angular.module('app.dashboard', ['dashboardGraphics','mockData'])
       url: '/api/companies/' + $scope.currentUser.company + '/scores'
     })
     .success(function(data){
-      console.log(data);
       $scope.users = formatUsers(data);
-      mainChart.render($scope.users, sizing, $scope);
+      mainChart.render($scope.users, $scope.sizing, $scope);
     })
     .error(function(err){
       console.error(err);
@@ -54,6 +53,64 @@ angular.module('app.dashboard', ['dashboardGraphics','mockData'])
     //   t.select("#lineA").attr("d", lineA(averages));
     //   t.select("#lineB").attr("d", lineB(averages));
     // }
+  }])
+  .factory('formatUsers', [function(){
+    return function(newUsers){
+
+      var parse = d3.time.format("%d-%b-%y").parse;
+      var format = d3.time.format("%d-%b-%y");
+
+      //generate random user data
+      // var newUsers = [];
+      // for(var i = 0; i < n; i++){
+      //   newUsers.push(randomUser(s));
+      // }
+
+      var sortedScores = {};
+      for(var i = 0; i < newUsers.length; i++){
+        for(var j = 0; j < newUsers[i].scores.length; j++){
+          var score = newUsers[i].scores[j];
+          score.date = new Date(score.date);
+          var dataStr = format(score.date);
+          if(sortedScores[dataStr]){
+
+            sortedScores[dataStr].push({
+              x: score.x,
+              y: score.y,
+              user_id: newUsers[i]._id
+            });
+          }else{
+            sortedScores[dataStr] = [{
+              x: score.x,
+              y: score.y,
+              user_id: newUsers[i]._id
+            }];
+          }
+        }
+      }
+
+      var averageScores = [];
+      for(var date in sortedScores){
+        var xSum = 0;
+        var ySum = 0;
+        var count = sortedScores[date].length;
+        for(var i = 0; i < count; i++){
+          xSum += sortedScores[date][i].x;
+          ySum += sortedScores[date][i].y;
+        }
+        averageScores.push({
+          date: parse(date),
+          x: xSum / count,
+          y: ySum / count
+        });
+      }
+
+      averageScores.sort(function(obj1,obj2){
+        return obj1.date - obj2.date;
+      });
+
+      return [newUsers, sortedScores, averageScores]; 
+    };
   }]);
 
   /*{
