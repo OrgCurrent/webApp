@@ -10,9 +10,9 @@ angular.module('ratingGraphics', [])
 
         // console.log(pageWidth, pageHeight);
 
-        var margin = {top: pageHeight/10, right: pageWidth/15, bottom: pageHeight/5, left: pageWidth/15},
-            width = pageWidth/1.75 - margin.left - margin.right,
-            height = pageHeight - 150 - margin.top - margin.bottom;
+        var margin = {top: pageHeight/10, right: pageWidth/15, bottom: pageHeight/10, left: pageWidth/15},
+            width = pageWidth - margin.left - margin.right,
+            height = pageHeight - 100 - margin.top - margin.bottom;
 
         /* 
          * value accessor - returns the value to encode for a given data object.
@@ -47,21 +47,18 @@ angular.module('ratingGraphics', [])
               if(scope.allowedToVote){
                 var mousePos = d3.mouse(this);
                 // if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
-                  console.log('xmousePos');
-                  console.log(mousePos[0]);
+                  console.log(mousePos[0], mousePos[1]);
                   // if the page is wider, graph is wider 
                   var yaxis = document.getElementsByClassName("y axis")[0].getBoundingClientRect();
                   var yaxisPosition = yaxis.left + yaxis.width / 2;
 
                   var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
-                  var xaxisPosition = xaxis.left + xaxis.width / 2;
-
-                  console.log(yaxisPosition); //33
+                  var xaxisPosition = xaxis.bottom + xaxis.height / 2;
 
                   var newX = ((mousePos[0] - yaxisPosition)*100)/width;
-                  var newY = (pageHeight - 150 - margin.top - mousePos[1]) / 4;
-                  console.log('newx');
-                  console.log(newX); // newY);
+                  var newY =  ((xaxisPosition - document.getElementsByTagName("h2")[0].getBoundingClientRect().bottom - mousePos[1])*73)/height;
+                  //console.log('newy');
+                  //console.log(newy); // newY);
                   // console.log('pageWidth Height');
                   // console.log(pageWidth, pageHeight);
                   scope.userData =[{x: newX, y: newY}];                
@@ -73,9 +70,9 @@ angular.module('ratingGraphics', [])
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // add the tooltip area to the webpage
-        var tooltip = d3.select(".board").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
+        // var tooltip = d3.select(".board").append("div")
+        //     .attr("class", "tooltip")
+        //     .style("opacity", 0);
 
         // load data
 
@@ -95,7 +92,8 @@ angular.module('ratingGraphics', [])
 
           xScale.domain([0, 100]);
           yScale.domain([0, 100]);
-
+          xAxis.ticks(Math.max(width/50, 2));
+          yAxis.ticks(Math.max(height/50, 2));
           // x-axis
           svg.append("g")
               .attr("class", "x axis")
