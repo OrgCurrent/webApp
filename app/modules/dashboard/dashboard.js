@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app.dashboard', ['dashboardGraphics'])
+angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
   .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'mainChart', 'formatUsers', function ($scope, $http, $location, $window, mainChart, formatUsers) {
 
     console.log($scope.currentUser);
@@ -54,64 +54,64 @@ angular.module('app.dashboard', ['dashboardGraphics'])
     //   t.select("#lineB").attr("d", lineB(averages));
     // }
   }])
-  .factory('formatUsers', [function(){
-    return function(newUsers){
+  // .factory('formatUsers', [function(){
+  //   return function(newUsers){
 
-      var parse = d3.time.format("%d-%b-%y").parse;
-      var format = d3.time.format("%d-%b-%y");
+  //     var parse = d3.time.format("%d-%b-%y").parse;
+  //     var format = d3.time.format("%d-%b-%y");
 
-      //generate random user data
-      // var newUsers = [];
-      // for(var i = 0; i < n; i++){
-      //   newUsers.push(randomUser(s));
-      // }
+  //     //generate random user data
+  //     // var newUsers = [];
+  //     // for(var i = 0; i < n; i++){
+  //     //   newUsers.push(randomUser(s));
+  //     // }
 
-      var sortedScores = {};
-      for(var i = 0; i < newUsers.length; i++){
-        for(var j = 0; j < newUsers[i].scores.length; j++){
-          var score = newUsers[i].scores[j];
-          score.date = new Date(score.date);
-          var dataStr = format(score.date);
-          if(sortedScores[dataStr]){
+  //     var sortedScores = {};
+  //     for(var i = 0; i < newUsers.length; i++){
+  //       for(var j = 0; j < newUsers[i].scores.length; j++){
+  //         var score = newUsers[i].scores[j];
+  //         score.date = new Date(score.date);
+  //         var dataStr = format(score.date);
+  //         if(sortedScores[dataStr]){
 
-            sortedScores[dataStr].push({
-              x: score.x,
-              y: score.y,
-              user_id: newUsers[i]._id
-            });
-          }else{
-            sortedScores[dataStr] = [{
-              x: score.x,
-              y: score.y,
-              user_id: newUsers[i]._id
-            }];
-          }
-        }
-      }
+  //           sortedScores[dataStr].push({
+  //             x: score.x,
+  //             y: score.y,
+  //             user_id: newUsers[i]._id
+  //           });
+  //         }else{
+  //           sortedScores[dataStr] = [{
+  //             x: score.x,
+  //             y: score.y,
+  //             user_id: newUsers[i]._id
+  //           }];
+  //         }
+  //       }
+  //     }
 
-      var averageScores = [];
-      for(var date in sortedScores){
-        var xSum = 0;
-        var ySum = 0;
-        var count = sortedScores[date].length;
-        for(var i = 0; i < count; i++){
-          xSum += sortedScores[date][i].x;
-          ySum += sortedScores[date][i].y;
-        }
-        averageScores.push({
-          date: parse(date),
-          x: xSum / count,
-          y: ySum / count
-        });
-      }
+  //     var averageScores = [];
+  //     for(var date in sortedScores){
+  //       var xSum = 0;
+  //       var ySum = 0;
+  //       var count = sortedScores[date].length;
+  //       for(var i = 0; i < count; i++){
+  //         xSum += sortedScores[date][i].x;
+  //         ySum += sortedScores[date][i].y;
+  //       }
+  //       averageScores.push({
+  //         date: parse(date),
+  //         x: xSum / count,
+  //         y: ySum / count
+  //       });
+  //     }
 
-      averageScores.sort(function(obj1,obj2){
-        return obj1.date - obj2.date;
-      });
+  //     averageScores.sort(function(obj1,obj2){
+  //       return obj1.date - obj2.date;
+  //     });
 
-      return [newUsers, sortedScores, averageScores]; 
-    };
-  }]);
+  //     return [newUsers, sortedScores, averageScores]; 
+  //   };
+  // }]);
 
   /*{
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
