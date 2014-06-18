@@ -8,7 +8,6 @@ angular.module('app.rating', ['ratingGraphics'])
     $scope.allowedToVote = true;
 
     $scope.scored = (new Date() - new Date($scope.currentUser.lastPost)) < (86400 * 1000);
-    //replace with time check
 
     if($scope.scored){
       $scope.allowedToVote = false;

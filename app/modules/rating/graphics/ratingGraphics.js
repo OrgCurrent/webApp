@@ -10,9 +10,9 @@ angular.module('ratingGraphics', [])
 
         // console.log(pageWidth, pageHeight);
 
-        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: 100, left: pageWidth/15},
-            width = pageWidth - margin.left - margin.right,
-            height = pageHeight - 100 - margin.top - margin.bottom;
+        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
+            height = pageHeight - margin.top - margin.bottom - 150,
+            width =   pageWidth - margin.left - margin.right - 50;
 
         /* 
          * value accessor - returns the value to encode for a given data object.
