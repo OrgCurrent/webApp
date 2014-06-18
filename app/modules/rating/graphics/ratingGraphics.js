@@ -43,7 +43,33 @@ angular.module('ratingGraphics', [])
         var svg = d3.select(".board").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-          .append("g")
+            .on("mousedown", function(){
+              if(scope.allowedToVote){
+                var mousePos = d3.mouse(this);
+                // if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
+                  console.log('xmousePos');
+                  console.log(mousePos[0]);
+                  // if the page is wider, graph is wider 
+                  var yaxis = document.getElementsByClassName("y axis")[0].getBoundingClientRect();
+                  var yaxisPosition = yaxis.left + yaxis.width / 2;
+
+                  var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
+                  var xaxisPosition = xaxis.left + xaxis.width / 2;
+
+                  console.log(yaxisPosition); //33
+
+                  var newX = ((mousePos[0] - yaxisPosition)*100)/width;
+                  var newY = (pageHeight - 150 - margin.top - mousePos[1]) / 4;
+                  console.log('newx');
+                  console.log(newX); // newY);
+                  // console.log('pageWidth Height');
+                  // console.log(pageWidth, pageHeight);
+                  scope.userData =[{x: newX, y: newY}];                
+                  updateUserDots();
+                // }
+              }
+            })
+           .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // add the tooltip area to the webpage
@@ -150,20 +176,20 @@ angular.module('ratingGraphics', [])
 
           //testing click rating functionality
 
-          var board = d3.select('.board').select('svg');
-          board.on("mousedown", function(){
-            if(scope.allowedToVote){
-              var mousePos = d3.mouse(this);
-              if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
-                console.log(mousePos);
-                var newX = (mousePos[0] - margin.left) / 4;
-                var newY = (500 - margin.top - mousePos[1]) / 4;
-                console.log(newX, newY);
-                scope.userData =[{x: newX, y: newY}];                
-                updateUserDots();
-              }
-            }
-          });
+          // var board = d3.select('.board').select('svg');
+          // board.on("mousedown", function(){
+          //   if(scope.allowedToVote){
+          //     var mousePos = d3.mouse(this);
+          //     // if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
+          //       console.log(mousePos);
+          //       var newX = (mousePos[0] - margin.left) / 4;
+          //       var newY = (pageHeight - 150 - margin.top - mousePos[1]) / 4;
+          //       console.log(newX, newY);
+          //       scope.userData =[{x: newX, y: newY}];                
+          //       updateUserDots();
+          //     // }
+          //   }
+          // });
 
           // if page hasn't initialized and the player has already scored today
           // retrieve the company scores immediately and display them
