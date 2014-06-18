@@ -10,7 +10,7 @@ angular.module('ratingGraphics', [])
 
         // console.log(pageWidth, pageHeight);
 
-        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/15},
+        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: 100, left: pageWidth/15},
             width = pageWidth - margin.left - margin.right,
             height = pageHeight - 100 - margin.top - margin.bottom;
 
@@ -43,7 +43,7 @@ angular.module('ratingGraphics', [])
         var svg = d3.select(".board").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            .on("mousedown", function(){
+            .on("mousedown", function(  ){
               if(scope.allowedToVote){
                 var mousePos = d3.mouse(this);
                 // if(mousePos[0] >= 50 && mousePos[0] <= 450 && mousePos[1] >= 50 && mousePos[1] <= 450){
@@ -63,8 +63,10 @@ angular.module('ratingGraphics', [])
                   console.log(newY); // newY);
                   // console.log('pageWidth Height');
                   // console.log(pageWidth, pageHeight);
-                  scope.userData =[{x: newX, y: newY}];                
-                  updateUserDots();
+                  if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
+                    scope.userData =[{x: newX, y: newY}];
+                    updateUserDots();
+                  }           
                 // }
               }
             })
