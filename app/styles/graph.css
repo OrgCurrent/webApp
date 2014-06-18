@@ -33,7 +33,6 @@ path.area {
 }
 
 .x.axis path {
-  /*display: none;*/
   fill: none;
   stroke: #000;
 }
