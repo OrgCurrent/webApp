@@ -10,23 +10,6 @@ angular.module('dashboardGraphics', [])
         var scores = data[1];
         var averages = data[2];
 
-        // console.log(averages);
-
-        //weekly averages test
-        // var weeklyAverages = [];
-        // for(var i = 6; i < averages.length; i+= 7){
-        //   var weekAverageA = 0;
-        //   var weekAverageB = 0;
-        //   for(var j = i - 6; j <= i; j++){
-        //     weekAverageA += averages[j].a / 7;
-        //     weekAverageB += averages[j].b / 7;
-        //   }
-        //   weeklyAverages.push({
-        //     a: weekAverageA,
-        //     b: weekAverageB,
-        //     date: averages[i].date
-        //   });
-        // }
         var smoothAverages = [];
         for(var i = 0; i < averages.length; i++){
           var avgNumber = Math.min(i+1, 7);
@@ -50,7 +33,6 @@ angular.module('dashboardGraphics', [])
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),
             y = d3.scale.linear().range([sizing.height, 0]),
-            // xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true),
             xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true),
             yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
 
@@ -69,8 +51,6 @@ angular.module('dashboardGraphics', [])
         // Compute the minimum and maximum date, and the maximum a/b.
         x.domain([smoothAverages[0].date, smoothAverages[smoothAverages.length - 1].date]);
         y.domain([0, 100]).nice();
-
-        // Add an SVG element with the desired dimensions and margin.
 
         //clear html of .board before updating new SVG
         var svg = d3.select('.board').html('').append('svg').attr("id", "board")
@@ -256,17 +236,6 @@ angular.module('dashboardGraphics', [])
           .append('circle')
           .attr('fill', function(d){return randomColor();})
           .attr('cx', function(d){
-            // 7 day average
-            // var xSum = 0;
-            // var count = 0;
-            // for(var i = 0; i < d.scores.length; i++){
-            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-            //     xSum += d.scores[i].x;
-            //     count++;
-            //   }
-            // }
-            // return count > 0 ? xSum / count * 2 : d.scores[0].x * 2;
-
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
@@ -276,17 +245,6 @@ angular.module('dashboardGraphics', [])
             }
           })
           .attr('cy', function(d){
-            // 7 day average
-            // var ySum = 0;
-            // var count = 0;
-            // for(var i = 0; i < d.scores.length; i++){
-            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-            //     ySum += d.scores[i].y;
-            //     count++;
-            //   }
-            // }
-            // return count > 0 ? 200 - ySum / count * 2 : 200 - d.scores[0].y * 2;
-
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
@@ -300,17 +258,6 @@ angular.module('dashboardGraphics', [])
         //score updates
         scorePoints.transition()
           .attr('cx', function(d){
-            // 7 day average
-            // var xSum = 0;
-            // var count = 0;
-            // for(var i = 0; i < d.scores.length; i++){
-            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-            //     xSum += d.scores[i].x;
-            //     count++;
-            //   }
-            // }
-            // return count > 0 ? xSum / count * 2 : d.scores[0].x * 2;
-
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
@@ -320,17 +267,6 @@ angular.module('dashboardGraphics', [])
             }
           })
           .attr('cy', function(d){
-            // 7 day average
-            // var ySum = 0;
-            // var count = 0;
-            // for(var i = 0; i < d.scores.length; i++){
-            //   if(date - d.scores[i].date <= 86400 * 1000 * 7 && date - d.scores[i].date >= 0){
-            //     ySum += d.scores[i].y;
-            //     count++;
-            //   }
-            // }
-            // return count > 0 ? 200 - ySum / count * 2 : 200 - d.scores[0].y * 2;
-
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
@@ -342,9 +278,6 @@ angular.module('dashboardGraphics', [])
           .attr('fill', function(d){
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0 && i < d.scores.length - 1){
-                // console.log(users);
-                // console.log(date);
-                // console.log(d.scores[i+1].date);
                 var x1 = d.scores[i].x
                 var x0 = d.scores[i+1].x;
                 var y1 = d.scores[i].y;
@@ -352,19 +285,11 @@ angular.module('dashboardGraphics', [])
 
                 var dx = x1 - x0;
                 var dy = y1 - y0;
-
                 var d = dx + dy;
 
+                //redness and blueness of dot
                 var redness = Math.max(0, Math.min(255, (100-d) * (255/200)));
                 var blueness = Math.max(0, Math.min(255, (d+100) * (255/200)));
-
-                //d 200 => 
-                //d 0 => 127.5
-                //d -200 => 255
-
-                //d -200
-
-                //redness and blueness of dot
 
                 return 'rgb(' + redness + ',0,' + blueness + ')';
 
@@ -375,11 +300,7 @@ angular.module('dashboardGraphics', [])
                 }
               }
             }
-          })
-          // .on('click', function(){
-          //   console.log('d');
-          // })
- 
+          }) 
           .duration(100);
 
         scorePoints.on('mouseover', function(d){

@@ -5,12 +5,6 @@ angular.module('formatUsers', [])
       var parse = d3.time.format("%d-%b-%y").parse;
       var format = d3.time.format("%d-%b-%y");
 
-      //generate random user data
-      // var newUsers = [];
-      // for(var i = 0; i < n; i++){
-      //   newUsers.push(randomUser(s));
-      // }
-
       var sortedScores = {};
       for(var i = 0; i < newUsers.length; i++){
         for(var j = 0; j < newUsers[i].scores.length; j++){
