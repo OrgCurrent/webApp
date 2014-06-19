@@ -99,47 +99,62 @@ angular.module('ratingGraphics', [])
             .text("Personal success");
 
         var loadAllDots = function(data){
+          // var radius = 4;
+          var strokeWidth = 3;
+          var delay = 50;
+          var duration = 200;
           // draw dots
-          svg.selectAll(".dot")
+          svg.selectAll(".colleagueScores")
               .data(data)
             .enter().append("circle")
-              .attr("class", "dot")
-              .attr("r", dotSize)
+              .attr("class", "colleagueScores")
+              .attr("r", 0)//dotSize)
               .attr("cx", xMap)
               .attr("cy", yMap)
-              .style("fill", "red")
-              .attr('opacity', 0)
-            .transition()
-              .duration(1000)
-              .attr('opacity', function(d) { 
-                // this makes the dots / posts more transparent the older they are
-                var date = d.date;  
-                var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
-                return 1 / ( postAgeDays + 1);
-              });  
+              // .style("fill", "red")
+              // .attr('opacity', 0)
+            // .transition()
+            .transition().delay(function(d, i) { return delay * i }).duration(duration)
+              .attr('r', dotSize)
+              .attr('stroke-width', strokeWidth)
+              .each('end', function() {
+                // have ripple around data point
+                ripple([this.cx.animVal.value, this.cy.animVal.value]);
+              });
+              // .duration(1000)
+              // .attr('opacity', function(d) { 
+              //   // this makes the dots / posts more transparent the older they are
+              //   var date = d.date;  
+              //   var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+              //   return 1 / ( postAgeDays + 1);
+              // });  
         };
 
         var updateUserDots = function(data){
-          var userDots = svg.selectAll(".user-dot")
+          var initR = 40;
+          var finalR = 10;
+          var thickness = 5;
+          var userDots = svg.selectAll(".userScore")
               .data(scope.userData);
               // .data(data);
           // userDots.select('circle').remove();
 
           userDots
             .enter().append("circle")
-              .attr("class", "user-dot")
+              .attr("class", "userScore")
                 .transition().duration(1000).ease('linear')
               .attr("r", dotSize*2)
               .attr("cx", xMap)
               .attr("cy", yMap)
-              .style("fill", "blue");
+              .attr({"stroke-width" : thickness});
+              // .style("fill", "blue");
 
           userDots
-              .attr("class", "user-dot")
+              .attr("class", "userScore")
               .attr("r", dotSize*2)
               .attr("cx", xMap)
-              .attr("cy", yMap)
-              .style("fill", "blue");
+              .attr("cy", yMap);
+              // .style("fill", "blue");
         };
 
         // if page hasn't initialized and the player has already scored today
@@ -172,6 +187,29 @@ angular.module('ratingGraphics', [])
           // update the user dot prior to submission 
           updateUserDots();
         }
+
+        var ripple = function(position) {
+          // constants for the ripple
+          var initR = 10;
+          var finalR = 40;
+          var thickness = 3;
+          var duration = 500;
+
+          var circle = svg.append('circle')
+            .attr({
+              'cx': position[0],
+              'cy': position[1],
+              'r': (initR - (thickness / 2)),
+              'class': 'colleague-ripples',
+            })
+            .style('stroke-width', thickness)
+          .transition().duration(duration).ease('quad-in')
+            .attr("r", finalR)
+            .style("stroke-opacity", 0)
+            .each('end', function () {
+              d3.select(this).remove();
+            });
+        };  
 
         scope.submitScore = function(){
           // $http POST call

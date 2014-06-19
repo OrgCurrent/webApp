@@ -46,7 +46,37 @@ path.area {
   fill: none;
   stroke: rgb(120,150,120);
   stroke-width: 2;
+/*Rating CSS*/
+.userScore {
+  fill: #444;
+  stroke: #66cc33; 
 }
+
+.colleagueScores {
+  fill: #4a87ee;
+  stroke: #1255c0;
+}
+
+.colleague-ripples {
+  fill: none;
+  stroke: #4a87ee; 
+}
+
+.arc {
+  fill: #66cc33;
+  stroke: none; 
+}
+
+circle.click {
+  fill: #444;
+  stroke: #66cc33;
+}
+
+.ripples {
+  fill: none;
+  stroke: #66cc33;
+}
+/*Rating CSS ends*/
 
 /*tiny line*/
 .x.axis line, .y.axis line {
