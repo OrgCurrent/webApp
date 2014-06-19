@@ -19,9 +19,7 @@ angular.module('happyMeterApp')
           role: $scope.user.role
         })
         .then( function() {
-          // Account created, redirect to home
-          //if user is 
-          $location.path('/');
+          $location.path('/verification');
         })
         .catch( function(err) {
           err = err.data;
