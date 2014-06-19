@@ -3,17 +3,34 @@
   margin: 0;
 }
 */
+
+.board{
+  width: 90%;
+  border: 1px solid rgb(0,50,0);
+  margin: 0 20px 0 20px;
+  border-radius: 5px;
+
+  background-color: rgb(240,250,240)
+}
+
+.fisheye-lines{
+  stroke: black;
+  stroke-width: 2;
+  stroke-dasharray: 5, 5;
+  opacity: 0.2;
+}
+
 path.line {
   fill: none;
   stroke-width: 1.5px;
 }
 
 #lineA{
-  stroke: green;
+  stroke: rgb(60,184,120);
 }
 
 #lineB{
-  stroke: blue;
+  stroke: rgb(0,110,110);
 }
 
 path.area {
@@ -24,25 +41,30 @@ path.area {
   shape-rendering: crispEdges;
 }
 
-.x.axis line {
-  stroke: #fff;
+/*axis path*/
+.x.axis path, .y.axis path {
+  fill: none;
+  stroke: rgb(120,150,120);
+  stroke-width: 2;
 }
+
+/*tiny line*/
+.x.axis line, .y.axis line {
+ 
+}
+
+/*ticks*/
+.x.axis .tick text, .y.axis .tick text {
+  fill: rgb(120,150,120);
+  font-weight: bold;
+}
+/
 
 .x.axis .minor {
   stroke-opacity: .5;
 }
 
-.x.axis path {
-  fill: none;
-  stroke: #000;
-}
-
-.y.axis line, .y.axis path {
-  fill: none;
-  stroke: #000;
-}
-
 .snapshot-line {
   stroke: black;
-  stroke-width: 3px;
+  stroke-width: 2px;
 }

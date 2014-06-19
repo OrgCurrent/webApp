@@ -1,17 +1,25 @@
-.fisheye-show{
+.datestamp{
   position: absolute;
-  left: 0;
-  top: 0;
-  background-color: white;
-  border: 2px solid black;
-}
-.fisheye-hide{
-  border: 0;
-  /*display: none;*/
-
+  left: 8px;
+  top: 2px;
 }
 
-#fisheye circle {
+.fisheye-show, .fisheye-dots-show{
+  position: absolute;
+  left: 8px;
+  top: 20px;
+  background-color: rgb(245,245,245);
+  border: 1px solid black;
+  border-radius: 4px;
+}
+.fisheye-hide, .fisheye-dots-hide{
+  border: 0px;
+  visibility: collapse;
+/*  display: none;
+*/}
+
+#fisheye {
+  /*position: absolute;*/
   /*fill: black;*/
 }
 
