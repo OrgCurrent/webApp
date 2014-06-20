@@ -2,6 +2,10 @@
 body {
   padding-top: 20px;
   padding-bottom: 20px;
+
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  background-color: rgb(250, 255, 250);
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -18,10 +22,18 @@ body {
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
+  /*custom font*/
+  font-family: 'Roboto Slab', serif;
+  font-size: 36px;
+  color: rgb(0, 50, 0);
+
+/*  background: -webkit-linear-gradient(red, green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;*/
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
+  line-height: 36px;
+  padding-bottom: 18px;
 }
 
 /* Custom page footer */

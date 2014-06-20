@@ -6,7 +6,7 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     console.log($scope.currentUser);
 
     $scope.sizing = {
-      margin: {top: 10, right: 80, bottom: 40, left: 80},
+      margin: {top: 40, right: 40, bottom: 40, left: 40},
     };
     $scope.sizing.width = $('.board').width() - $scope.sizing.margin.left - $scope.sizing.margin.right;
     $scope.sizing.height = ($window.innerHeight - 120) - $scope.sizing.margin.top - $scope.sizing.margin.bottom;
@@ -18,8 +18,8 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
       mainChart.render($scope.users, $scope.sizing, $scope);
     });
 
-    $scope.mousePosition = [50, 0];
-    $scope.showFisheye = false;
+    $scope.mousePosition = [0, 0];
+    $scope.showFisheye = true;
 
     //backend data
     $http({

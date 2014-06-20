@@ -26,15 +26,13 @@ angular.module('dashboardGraphics', [])
           });
         }
 
-        console.log(smoothAverages);
-
         scope.snapshotDate = timeFormat.format(smoothAverages[0].date);
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),
             y = d3.scale.linear().range([sizing.height, 0]),
             xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true),
-            yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
+            yAxis = d3.svg.axis().scale(y).ticks(6).orient("right");
 
         // A line generator
         var lineA = d3.svg.line()
@@ -64,11 +62,19 @@ angular.module('dashboardGraphics', [])
             })
             .on('click', function(){
               if(scope.showFisheye){
-                d3.select('#fisheye')
-                    .attr('class', 'fisheye-hide')
+                d3.selectAll('.fisheye-dot')
+                    .attr('display', 'none');
+                d3.selectAll('.fisheye-line')
+                    .attr('display', 'none');
+                d3.select('.fisheye')
+                    .attr('display', 'none');
               }else{
-                d3.select('#fisheye')
-                    .attr('class', 'fisheye-show');
+                d3.select('.fisheye')
+                    .attr('display', 'static')
+                d3.selectAll('.fisheye-dot')
+                    .attr('display', 'static');
+                d3.selectAll('.fisheye-line')
+                    .attr('display', 'static');
               }
               scope.showFisheye = !scope.showFisheye;
             });
@@ -97,6 +103,24 @@ angular.module('dashboardGraphics', [])
             .attr("class", "y axis")
             .attr("transform", "translate(" + sizing.width + ",0)")
             .call(yAxis);
+
+        //Add the 3 fisheye-box lines
+        var fisheyeLines = d3.select('#board')
+          .append("g")
+            .attr('class', 'fisheye-lines');
+
+        fisheyeLines.selectAll('.fisheye-line')
+          .data([[0, 175], [150, 175], [150, 25]])
+          .enter()
+            .append('line')
+            .attr("class", "fisheye-line")
+            .attr('x1', sizing.margin.left)
+            .attr('y1', Math.max(
+              sizing.height * (100 - smoothAverages[0].x) / 100,
+              sizing.height * (100 - smoothAverages[0].y) / 100
+            ) + sizing.margin.top)
+            .attr('x2', function(d, i){return d[0];})
+            .attr('y2', function(d, i){return d[1];});
 
         // Add the lineA path.
         svg.append("path")
@@ -132,18 +156,39 @@ angular.module('dashboardGraphics', [])
             .attr("class", "snapshot-line")
             .attr("x1", scope.mousePosition[0])
             .attr("x2", scope.mousePosition[0])
-            .attr("y1", 0)
-            .attr("y1", sizing.height);
+            .attr("y1", sizing.height)
+            .attr("y2", Math.max(
+              sizing.height * (100 - smoothAverages[0].x) / 100,
+              sizing.height * (100 - smoothAverages[0].y) / 100
+            ));
+
+        //for determining x/y line heights
+        var xHeight = function(d, i){
+          var lastHeight = sizing.height * (100 - smoothAverages[xIndex].x) / 100;
+          if(xIndex < smoothAverages.length - 1){
+            var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].x) / 100;
+            var displacement = xPos - xIndex;
+            return lastHeight + displacement * (nextHeight - lastHeight);
+          }else{
+            return lastHeight;
+          }
+        };
+        var yHeight = function(d, i){
+          var lastHeight = sizing.height * (100 - smoothAverages[xIndex].y) / 100;
+          if(xIndex < smoothAverages.length - 1){
+            var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].y) / 100;
+            var displacement = xPos - xIndex;
+            return lastHeight + displacement * (nextHeight - lastHeight);
+          }else{
+            return lastHeight;
+          }
+        };
 
         fisheyeChart.render(smoothAverages[0].date, users, scope);
 
         var snapshotUpdate = function(){
 
           if(scope.mousePosition[0] < sizing.width){
-
-            snapshotLine.data(scope.mousePosition)
-                .attr("x1", scope.mousePosition[0])
-                .attr("x2", scope.mousePosition[0]);
 
             var xRatio = scope.mousePosition[0] / sizing.width;
             //swift xPos left slightly to accommodate last date
@@ -152,20 +197,48 @@ angular.module('dashboardGraphics', [])
             var date = smoothAverages[xIndex].date;
             var dateStr = timeFormat.format(date);
 
+            var xHeight = function(d, i){
+              var lastHeight = sizing.height * (100 - smoothAverages[xIndex].x) / 100;
+              if(xIndex < smoothAverages.length - 1){
+                var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].x) / 100;
+                var displacement = xPos - xIndex;
+                return lastHeight + displacement * (nextHeight - lastHeight);
+              }else{
+                return lastHeight;
+              }
+            };
+
+            var yHeight = function(d, i){
+              var lastHeight = sizing.height * (100 - smoothAverages[xIndex].y) / 100;
+              if(xIndex < smoothAverages.length - 1){
+                var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].y) / 100;
+                var displacement = xPos - xIndex;
+                return lastHeight + displacement * (nextHeight - lastHeight);
+              }else{
+                return lastHeight;
+              }
+            };
+
+            var height = 0;
+
+            snapshotLine.data(scope.mousePosition)
+                .attr("x1", scope.mousePosition[0])
+                .attr("x2", scope.mousePosition[0])
+                .attr("y1", sizing.height)
+                .attr("y2", function(d, i){
+                  height = Math.min(xHeight(d, i), yHeight(d, i)); 
+                  return height;
+                });
+
+            fisheyeLines.selectAll('.fisheye-line')
+                .attr('x1', scope.mousePosition[0] + scope.sizing.margin.left)
+                .attr('y1', height + scope.sizing.margin.top);
+
             //xText tag
             svg.select('#xText')
                 .attr('x', scope.mousePosition[0] + 5)
                 .attr('y', function(d, i){
-                  var lastHeight = sizing.height * (100 - smoothAverages[xIndex].x) / 100;
-                  if(xIndex < smoothAverages.length - 1){
-                    var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].x) / 100;
-                    var displacement = xPos - xIndex;
-
-                  //substract 10 to swift it upwards
-                    return lastHeight + displacement * (nextHeight - lastHeight) - 10;
-                  }else{
-                    return lastHeight - 10;
-                  }
+                  return xHeight(d, i) - 10;
                 })
                 .text('Company success: ' + smoothAverages[xIndex].x.toFixed(1));
 
@@ -173,16 +246,7 @@ angular.module('dashboardGraphics', [])
             svg.select('#yText')
                 .attr('x', scope.mousePosition[0] + 5)
                 .attr('y', function(d, i){
-                  var lastHeight = sizing.height * (100 - smoothAverages[xIndex].y) / 100;
-                  if(xIndex < smoothAverages.length - 1){
-                    var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].y) / 100;
-                    var displacement = xPos - xIndex;
-
-                    //substract 10 to swift it upwards
-                    return lastHeight + displacement * (nextHeight - lastHeight) - 10;
-                  }else{
-                    return lastHeight - 10;
-                  }
+                  return yHeight(d, i) - 10;
                 })
                 .text('Self success: ' + smoothAverages[xIndex].y.toFixed(1));
 
@@ -202,19 +266,27 @@ angular.module('dashboardGraphics', [])
     return {
       render: function(date, users, scope){
 
+        var sizing = {
+          width: 150,
+          height: 150
+        };
+
+
         var fisheye = d3.select('#fisheye');
         if(fisheye[0][0] === null){
           fisheye = d3.select('.board').append('svg')
             .attr('id', 'fisheye')
+            .attr('display', 'absolute')
             //hide on page load
-            .attr('class', 'fisheye-hide')
-            .attr('width', 200)
-            .attr('height', 200);
+            .attr('class', 'fisheye')
+            .attr('width', sizing.width)
+            .attr('height', sizing.height);
 
-          fisheye.append('text');
+          d3.select('.board').append('text')
+            .attr('class', 'datestamp');
         }
 
-        fisheye.select("text")
+        d3.select('.board').select(".datestamp")
             .attr("x", 5)
             .attr("y", 15)
             .style("text-anchor", "start")
@@ -222,25 +294,26 @@ angular.module('dashboardGraphics', [])
 
         // fisheye.style('background-color', 'red');
         // to be refactored
-        fisheye.style('left', Math.max(90, Math.min(scope.mousePosition[0], scope.sizing.width - 100)));
+        // fisheye.style('left', Math.max(90, Math.min(scope.mousePosition[0], scope.sizing.width - 100)));
 
         var randomColor = function(){
           return 'rgb(' + Math.floor(Math.random() * 256) + ',' + 255 + ',' + Math.floor(Math.random() * 256) + ')';
         };
 
-        var scorePoints = fisheye.selectAll('circle')
+        var scorePoints = fisheye.selectAll('.fisheye-dot')
             .data(users);
 
         //new score entry
         scorePoints.enter()
           .append('circle')
+          .attr('class', 'fisheye-dot fisheye-dot-show')
           .attr('fill', function(d){return randomColor();})
           .attr('cx', function(d){
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return d.scores[i].x * 2;
+                return d.scores[i].x * sizing.width / 100;
               }
             }
           })
@@ -249,7 +322,7 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return 200 - d.scores[i].y * 2;
+                return sizing.height - d.scores[i].y * sizing.height / 100;
               }
             }
           })
@@ -262,7 +335,7 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return d.scores[i].x * 2;
+                return d.scores[i].x * sizing.width / 100;
               }
             }
           })
@@ -271,7 +344,7 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return 200 - d.scores[i].y * 2;
+                return sizing.height - d.scores[i].y * sizing.height / 100;
               }
             }
           })
