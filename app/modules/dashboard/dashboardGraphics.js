@@ -62,21 +62,15 @@ angular.module('dashboardGraphics', [])
             })
             .on('click', function(){
               if(scope.showFisheye){
-                d3.select('#fisheye')
-                    .attr('class', 'fisheye-hide');
                 d3.selectAll('.fisheye-dot')
                     .attr('display', 'none');
                 d3.selectAll('.fisheye-line')
                     .attr('display', 'none');
-
-                setTimeout(function(){
-                  d3.select('#fisheye')
-                    .attr('display', 'none')
-                }, 20);
+                d3.select('.fisheye')
+                    .attr('display', 'none');
               }else{
-                d3.select('#fisheye')
+                d3.select('.fisheye')
                     .attr('display', 'static')
-                    .attr('class', 'fisheye-show');
                 d3.selectAll('.fisheye-dot')
                     .attr('display', 'static');
                 d3.selectAll('.fisheye-line')
@@ -284,7 +278,7 @@ angular.module('dashboardGraphics', [])
             .attr('id', 'fisheye')
             .attr('display', 'absolute')
             //hide on page load
-            .attr('class', 'fisheye-show')
+            .attr('class', 'fisheye')
             .attr('width', sizing.width)
             .attr('height', sizing.height);
 

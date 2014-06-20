@@ -4,7 +4,7 @@
   top: 2px;
 }
 
-.fisheye-show, .fisheye-dots-show{
+.fisheye, .fisheye-dots-show{
   position: absolute;
   left: 8px;
   top: 20px;
@@ -12,14 +12,3 @@
   border: 1px solid black;
   border-radius: 4px;
 }
-.fisheye-hide, .fisheye-dots-hide{
-  border: 0px;
-  visibility: collapse;
-/*  display: none;
-*/}
-
-#fisheye {
-  /*position: absolute;*/
-  /*fill: black;*/
-}
-
