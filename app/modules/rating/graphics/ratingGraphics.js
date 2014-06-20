@@ -120,14 +120,14 @@ angular.module('ratingGraphics', [])
               .each('end', function() {
                 // have ripple around data point
                 ripple([this.cx.animVal.value, this.cy.animVal.value]);
-              });
+              })
               // .duration(1000)
-              // .attr('opacity', function(d) { 
-              //   // this makes the dots / posts more transparent the older they are
-              //   var date = d.date;  
-              //   var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
-              //   return 1 / ( postAgeDays + 1);
-              // });  
+              .attr('opacity', function(d) { 
+                // this makes the dots / posts more transparent the older they are
+                var date = d.date;  
+                var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                return 1 / ( postAgeDays + 1);
+              });  
         };
 
         var updateUserDots = function(data){
