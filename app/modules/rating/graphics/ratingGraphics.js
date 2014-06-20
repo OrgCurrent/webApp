@@ -9,7 +9,7 @@ angular.module('ratingGraphics', [])
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
 
         var clickTimer = 0;
-        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
+        var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
             height = pageHeight - margin.top - margin.bottom - 150,
             width =   pageWidth - margin.left - margin.right - 50;
 
