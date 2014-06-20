@@ -37,6 +37,9 @@ angular.module('happyMeterApp', [
         controller: 'SettingsCtrl',
         authenticate: true
       })
+      .when('/verification', {
+        templateUrl: 'partials/verification',
+      })
       .otherwise({
         redirectTo: '/'
       });

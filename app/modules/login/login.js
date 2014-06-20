@@ -3,7 +3,7 @@
 angular.module('happyMeterApp')
   .controller('LoginCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
     $scope.errors = {};
-
+    $scope.verifiedSuccess = $location.search().action === "verified";
     $scope.login = function(form) {
       $scope.submitted = true;
       
