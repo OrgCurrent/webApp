@@ -17,7 +17,8 @@
     "passport": "~0.2.0",
     "passport-local": "~0.1.6",
     "ejs": "~0.8.4",
-    "protractor": "^0.24.1"
+    "protractor": "^0.24.1",
+    "mailgun-js": "^0.4.15"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
