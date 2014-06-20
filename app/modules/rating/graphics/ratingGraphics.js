@@ -1,24 +1,26 @@
 "use strict";
 
 angular.module('ratingGraphics', [])
-  .factory('scoresGraph', ['$window', 'graphApiHelper', function($window, graphApiHelper){
+  .factory('scoresGraph', ['$window', 'graphApiHelper', 'storedUserData', function($window, graphApiHelper, storedUserData){
     return {
       initialize: function(scope){
         var pageWidth = parseInt(d3.select(".board").style("width"));
         var pageHeight = $window.innerHeight;
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
 
-        var margin = {top: pageHeight/10, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
+        var clickTimer = 0;
+        var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
             height = pageHeight - margin.top - margin.bottom - 150,
             width =   pageWidth - margin.left - margin.right - 50;
 
-            // set the height and the width to be equal (to the smaller of the two)
+        // set the height and the width to be equal (to the smaller of the two)
         if(height > width) {
           height = width;
         } else {
           width = height;
         }
 
+        scope.scored = storedUserData.getScored();
         /* 
          * value accessor - returns the value to encode for a given data object.
          * scale - maps value to a visual display encoding, such as a pixel position.
@@ -41,21 +43,26 @@ angular.module('ratingGraphics', [])
         // add the graph canvas to the body of the webpage
 
         var svg = d3.select(".board").append("svg")
+            .attr("class", "ratingsvg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .on("mousedown", function( ){
-              if(scope.allowedToVote){
+              if(!scope.scored){
                 var mousePos = d3.mouse(this);
                 // if the page is wider, graph is wider 
                 var yaxis = document.getElementsByClassName("y axis")[0].getBoundingClientRect();
-                var yaxisPosition = yaxis.left + yaxis.width / 2;
+                var yaxisPosition = yaxis.left + yaxis.width / 2 
+                -  document.getElementsByClassName("ratingsvg")[0].getBoundingClientRect().left;
+                //   document.getElementsByClassName("board")[0].getBoundingClientRect().left;
 
                 var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
-                var xaxisPosition = xaxis.top + xaxis.height/2; //xaxis.bottom + xaxis.height / 2;
-                var topBoard = document.getElementsByClassName("board")[0].getBoundingClientRect().top;
+                var xaxisPosition = xaxis.top + xaxis.height/2; 
+                var topBoard = document.getElementsByClassName("key")[1].getBoundingClientRect().bottom;
 
                 var newX = ((mousePos[0] - yaxisPosition - 4)*100)/width;
                 var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
+
+                clickTimer = Date.now();
 
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.userData =[{x: newX, y: newY}];
@@ -63,6 +70,14 @@ angular.module('ratingGraphics', [])
                 }           
               }
             })
+           .on("mouseup", function( ){
+            if( Date.now() - clickTimer > 1500){
+              scope.submitScore();
+            } else {
+              console.log('do not submit');
+            }
+            clickTimer = 0;
+           })
            .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -136,8 +151,6 @@ angular.module('ratingGraphics', [])
           var thickness = 5;
           var userDots = svg.selectAll(".userScore")
               .data(scope.userData);
-              // .data(data);
-          // userDots.select('circle').remove();
 
           userDots
             .enter().append("circle")
@@ -147,18 +160,17 @@ angular.module('ratingGraphics', [])
               .attr("cx", xMap)
               .attr("cy", yMap)
               .attr({"stroke-width" : thickness});
-              // .style("fill", "blue");
 
           userDots
               .attr("class", "userScore")
               .attr("r", dotSize*2)
               .attr("cx", xMap)
               .attr("cy", yMap);
-              // .style("fill", "blue");
         };
 
         // if page hasn't initialized and the player has already scored today
         // retrieve the company scores immediately and display them
+
         if(scope.scored && !scope.initialized){
           graphApiHelper.getCompanyScores()
             .success(function(data){
@@ -179,7 +191,7 @@ angular.module('ratingGraphics', [])
             });
         } else if(scope.scored){
           // if page has loaded and user has posted a score load / render
-          // both colleague and user scores
+          // both colleague and user scores (**this is run when the page is resized**)
           updateUserDots();
           loadAllDots(scope.colleagueScores);
         } else {
@@ -218,7 +230,9 @@ angular.module('ratingGraphics', [])
             .success(function(data){
 
               //load All Dots
-              scope.allowedToVote = false;
+              // after a successful POST mark set the scope scored property to true
+              scope.scored = true;
+              storedUserData.setScored(true);
 
               graphApiHelper.getCompanyScores()
                 .success(function(data){
@@ -228,9 +242,6 @@ angular.module('ratingGraphics', [])
                       scores.push({x: data[i].score.x, y: data[i].score.y, date: data[i].score.date});
                     }
                   }
-                  // after a successful POST mark set the scope scored property to true
-                  scope.scored = true;
-
                   // store colleague scores on the scope, so they can be 
                   // redrawn when the page is resized (instead of another GET)
                   scope.colleagueScores = scores;
@@ -268,4 +279,35 @@ angular.module('ratingGraphics', [])
         })
       }
     };
-  }]);
+  }])
+  .directive('circleKey', function() {
+  var link = function(scope, element, attr) {
+    var outerRadius = 3;
+    var innerRadius = 3;
+    var radius = 5;
+
+    var svg = d3.select(element[0])
+      .append('svg')
+      .attr({
+        'height': 10,
+        'width': 10
+      })
+      .append('circle')
+      .attr('cx', 5)
+      .attr('cy', 5)
+      .attr('r', innerRadius)
+      .style('stroke-width', outerRadius);
+
+    if (scope.user === 'true') {
+      svg.attr('class', 'userScore');
+    } else {
+      svg.attr('class', 'colleagueScores');
+    }
+  };
+
+  return {
+    restrict: 'E',
+    link: link,
+    scope: {user: '@'}
+  }
+});

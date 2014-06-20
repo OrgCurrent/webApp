@@ -1,22 +1,20 @@
 'use strict';
 
-angular.module('app.rating', ['ratingGraphics'])
-  .controller('RatingCtrl', ['$window','$scope', '$http', 'scoresGraph', function ($window ,$scope, $http, scoresGraph) {
-    console.log($scope.currentUser);
+angular.module('app.rating', ['ratingGraphics', 'storedUserData'])
+  .controller('RatingCtrl', ['$window','$scope', '$http', 'scoresGraph','storedUserData', function ($window ,$scope, $http, scoresGraph, storedUserData) {
 
     $scope.userData = [];
-    $scope.allowedToVote = true;
 
     $scope.scored = (new Date() - new Date($scope.currentUser.lastPost)) < (86400 * 1000);
 
     if($scope.scored){
-      $scope.allowedToVote = false;
+      storedUserData.setScored(true);
     }
 
     scoresGraph.initialize($scope);
 
     d3.select($window).on('resize', function(){
-      d3.select("svg").remove();
+      d3.select(".ratingsvg").remove();
       scoresGraph.initialize($scope);
     });
   }]);
