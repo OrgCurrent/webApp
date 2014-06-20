@@ -46,6 +46,7 @@ path.area {
   fill: none;
   stroke: rgb(120,150,120);
   stroke-width: 2;
+}
 /*Rating CSS*/
 .userScore {
   fill: #444;
@@ -88,7 +89,6 @@ circle.click {
   fill: rgb(120,150,120);
   font-weight: bold;
 }
-/
 
 .x.axis .minor {
   stroke-opacity: .5;
