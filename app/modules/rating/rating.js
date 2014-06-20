@@ -14,7 +14,7 @@ angular.module('app.rating', ['ratingGraphics', 'storedUserData'])
     scoresGraph.initialize($scope);
 
     d3.select($window).on('resize', function(){
-      d3.select("svg").remove();
+      d3.select(".ratingsvg").remove();
       scoresGraph.initialize($scope);
     });
   }]);

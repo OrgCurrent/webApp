@@ -8,6 +8,7 @@
   width: 90%;
   border: 1px solid rgb(0,50,0);
   margin: 0 20px 0 20px;
+  padding: 1px 1px 1px 1px;
   border-radius: 5px;
 
   background-color: rgb(240,250,240)
@@ -63,9 +64,16 @@ path.area {
   stroke: #4a87ee; 
 }
 
-.arc {
-  fill: #66cc33;
-  stroke: none; 
+.ratingsvg {
+  display: block;
+  margin: auto;
+}
+
+.instructions {
+
+  height: 30px;
+  margin-top: 10px;
+  font-weight: 800;
 }
 
 circle.click {
@@ -78,10 +86,14 @@ circle.click {
   stroke: #66cc33;
 }
 
-.label {
+.label, .key {
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   font-weight: 300;
   font-size: 13px;
+}
+
+.key, .instructions {
+  text-align: center;
 }
 /*Rating CSS ends*/
 

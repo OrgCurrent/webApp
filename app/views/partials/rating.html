@@ -1,6 +1,9 @@
 <div ng-include="'partials/navbar.html'"></div>
-
+<div class="instructions" ng-show="!scored"> Press and hold to xpress yourself </div>
+<div class="instructions" ng-show="scored"> Thanks for Voting today ! </div>
 <div class="row">
-  <div class="board col-sm-12"></div>
+  <div class="board col-sm-12">
+  	<div class="key"><circle-key user="true"></circle-key> <i >Your sentiment</i></div>
+ 		<div class="key"><circle-key user="false"></circle-key> <i >Your co-workers' most recent sentiment</i></div>
   </div>
 </div>

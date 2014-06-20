@@ -43,6 +43,7 @@ angular.module('ratingGraphics', [])
         // add the graph canvas to the body of the webpage
 
         var svg = d3.select(".board").append("svg")
+            .attr("class", "ratingsvg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .on("mousedown", function( ){
@@ -50,17 +51,17 @@ angular.module('ratingGraphics', [])
                 var mousePos = d3.mouse(this);
                 // if the page is wider, graph is wider 
                 var yaxis = document.getElementsByClassName("y axis")[0].getBoundingClientRect();
-                var yaxisPosition = yaxis.left + yaxis.width / 2;
+                var yaxisPosition = yaxis.left + yaxis.width / 2 - margin.left;
 
                 var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
                 var xaxisPosition = xaxis.top + xaxis.height/2; //xaxis.bottom + xaxis.height / 2;
-                var topBoard = document.getElementsByClassName("board")[0].getBoundingClientRect().top;
+                var topBoard = document.getElementsByClassName("key")[1].getBoundingClientRect().bottom;
 
                 var newX = ((mousePos[0] - yaxisPosition + 15)*100)/width;
                 var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
 
                 clickTimer = Date.now();
-
+                
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.userData =[{x: newX, y: newY}];
                   updateUserDots();
@@ -276,4 +277,35 @@ angular.module('ratingGraphics', [])
         })
       }
     };
-  }]);
+  }])
+  .directive('circleKey', function() {
+  var link = function(scope, element, attr) {
+    var outerRadius = 3;
+    var innerRadius = 3;
+    var radius = 5;
+
+    var svg = d3.select(element[0])
+      .append('svg')
+      .attr({
+        'height': 10,
+        'width': 10
+      })
+      .append('circle')
+      .attr('cx', 5)
+      .attr('cy', 5)
+      .attr('r', innerRadius)
+      .style('stroke-width', outerRadius);
+
+    if (scope.user === 'true') {
+      svg.attr('class', 'userScore');
+    } else {
+      svg.attr('class', 'colleagueScores');
+    }
+  };
+
+  return {
+    restrict: 'E',
+    link: link,
+    scope: {user: '@'}
+  }
+});
