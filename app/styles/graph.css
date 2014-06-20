@@ -77,6 +77,12 @@ circle.click {
   fill: none;
   stroke: #66cc33;
 }
+
+.label {
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+}
 /*Rating CSS ends*/
 
 /*tiny line*/
