@@ -31,7 +31,7 @@ angular.module('dashboardGraphics', [])
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),
             y = d3.scale.linear().range([sizing.height, 0]),
-            xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true),
+            xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true).tickFormat(d3.time.format("%d-%b-%y")),
             yAxis = d3.svg.axis().scale(y).ticks(6).orient("right");
 
         // A line generator
@@ -144,13 +144,13 @@ angular.module('dashboardGraphics', [])
             .style("text-anchor", "start")
             .text('Company success: ' + smoothAverages[0].x.toFixed(1));
 
-        // Add 'Self success' y-label
+        // Add 'Personal success' y-label
         svg.append("text")
             .attr('id', 'yText')
             .attr("x", scope.mousePosition[0] + 5)
             .attr("y", sizing.height * (100 - smoothAverages[0].y) / 100 - 10)
             .style("text-anchor", "start")
-            .text('Self success: ' + smoothAverages[0].y.toFixed(1));
+            .text('Personal success: ' + smoothAverages[0].y.toFixed(1));
 
         var snapshotLine = svg.append("line")
             .attr("class", "snapshot-line")
@@ -248,7 +248,7 @@ angular.module('dashboardGraphics', [])
                 .attr('y', function(d, i){
                   return yHeight(d, i) - 10;
                 })
-                .text('Self success: ' + smoothAverages[xIndex].y.toFixed(1));
+                .text('Personal success: ' + smoothAverages[xIndex].y.toFixed(1));
 
             scope.$apply(function(){
               scope.snapshotDate = dateStr;
