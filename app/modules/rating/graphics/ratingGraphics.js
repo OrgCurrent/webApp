@@ -51,17 +51,19 @@ angular.module('ratingGraphics', [])
                 var mousePos = d3.mouse(this);
                 // if the page is wider, graph is wider 
                 var yaxis = document.getElementsByClassName("y axis")[0].getBoundingClientRect();
-                var yaxisPosition = yaxis.left + yaxis.width / 2 - margin.left;
+                var yaxisPosition = yaxis.left + yaxis.width / 2 
+                -  document.getElementsByClassName("ratingsvg")[0].getBoundingClientRect().left;
+                //   document.getElementsByClassName("board")[0].getBoundingClientRect().left;
 
                 var xaxis = document.getElementsByClassName("x axis")[0].getBoundingClientRect();
-                var xaxisPosition = xaxis.top + xaxis.height/2; //xaxis.bottom + xaxis.height / 2;
+                var xaxisPosition = xaxis.top + xaxis.height/2; 
                 var topBoard = document.getElementsByClassName("key")[1].getBoundingClientRect().bottom;
 
-                var newX = ((mousePos[0] - yaxisPosition + 15)*100)/width;
+                var newX = ((mousePos[0] - yaxisPosition - 4)*100)/width;
                 var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
 
                 clickTimer = Date.now();
-                
+
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.userData =[{x: newX, y: newY}];
                   updateUserDots();
@@ -69,12 +71,12 @@ angular.module('ratingGraphics', [])
               }
             })
            .on("mouseup", function( ){
-            if( Date.now() - scope.mouseTimer > 1500){
+            if( Date.now() - clickTimer > 1500){
               scope.submitScore();
             } else {
               console.log('do not submit');
             }
-            scope.mouseTimer = 0;
+            clickTimer = 0;
            })
            .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
