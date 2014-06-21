@@ -73,7 +73,5 @@ angular.module('happyMeterApp', [
       if (next.authenticate && !Auth.isLoggedIn()) {
         $location.path('/login');
       }
-      if(Auth.isLoggedIn() && $rootScope.currentUser === "employee") {
-      }
     });
   });
