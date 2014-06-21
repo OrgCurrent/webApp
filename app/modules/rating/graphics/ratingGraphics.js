@@ -140,8 +140,11 @@ angular.module('ratingGraphics', [])
               // .duration(1000)
               .attr('opacity', function(d) { 
                 // this makes the dots / posts more transparent the older they are
-                var date = d.date;  
-                var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                var date = d.date;
+                var postAgeDays = 0;  
+                if(date) {
+                  postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                }
                 return  (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
               });  
         };
@@ -174,7 +177,7 @@ angular.module('ratingGraphics', [])
                 if(date) {
                   postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
                 }
-                return 1 / ( postAgeDays + 1);
+                return (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
               });
         };
 
@@ -268,9 +271,14 @@ angular.module('ratingGraphics', [])
         scope.initialized = true;
 
         scope.displayHistory = function() {
-          d3.select(".userScore").remove();
+          d3.selectAll(".userScore").remove();
           // d3.select(".colleagueScores").remove();
-          updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory - 1));
+          if(!scope.toggle){
+            updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory));
+            scope.toggle = true;
+          } else {
+            scope.toggle = false;
+          }
         }
       }
     }
