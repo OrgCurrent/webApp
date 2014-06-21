@@ -7,6 +7,7 @@ angular.module('ratingGraphics', [])
         var pageWidth = parseInt(d3.select(".board").style("width"));
         var pageHeight = $window.innerHeight;
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
+        var defaultPostHistory = 7; // will show last posts days by default
 
         var clickTimer = 0;
         var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
@@ -66,7 +67,7 @@ angular.module('ratingGraphics', [])
 
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.userData =[{x: newX, y: newY}];
-                  updateUserDots();
+                  updateUserDots(scope.userData);
                 }           
               }
             })
@@ -141,7 +142,7 @@ angular.module('ratingGraphics', [])
                 // this makes the dots / posts more transparent the older they are
                 var date = d.date;  
                 var postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
-                return 1 / ( postAgeDays + 1);
+                return  (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
               });  
         };
 
@@ -150,7 +151,7 @@ angular.module('ratingGraphics', [])
           var finalR = 10;
           var thickness = 5;
           var userDots = svg.selectAll(".userScore")
-              .data(scope.userData);
+              .data(data);
 
           userDots
             .enter().append("circle")
@@ -165,7 +166,16 @@ angular.module('ratingGraphics', [])
               .attr("class", "userScore")
               .attr("r", dotSize*2)
               .attr("cx", xMap)
-              .attr("cy", yMap);
+              .attr("cy", yMap)
+              .attr('opacity', function(d) { 
+                // this makes the dots / posts more transparent the older they are
+                var date = d.date;
+                var postAgeDays = 0;
+                if(date) {
+                  postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                }
+                return 1 / ( postAgeDays + 1);
+              });
         };
 
         // if page hasn't initialized and the player has already scored today
@@ -187,17 +197,17 @@ angular.module('ratingGraphics', [])
               //get user last score from scope.currentUser
               var userScore = scope.currentUser.scores[0];
               scope.userData = [{x: userScore.x, y: userScore.y}];
-              updateUserDots();
+              updateUserDots(scope.userData);
             });
         } else if(scope.scored){
           // if page has loaded and user has posted a score load / render
           // both colleague and user scores (**this is run when the page is resized**)
-          updateUserDots();
+          updateUserDots(scope.userData);
           loadAllDots(scope.colleagueScores);
         } else {
           // if the page has loaded, but the user hasn't posted
           // update the user dot prior to submission 
-          updateUserDots();
+          updateUserDots(scope.userData);
         }
 
         var ripple = function(position) {
@@ -250,12 +260,18 @@ angular.module('ratingGraphics', [])
 
                   scope.userData.push(scope.userData[0]);
 
-                  updateUserDots();
+                  updateUserDots(scope.userData);
                 });
             });
         };
 
         scope.initialized = true;
+
+        scope.displayHistory = function() {
+          d3.select(".userScore").remove();
+          // d3.select(".colleagueScores").remove();
+          updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory - 1));
+        }
       }
     }
   }])
