@@ -50,8 +50,8 @@ path.area {
 }
 /*Rating CSS*/
 .userScore {
-  fill: #444;
-  stroke: #66cc33; 
+  fill: #851518;
+  stroke: #ff6633; 
 }
 
 .colleagueScores {
@@ -69,21 +69,14 @@ path.area {
   margin: auto;
 }
 
-.instructions {
-
-  height: 30px;
-  margin-top: 10px;
-  font-weight: 800;
-}
-
 circle.click {
   fill: #444;
-  stroke: #66cc33;
+  stroke: #ff6633;
 }
 
 .ripples {
   fill: none;
-  stroke: #66cc33;
+  stroke: #ff6633;
 }
 
 .label, .key {
@@ -95,6 +88,38 @@ circle.click {
 .key, .instructions {
   text-align: center;
 }
+
+.shad {
+  box-shadow: #851518 0px 2px 0px 0px;
+  border-radius: 3px;
+  display: inline-block;
+  zoom: 1;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 9px 18px 7px 18px;
+  margin: 0 0 5px 0;
+/*  font-family: Roboto;"Whitney",helvetica,arial,sans-serif;*/
+  font-weight: 500;
+  font-size: 13px;
+  text-decoration: none;
+  border-width: 0;
+  -webkit-transition: none;
+  transition: none;
+  -webkit-text-shadow: none;
+  text-shadow: none;
+  color: white;
+  background-color: #ff6633;
+}
+
+.shad:focus {
+  outline:0;
+}
+
+.shad:hover {
+background: #e0393e;
+color: #fff;
+}
+
 /*Rating CSS ends*/
 
 /*tiny line*/
