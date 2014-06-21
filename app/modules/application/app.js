@@ -70,8 +70,6 @@ angular.module('happyMeterApp', [
 
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$routeChangeStart', function (event, next) {
-        console.log('next',next);
-      
       if (next.authenticate && !Auth.isLoggedIn()) {
         $location.path('/login');
       }
