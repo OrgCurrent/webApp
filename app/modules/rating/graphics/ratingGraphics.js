@@ -22,6 +22,7 @@ angular.module('ratingGraphics', [])
         }
 
         scope.scored = storedUserData.getScored();
+
         /* 
          * value accessor - returns the value to encode for a given data object.
          * scale - maps value to a visual display encoding, such as a pixel position.
@@ -40,6 +41,7 @@ angular.module('ratingGraphics', [])
             yScale = d3.scale.linear().range([height, 0]), // value -> display
             yMap = function(d) { return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient("left");
+
 
         // add the graph canvas to the body of the webpage
 
@@ -67,7 +69,7 @@ angular.module('ratingGraphics', [])
 
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.userData =[{x: newX, y: newY}];
-                  updateUserDots(scope.userData);
+                  updateUserDots(scope.userData, true);
                 }           
               }
             })
@@ -90,6 +92,9 @@ angular.module('ratingGraphics', [])
         xAxis.tickSize(1,1);
         yAxis.tickSize(1,1);
 
+        var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
         // x-axis
         svg.append("g")
             .attr("class", "x axis")
@@ -114,6 +119,22 @@ angular.module('ratingGraphics', [])
             .style("text-anchor", "end")
             .text("Personal success");
 
+        var dayDifference = function(date) { return Math.floor((new Date() - new Date(date)) /  (86400 * 1000)); };
+
+        // utility function for dot tooltip formatting
+        var postLabel = function(d) {
+            var daysAgo = dayDifference(d.date);
+            var text = daysAgo ? daysAgo + " days ago" : "today";
+            tooltip.transition()
+              .duration(200)
+              .style("opacity", .9);
+            tooltip.html("<br/> Company Success: " + Math.floor(xValue(d)) 
+            + "<br/> Personal Success: " + Math.floor(yValue(d)) + "<br/> Posted " + 
+            text)
+              .style("left", (d3.event.pageX + 15) + "px")
+              .style("top", (d3.event.pageY - 40) + "px");
+        };
+
         var loadAllDots = function(data){
           // var radius = 4;
           var strokeWidth = 3;
@@ -127,6 +148,14 @@ angular.module('ratingGraphics', [])
               .attr("r", 0)//dotSize)
               .attr("cx", xMap)
               .attr("cy", yMap)
+            .on("mouseover", function(d) {
+              postLabel(d);
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                     .duration(500)
+                     .style("opacity", 0);
+            })
               // .style("fill", "red")
               // .attr('opacity', 0)
             // .transition()
@@ -143,13 +172,14 @@ angular.module('ratingGraphics', [])
                 var date = d.date;
                 var postAgeDays = 0;  
                 if(date) {
-                  postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                  postAgeDays = dayDifference(date);
                 }
                 return  (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
-              });  
+              });
+
         };
 
-        var updateUserDots = function(data){
+        var updateUserDots = function(data, today){
           var initR = 40;
           var finalR = 10;
           var thickness = 5;
@@ -158,15 +188,35 @@ angular.module('ratingGraphics', [])
 
           userDots
             .enter().append("circle")
-              .attr("class", "userScore post")
-                .transition().duration(1000).ease('linear')
-              .attr("r", dotSize*2)
-              .attr("cx", xMap)
-              .attr("cy", yMap)
-              .attr({"stroke-width" : thickness});
+              .attr("class", function(){
+                if(today){
+                  return "userScore today";
+                } else {
+                   return "userScore notToday";
+                }
+              })
+            .on("mouseover", function(d) {
+              postLabel(d);
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
+            })
+              .transition().duration(1000).ease('linear')
+            .attr("r", dotSize*2)
+            .attr("cx", xMap)
+            .attr("cy", yMap)
+            .attr({"stroke-width" : thickness});
 
           userDots
-              .attr("class", "userScore post")
+              .attr("class", function(){
+                if(today){
+                  return "userScore today";
+                } else {
+                   return "userScore notToday";
+                }
+              })
               .attr("r", dotSize*2)
               .attr("cx", xMap)
               .attr("cy", yMap)
@@ -175,7 +225,7 @@ angular.module('ratingGraphics', [])
                 var date = d.date;
                 var postAgeDays = 0;
                 if(date) {
-                  postAgeDays = Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
+                  postAgeDays = dayDifference(date);
                 }
                 return (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
               });
@@ -200,17 +250,17 @@ angular.module('ratingGraphics', [])
               //get user last score from scope.currentUser
               var userScore = scope.currentUser.scores[0];
               scope.userData = [{x: userScore.x, y: userScore.y}];
-              updateUserDots(scope.userData);
+              updateUserDots(scope.userData, true);
             });
         } else if(scope.scored){
           // if page has loaded and user has posted a score load / render
           // both colleague and user scores (**this is run when the page is resized**)
-          updateUserDots(scope.userData);
+          updateUserDots(scope.userData, true);
           loadAllDots(scope.colleagueScores);
         } else {
           // if the page has loaded, but the user hasn't posted
           // update the user dot prior to submission 
-          updateUserDots(scope.userData);
+          updateUserDots(scope.userData, true);
         }
 
         var ripple = function(position) {
@@ -263,7 +313,7 @@ angular.module('ratingGraphics', [])
 
                   scope.userData.push(scope.userData[0]);
 
-                  updateUserDots(scope.userData);
+                  updateUserDots(scope.userData, true);
                 });
             });
         };
@@ -271,9 +321,12 @@ angular.module('ratingGraphics', [])
         scope.initialized = true;
 
         scope.displayHistory = function() {
-          d3.selectAll(".post").remove();
+          d3.selectAll(".notToday").remove();
           // d3.select(".colleagueScores").remove();
           if(!scope.toggle){
+            if(scope.scored){
+              scope.userData;
+            }
             updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory));
             scope.toggle = true;
           } else {
