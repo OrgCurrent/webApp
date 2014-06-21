@@ -158,7 +158,7 @@ angular.module('ratingGraphics', [])
 
           userDots
             .enter().append("circle")
-              .attr("class", "userScore")
+              .attr("class", "userScore post")
                 .transition().duration(1000).ease('linear')
               .attr("r", dotSize*2)
               .attr("cx", xMap)
@@ -166,7 +166,7 @@ angular.module('ratingGraphics', [])
               .attr({"stroke-width" : thickness});
 
           userDots
-              .attr("class", "userScore")
+              .attr("class", "userScore post")
               .attr("r", dotSize*2)
               .attr("cx", xMap)
               .attr("cy", yMap)
@@ -271,7 +271,7 @@ angular.module('ratingGraphics', [])
         scope.initialized = true;
 
         scope.displayHistory = function() {
-          d3.selectAll(".userScore").remove();
+          d3.selectAll(".post").remove();
           // d3.select(".colleagueScores").remove();
           if(!scope.toggle){
             updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory));

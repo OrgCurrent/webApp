@@ -50,8 +50,8 @@ path.area {
 }
 /*Rating CSS*/
 .userScore {
-  fill: #444;
-  stroke: #66cc33; 
+  fill: #851518;
+  stroke: #ff6633; 
 }
 
 .colleagueScores {
@@ -71,12 +71,12 @@ path.area {
 
 circle.click {
   fill: #444;
-  stroke: #66cc33;
+  stroke: #ff6633;
 }
 
 .ripples {
   fill: none;
-  stroke: #66cc33;
+  stroke: #ff6633;
 }
 
 .label, .key {
