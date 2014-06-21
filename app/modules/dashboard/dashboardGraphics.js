@@ -190,11 +190,8 @@ angular.module('dashboardGraphics', [])
               .attr("y2", function(d, i){
                 height = Math.min(xHeight(d, i), yHeight(d, i)); 
                 return height;
-              })
-              .attrTween('y2', function(d, i, a){
-                console.log(d, i, a);
               });
-
+              
             fisheyeLines.selectAll('.fisheye-line')
               .attr('x1', scope.mouse[0] + sizing.margin.left)
               .attr('y1', height + sizing.margin.top);
