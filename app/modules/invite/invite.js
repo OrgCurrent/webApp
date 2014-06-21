@@ -5,7 +5,7 @@ angular.module('happyMeterApp')
     $scope.inviteEmail = '';
     $scope.inviteSuccess = false;
     $scope.sendInvite = function(email) {
-      $http.put('http://localhost:9000/invite/' + email)  
+      $http.put('/invite/' + email)  
       .success(function(){
         $scope.inviteSuccess = true;
         $scope.inviteEmail = '';
