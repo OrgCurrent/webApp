@@ -37,6 +37,11 @@ angular.module('happyMeterApp', [
         controller: 'SettingsCtrl',
         authenticate: true
       })
+      .when('/invite', {
+        templateUrl: 'partials/invite',
+        controller: 'InviteCtrl',
+        authenticate: true
+      })
       .when('/verification', {
         templateUrl: 'partials/verification',
       })
@@ -65,7 +70,6 @@ angular.module('happyMeterApp', [
 
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$routeChangeStart', function (event, next) {
-      
       if (next.authenticate && !Auth.isLoggedIn()) {
         $location.path('/login');
       }

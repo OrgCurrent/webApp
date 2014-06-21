@@ -4,6 +4,7 @@
       <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}" ng-hide="!currentUser || item.hide">
           <a ng-href="{{item.link}}">{{item.title}}</a>
       </li>
+      <li ng-hide="currentUser" ng-class="{active: isActive('/')}"><a href="/">Home</a></li>
       <li ng-hide="currentUser" ng-class="{active: isActive('/login')}"><a href="/login">Login</a></li>
       <li ng-hide="currentUser" ng-class="{active: isActive('/signup')}"><a href="/signup">Sign up</a></li>
       <li ng-show="currentUser" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()">Logout</a></li>
