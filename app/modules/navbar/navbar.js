@@ -16,13 +16,16 @@ angular.module('happyMeterApp')
     }, {
       'title': 'Settings',
       'link': '/settings'
+    }, {
+      'title': 'Invite',
+      'link': '/invite'
     }];
     
     $scope.logout = function() {
       Auth.logout()
       .then(function() {
         storedUserData.setScored(false);
-        $location.path('/login');
+        $location.path('/');
       });
     };
     

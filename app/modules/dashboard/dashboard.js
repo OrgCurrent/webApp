@@ -3,8 +3,6 @@
 angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
   .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'mainChart', 'formatUsers', function ($scope, $http, $location, $window, mainChart, formatUsers) {
 
-    console.log($scope.currentUser);
-
     $scope.sizing = {
       margin: {top: 40, right: 40, bottom: 40, left: 40},
     };
