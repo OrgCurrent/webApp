@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('happyMeterApp')
-  .controller('NavbarCtrl', ['$scope', '$location', 'Auth','storedUserData', function ($scope, $location, Auth, storedUserData) {
+  .controller('NavbarCtrl', ['$rootScope', '$scope', '$location', 'Auth',
+   function ($rootScope, $scope, $location, Auth) {
 
     var role = $scope.currentUser ? $scope.currentUser.role : undefined;
 
@@ -24,7 +25,6 @@ angular.module('happyMeterApp')
     $scope.logout = function() {
       Auth.logout()
       .then(function() {
-        storedUserData.setScored(false);
         $location.path('/');
       });
     };
