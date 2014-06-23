@@ -75,8 +75,8 @@ angular.module('ratingGraphics', [])
                 clickTimer = Date.now();
                 // only acceps a click if it is within the bounds of the graph area
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
-                  scope.userData =[{x: newX, y: newY}];
-                  updateUserDots(scope.userData, true);
+                  scope.clickPosition =[{x: newX, y: newY}];
+                  updateUserDots(scope.clickPosition, true);
                 }          
               }
             })
@@ -127,20 +127,22 @@ angular.module('ratingGraphics', [])
             .text('Personal success');
 
         // utility function for calculating post age
-        var dayDifference = function(date){ 
-          return Math.floor((new Date() - new Date(date)) /  (86400 * 1000)); 
+        var dayDifference = function(date){
+          return Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
         };
 
         // utility function for dot tooltip formatting
         var postLabel = function(d){
             var daysAgo = dayDifference(d.date);
             var text = daysAgo ? daysAgo + ' days ago' : 'today';
+
             tooltip.transition()
               .duration(200)
               .style('opacity', .9);
+
             tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d)) 
-              + '<br/> Personal Success: ' + Math.floor(yValue(d)) + '<br/> Posted ' + 
-              text)
+              + '<br/> Personal Success: ' + Math.floor(yValue(d)) 
+              + '<br/> Posted ' + text)
               .style('left', (d3.event.pageX + 15) + 'px')
               .style('top', (d3.event.pageY - 40) + 'px');
         };
@@ -156,7 +158,7 @@ angular.module('ratingGraphics', [])
               .data(data)
             .enter().append('circle')
               .attr('class', 'colleagueScores')
-              .attr('r', 0)//dotSize)
+              .attr('r', 0)
               .attr('cx', xMap)
               .attr('cy', yMap)
             .on('mouseover', function(d){
@@ -189,12 +191,14 @@ angular.module('ratingGraphics', [])
           var finalR = 10;
           var thickness = 5;
 
-          var userDots = svg.selectAll('.userScore')
-              .data(data);
+          var userDots = today ? svg.selectAll('.today').data(data) 
+                               : svg.selectAll('.notToday').data(data);
 
           userDots
             .enter().append('circle')
-              .attr('class', function(){
+              .attr('class', function(d){
+                var date = d.date;
+                var today = !dayDifference(date) ? true : false;
                 return today ? 'userScore today' : 'userScore notToday';
               })
             .on('mouseover', function(d){
@@ -212,9 +216,6 @@ angular.module('ratingGraphics', [])
               .attr({'stroke-width' : thickness});
 
           userDots
-            .attr('class', function(){
-              return today ? 'userScore today' : 'userScore notToday';
-            })
             .attr('r', dotSize*2)
             .attr('cx', xMap)
             .attr('cy', yMap)
@@ -243,18 +244,18 @@ angular.module('ratingGraphics', [])
               loadAllDots(scores);
               //get user last score from scope.currentUser
               var userScore = scope.currentUser.scores[0];
-              scope.userData = [{x: userScore.x, y: userScore.y}];
-              updateUserDots(scope.userData, true);
+              scope.clickPosition = [{x: userScore.x, y: userScore.y}];
+              updateUserDots(scope.clickPosition, true);
             });
         } else if(scope.scored){
           // if page has loaded and user has posted a score load / render
           // both colleague and user scores (**this is run when the page is resized**)
-          updateUserDots(scope.userData, true);
+          updateUserDots(scope.clickPosition, true);
           loadAllDots(scope.colleagueScores);
         } else {
           // if the page has loaded, but the user hasn't posted
           // update the user dot prior to submission 
-          updateUserDots(scope.userData, true);
+          updateUserDots(scope.clickPosition, true);
         }
 
         var ripple = function(position){
@@ -281,9 +282,8 @@ angular.module('ratingGraphics', [])
         };  
 
         scope.submitScore = function(){
-          // $http POST call
-          var score = scope.userData;
-          graphApiHelper.submitUserScore(score[0])
+          var score = scope.clickPosition[0];
+          graphApiHelper.submitUserScore(score)
             .success(function(data){
 
               //load All Dots
@@ -295,7 +295,9 @@ angular.module('ratingGraphics', [])
                 .success(function(data){
                   var scores = [];
                   for(var i = 0; i < data.length; i++){
-                    if(data[i].score){
+                  // only display colleague score if there is a valid score property
+                  // and the score is not equal to the user score
+                    if(data[i].score && data[i].score.x !== score.x && data[i].score.y !== score.y){
                       scores.push({x: data[i].score.x, y: data[i].score.y, date: data[i].score.date});
                     }
                   }
@@ -305,9 +307,9 @@ angular.module('ratingGraphics', [])
 
                   loadAllDots(scores);
 
-                  scope.userData.push(scope.userData[0]);
+                  // scope.clickPosition.push(scope.clickPosition[0]);
 
-                  updateUserDots(scope.userData, true);
+                  updateUserDots(scope.clickPosition, true);
                 });
             });
         };
@@ -316,11 +318,8 @@ angular.module('ratingGraphics', [])
 
         scope.displayHistory = function(){
           d3.selectAll('.notToday').remove();
-          // d3.select('.colleagueScores').remove();
+
           if(!scope.displayPostHistory){
-            if(scope.scored){
-              scope.userData ;
-            }
             updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory));
             scope.displayPostHistory = true;
           } else {
