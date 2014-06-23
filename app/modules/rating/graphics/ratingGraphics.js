@@ -8,6 +8,7 @@ angular.module('ratingGraphics', [])
         var pageHeight = $window.innerHeight;
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
         var defaultPostHistory = 7; // will show last posts days by default
+        var postOnClickDuration = 1500 ; // duration of click to submit rating
 
         var clickTimer = 0;
         var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8},
@@ -74,11 +75,9 @@ angular.module('ratingGraphics', [])
               }
             })
            .on("mouseup", function( ){
-            if( Date.now() - clickTimer > 1500){
+            if( Date.now() - clickTimer > postOnClickDuration){
               scope.submitScore();
-            } else {
-              console.log('do not submit');
-            }
+            } 
             clickTimer = 0;
            })
            .append("g")
@@ -119,7 +118,9 @@ angular.module('ratingGraphics', [])
             .style("text-anchor", "end")
             .text("Personal success");
 
-        var dayDifference = function(date) { return Math.floor((new Date() - new Date(date)) /  (86400 * 1000)); };
+        var dayDifference = function(date) { 
+          return Math.floor((new Date() - new Date(date)) /  (86400 * 1000)); 
+        };
 
         // utility function for dot tooltip formatting
         var postLabel = function(d) {
@@ -136,10 +137,10 @@ angular.module('ratingGraphics', [])
         };
 
         var loadAllDots = function(data){
-          // var radius = 4;
           var strokeWidth = 3;
           var delay = 50;
           var duration = 200;
+
           // draw dots
           svg.selectAll(".colleagueScores")
               .data(data)
@@ -156,9 +157,6 @@ angular.module('ratingGraphics', [])
                      .duration(500)
                      .style("opacity", 0);
             })
-              // .style("fill", "red")
-              // .attr('opacity', 0)
-            // .transition()
             .transition().delay(function(d, i) { return delay * i }).duration(duration)
               .attr('r', dotSize)
               .attr('stroke-width', strokeWidth)
@@ -170,10 +168,7 @@ angular.module('ratingGraphics', [])
               .attr('opacity', function(d) { 
                 // this makes the dots / posts more transparent the older they are
                 var date = d.date;
-                var postAgeDays = 0;  
-                if(date) {
-                  postAgeDays = dayDifference(date);
-                }
+                var postAgeDays = date ? dayDifference(date) : 0;  
                 return  (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
               });
 
@@ -189,11 +184,7 @@ angular.module('ratingGraphics', [])
           userDots
             .enter().append("circle")
               .attr("class", function(){
-                if(today){
-                  return "userScore today";
-                } else {
-                   return "userScore notToday";
-                }
+                return today ? "userScore today" : "userScore notToday";
               })
             .on("mouseover", function(d) {
               postLabel(d);
@@ -211,11 +202,7 @@ angular.module('ratingGraphics', [])
 
           userDots
               .attr("class", function(){
-                if(today){
-                  return "userScore today";
-                } else {
-                   return "userScore notToday";
-                }
+                return today ? "userScore today" : "userScore notToday";
               })
               .attr("r", dotSize*2)
               .attr("cx", xMap)
@@ -223,10 +210,7 @@ angular.module('ratingGraphics', [])
               .attr('opacity', function(d) { 
                 // this makes the dots / posts more transparent the older they are
                 var date = d.date;
-                var postAgeDays = 0;
-                if(date) {
-                  postAgeDays = dayDifference(date);
-                }
+                var postAgeDays = date ? dayDifference(date) : 0;
                 return (defaultPostHistory  - postAgeDays) / defaultPostHistory ;
               });
         };
@@ -323,14 +307,14 @@ angular.module('ratingGraphics', [])
         scope.displayHistory = function() {
           d3.selectAll(".notToday").remove();
           // d3.select(".colleagueScores").remove();
-          if(!scope.toggle){
+          if(!scope.displayPostHistory){
             if(scope.scored){
-              scope.userData;
+              scope.userData ;
             }
             updateUserDots(scope.currentUser.scores.slice(0, defaultPostHistory));
-            scope.toggle = true;
+            scope.displayPostHistory = true;
           } else {
-            scope.toggle = false;
+            scope.displayPostHistory = false;
           }
         }
       }
@@ -375,11 +359,9 @@ angular.module('ratingGraphics', [])
       .attr('r', innerRadius)
       .style('stroke-width', outerRadius);
 
-    if (scope.user === 'true') {
-      svg.attr('class', 'userScore');
-    } else {
-      svg.attr('class', 'colleagueScores');
-    }
+    scope.user === 'true' ? svg.attr('class', 'userScore') 
+                          : svg.attr('class', 'colleagueScores');
+
   };
 
   return {
