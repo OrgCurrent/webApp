@@ -12,3 +12,8 @@
   border: 1px solid black;
   border-radius: 4px;
 }
+
+.fisheye-label, .fisheye-legend{
+  font-weight: 300;
+  font-size: 10px;
+}

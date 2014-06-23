@@ -1,11 +1,17 @@
 /* Space out content a bit */
 body {
+
   padding-top: 20px;
   padding-bottom: 20px;
 
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   font-weight: 300;
   background-color: rgb(250, 255, 250);
+}
+/*UNDO BOOTSTRAP*/
+.row{
+  margin: 0;
+  position: relative;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -44,12 +50,13 @@ body {
 }
 
 /* Customize container */
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
   .container {
     max-width: 1170px;
+    /*max-width: 1400px;*/
   }
 }
-.container-narrow > hr {
+*/.container-narrow > hr {
   margin: 30px 0;
 }
 

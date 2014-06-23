@@ -1,6 +1,18 @@
 <div ng-include="'partials/navbar.html'"></div>
 
-<div class="row">
-  <div class="board col-sm-12"></div>
-  <div d3-bars bar-height="20" bar-padding="5"></div>
+<div class='container'>
+  <div class="row">
+    <button class='show-sidebox' ng-hide='showSidebox' ng-click='toggleSidebox()'>►</button>
+    <div class="sidebox-wrapper col-sm-3" ng-show='showSidebox'>
+      <div class='sidebox'>
+        <h3>Dashboard Settings</h3>
+        <h3>Analytics</h3>
+      </div>
+      <button class='hide-sidebox' ng-click='toggleSidebox()'>◄</button>
+    </div>
+    <div class="board-wrapper col-sm-9">
+      <div class='board'></div>
+    </div>
+    <div d3-bars bar-height="20" bar-padding="5"></div>
+  </div>
 </div>
