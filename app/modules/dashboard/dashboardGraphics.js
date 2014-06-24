@@ -2,7 +2,7 @@
 
 angular.module('dashboardGraphics', [])
 
-  .factory('mainChart', ['$window', 'fisheyeChart', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, fisheyeChart, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
+  .factory('mainChart', ['$window', 'fisheyeChart', 'FisheyeLines', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, fisheyeChart, FisheyeLines, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
     return {
       render: function(data, sizing, scope){
 
@@ -134,13 +134,13 @@ angular.module('dashboardGraphics', [])
               sizing.height * (100 - smoothAverages[0].y) / 100
             ));
 
-        fisheyeChart.render(smoothAverages[0].date, users, scope);
         Datestamp.render(smoothAverages[0].date, scope.dateRange, smoothAverages);
         Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), scope);
+        if(scope.displayMode === 'fisheye') fisheyeChart.render(smoothAverages[0].date, users, scope);
 
 
         var snapshotUpdate = function(){
-          if(scope.mouse[0] < sizing.width){
+          if(scope.displayMode === 'fisheye' && scope.mouse[0] < sizing.width){
 
             var xRatio = scope.mouse[0] / sizing.width;
             //swift xPos left slightly to accommodate last date
@@ -151,27 +151,6 @@ angular.module('dashboardGraphics', [])
 
             //set snapshotDate
             scope.snapshotDate = dateStr;            
-
-            var xHeight = function(d, i){
-              var lastHeight = sizing.height * (100 - smoothAverages[xIndex].x) / 100;
-              if(xIndex < smoothAverages.length - 1){
-                var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].x) / 100;
-                var displacement = xPos - xIndex;
-                return lastHeight + displacement * (nextHeight - lastHeight);
-              }else{
-                return lastHeight;
-              }
-            };
-            var yHeight = function(d, i){
-              var lastHeight = sizing.height * (100 - smoothAverages[xIndex].y) / 100;
-              if(xIndex < smoothAverages.length - 1){
-                var nextHeight = sizing.height * (100 - smoothAverages[xIndex+1].y) / 100;
-                var displacement = xPos - xIndex;
-                return lastHeight + displacement * (nextHeight - lastHeight);
-              }else{
-                return lastHeight;
-              }
-            };
 
             var height = 0;
             var h1 = PathMethods.getYFromX(lineX, scope.mouse[0]);
@@ -323,10 +302,6 @@ angular.module('dashboardGraphics', [])
                 var dy = d.scores[i].y - d.scores[i+1].y;
                 var diff = dx + dy;
 
-                //redness and blueness of dot
-                // var redness = Math.max(0, Math.min(255, (100-diff) * (255/200)));
-                // var blueness = Math.max(0, Math.min(255, (diff+100) * (255/200)));
-
                 //sensitive setting
                 var blueness = Math.max(0, Math.min(255, (diff+15) * (255/30)));
 
@@ -344,6 +319,10 @@ angular.module('dashboardGraphics', [])
           .remove();
       }
     };
+  }])
+
+  .factory('FisheyeLines', [function(){
+
   }])
 
   .factory('Datestamp', ['TimeFormat', function(TimeFormat){
@@ -374,7 +353,6 @@ angular.module('dashboardGraphics', [])
   .factory('Scorestamp', [function(){
     return {
       render: function(x, y, scope){
-        console.log(x);
         if(!d3.select('.xText')[0][0]){
           d3.select('#board').append("text")
             .attr('text-anchor', 'end')
@@ -460,7 +438,6 @@ angular.module('dashboardGraphics', [])
         while(Math.abs(finalX - x) > 1){
           len = (x0 + x1) / 2 * totalLength;
           point = path.getPointAtLength(len);
-          console.log(point);
           finalX = point.x;
           if(finalX > x){
             x1 = x1 - (x1 - x0) / 2;

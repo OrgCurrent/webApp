@@ -11,13 +11,14 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     $scope.showSidebox = true;
     //mouse position listener for fisheye
     $scope.mouse = [0, 0];
+    $scope.displayMode = 'fisheye';
+
+    $scope.setDisplayMode = function(mode){
+      $scope.displayMode = mode;
+    };
 
     $scope.setDateRange = function(days){
-      if(days){
-        $scope.dateRange = days;  
-      }else{
-        $scope.dateRange = undefined;
-      }
+      $scope.dateRange = days || undefined;
       $scope.renderChart();
     };
 
@@ -30,9 +31,12 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
       
       mainChart.render($scope.users, $scope.sizing, $scope);
     };
+
+    //BUG!!!!!!!
     //listener for window scope resize
-    $window.addEventListener('resize', function(){
-      $scope.renderChart();
+    $window.addEventListener('resize', $scope.renderChart);
+    $scope.$on('$destroy', function(event){
+      $window.removeEventListener('resize', $scope.renderChart);
     });
 
     $scope.toggleSidebox = function(){
