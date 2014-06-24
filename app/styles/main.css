@@ -49,6 +49,26 @@ body {
   padding-bottom: 18px;
 }
 
+.logout{
+  background-color: #e87352;
+  border-color: #e5613b 
+}
+
+.logout:active{
+  background-color: #e3562e;
+  border-color: #c9411b;
+}
+
+.login {
+  background-color: #60cd9b;
+  border-color: #4dc78f;
+}
+
+.login > a, .logout > a {
+  color: white;
+}
+
+
 /* Custom page footer */
 .footer {
   padding-top: 19px;

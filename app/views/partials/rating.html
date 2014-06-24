@@ -1,14 +1,16 @@
 <div ng-include="'partials/navbar.html'"></div>
-<div class="container">
-	<div class="instructions">
-		<i class="shad" ng-show="!scored"> xPress your self by long-clicking below</i>
-		<i class="shad" ng-show="scored"> Thanks for voting today ! </i>
-		<button class="btn shad" ng-click="displayHistory()"><i ng-show="!displayPostHistory">See Your Post History</i><i ng-show="displayPostHistory">Hide Your Post History</i>
+	<div ng-include="'partials/sidebox.html'"></div>
+	<div class="ratingContent">
+		<div class="ratingBoard">
+			<div class="key">
+				<circle-key user="true"></circle-key> <i >Your sentiment</i>
+			</div>
+			<div class="key">
+				<circle-key user="false"></circle-key><i >Your co-workers' most recent sentiment</i>
+			</div>
+		</div>
+		<button class="btn shad" ng-click="displayHistory()">
+			<i class="fa fa-history"></i>
 		</button>
 	</div>
-	<div class="board col-sm-12">
-		<div class="key"><circle-key user="true"></circle-key> <i >Your sentiment</i></div>
-			<div class="key"><circle-key user="false"></circle-key> <i >Your co-workers' most recent sentiment</i></div>
-	</div>
 
-</div>

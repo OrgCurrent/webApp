@@ -1,13 +1,8 @@
 <div class="header" ng-controller="NavbarCtrl">
   <div class="container container-header">
     <ul class="nav nav-pills pull-right">
-      <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}" ng-hide="!currentUser || item.hide">
-          <a ng-href="{{item.link}}">{{item.title}}</a>
-      </li>
-      <li ng-hide="currentUser" ng-class="{active: isActive('/')}"><a href="/">Home</a></li>
-      <li ng-hide="currentUser" ng-class="{active: isActive('/login')}"><a href="/login">Login</a></li>
-      <li ng-hide="currentUser" ng-class="{active: isActive('/signup')}"><a href="/signup">Sign up</a></li>
-      <li ng-show="currentUser" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()">Logout</a></li>
+      <li class="logout" ng-show="currentUser" ng-class="{active: isActive('/logout')}"><a href="/" ng-click="logout()"><i class="fa fa-power-off fa-3	"></i></a></li>
+       <li class="login" ng-show="!currentUser"><a href="/login"><i class="fa fa-power-off"></i></a></li>
     </ul>
     <img class='logo' src='images/logo.png'></img>
   </div>

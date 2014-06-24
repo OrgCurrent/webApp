@@ -7,7 +7,7 @@ angular.module('ratingGraphics', [])
       initialize: function(rootScope, scope){
 
         // options for graph size
-        var pageWidth = parseInt(d3.select('.board').style('width'));
+        var pageWidth = parseInt(d3.select('.ratingBoard').style('width'));
         var pageHeight = $window.innerHeight;
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
         var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8};
@@ -51,7 +51,7 @@ angular.module('ratingGraphics', [])
 
         // add the graph canvas to the body of the webpage
 
-        var svg = d3.select('.board').append('svg')
+        var svg = d3.select('.ratingBoard').append('svg')
             .attr('class', 'ratingsvg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
