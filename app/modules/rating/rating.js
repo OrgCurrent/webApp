@@ -8,7 +8,11 @@ angular.module('app.rating', ['ratingGraphics'])
 
     $scope.scored = (new Date() - new Date($scope.currentUser.lastPost)) < (86400 * 1000);
 
-    $rootScope.currentUser.scoredToday = $scope.scored ? true : false;
+    if(!$rootScope.currentUser.scoredToday) {
+      $rootScope.currentUser.scoredToday = $scope.scored ? true : false;
+    } else {
+      $scope.scored = true;
+    }
 
     scoresGraph.initialize($rootScope, $scope);
 

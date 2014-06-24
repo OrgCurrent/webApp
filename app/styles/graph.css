@@ -101,13 +101,10 @@
   font-size: 2.4em;
 }
 
-.ratingBoard{
-}
+  /*.show-sidebox .ratingContent{
+    left: 220px;
 
-.show-sidebox .ratingContent{
-  left: 220px;
-
-}
+  }*/
 
 .fisheye-lines{
   stroke: black;

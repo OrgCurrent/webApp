@@ -1,16 +1,16 @@
 <div ng-include="'partials/navbar.html'"></div>
 	<div ng-include="'partials/sidebox.html'"></div>
+	<div class="key">
+		<circle-key user="true"></circle-key> <i >Your sentiment</i>
+	</div>
+	<div class="key">
+		<circle-key user="false"></circle-key><i >Your co-workers' most recent sentiment</i>
+	</div>
 	<div class="ratingContent">
 		<div class="ratingBoard">
-			<div class="key">
-				<circle-key user="true"></circle-key> <i >Your sentiment</i>
-			</div>
-			<div class="key">
-				<circle-key user="false"></circle-key><i >Your co-workers' most recent sentiment</i>
-			</div>
 		</div>
-		<button class="btn shad" ng-click="displayHistory()">
+<!-- 		<button class="btn shad" ng-click="displayHistory()">
 			<i class="fa fa-history"></i>
-		</button>
+		</button> -->
 	</div>
 

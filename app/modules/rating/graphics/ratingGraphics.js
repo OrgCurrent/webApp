@@ -48,14 +48,13 @@ angular.module('ratingGraphics', [])
             yMap = function(d){ return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient('left');
 
-
         // add the graph canvas to the body of the webpage
-
         var svg = d3.select('.ratingBoard').append('svg')
             .attr('class', 'ratingsvg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .on('mousedown', function( ){
+              console.log('hello');
               // handles a user click to post a rating, if user hasn't scored today
               if(!scope.scored){
                 var mousePos = d3.mouse(this);
@@ -77,7 +76,7 @@ angular.module('ratingGraphics', [])
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.clickPosition =[{x: newX, y: newY}];
                   updateUserDots(scope.clickPosition, true);
-                }          
+                }      
               }
             })
            .on('mouseup', function( ){
