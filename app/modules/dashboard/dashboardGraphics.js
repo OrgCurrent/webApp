@@ -2,7 +2,7 @@
 
 angular.module('dashboardGraphics', [])
 
-  .factory('mainChart', ['$window', 'fisheyeChart', 'SmoothAverages', 'timeFormat', function($window, fisheyeChart, SmoothAverages, timeFormat){
+  .factory('mainChart', ['$window', 'fisheyeChart', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, fisheyeChart, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
     return {
       render: function(data, sizing, scope){
 
@@ -10,17 +10,18 @@ angular.module('dashboardGraphics', [])
         var users = data[0];
         var scores = data[1];
         var averages = data[2];
+        console.log(averages);
 
         //create smoothAverages array for line chart
-        var smoothAverages = SmoothAverages(averages);
+        var smoothAverages = SmoothAverages(averages, scope.dateRange, scope);
 
-        scope.snapshotDate = timeFormat.format(smoothAverages[0].date);
+        scope.snapshotDate = TimeFormat.format(smoothAverages[0].date);
 
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),
             y = d3.scale.linear().range([sizing.height, 0]),
-            xAxis = d3.svg.axis().scale(x).ticks(6).tickSubdivide(true).tickFormat(d3.time.format("%d-%b-%y")),
+            xAxis = d3.svg.axis().scale(x).ticks(4).tickFormat(d3.time.format("%d-%b-%y")),
             yAxis = d3.svg.axis().scale(y).ticks(6).orient("right");
 
         // A line generator
@@ -95,57 +96,48 @@ angular.module('dashboardGraphics', [])
             .attr('class', 'fisheye-lines');
 
         fisheyeLines.selectAll('.fisheye-line')
-          .data([[8, 170], [158, 170], [158, 20]])
+        //hard-coded positions of 3 corners of fisheye chart
+          .data([[8, 190], [158, 190], [158, 40]])
           .enter()
             .append('line')
             .attr("class", "fisheye-line")
             .attr('x1', scope.mouse[0] + sizing.margin.left)
-            .attr('y1', Math.max(
+            .attr('y1', Math.min(
               sizing.height * (100 - smoothAverages[0].x) / 100,
               sizing.height * (100 - smoothAverages[0].y) / 100
             ) + sizing.margin.top)
             .attr('x2', function(d, i){return d[0];})
             .attr('y2', function(d, i){return d[1];});
 
-        // Add the lineA path.
-        svg.append("path")
+        // Add the lineX path.
+        var lineX = svg.append("path")
             .attr("class", "line")
             .attr("id", "lineA")
             .attr("clip-path", "url(#clip)")
             .attr("d", lineA(smoothAverages));
 
-        // Add the line path.
-        svg.append("path")
+
+        // Add the lineY path.
+        var lineY = svg.append("path")
             .attr("class", "line")
             .attr("id", "lineB")
             .attr("clip-path", "url(#clip)")
             .attr("d", lineB(smoothAverages));
-
-        // Add x,y labels
-        svg.append("text")
-            .attr('id', 'xText')
-            .attr("x", scope.mouse[0] + 5)
-            .attr("y", sizing.height * (100 - smoothAverages[0].x) / 100 - 10)
-            .style("text-anchor", "start")
-            .text('Company success: ' + smoothAverages[0].x.toFixed(1));
-        svg.append("text")
-            .attr('id', 'yText')
-            .attr("x", scope.mouse[0] + 5)
-            .attr("y", sizing.height * (100 - smoothAverages[0].y) / 100 - 10)
-            .style("text-anchor", "start")
-            .text('Personal success: ' + smoothAverages[0].y.toFixed(1));
 
         var snapshotLine = svg.append("line")
             .attr("class", "snapshot-line")
             .attr("x1", scope.mouse[0])
             .attr("x2", scope.mouse[0])
             .attr("y1", sizing.height)
-            .attr("y2", Math.max(
+            .attr("y2", Math.min(
               sizing.height * (100 - smoothAverages[0].x) / 100,
               sizing.height * (100 - smoothAverages[0].y) / 100
             ));
 
         fisheyeChart.render(smoothAverages[0].date, users, scope);
+        Datestamp.render(smoothAverages[0].date, scope.dateRange, smoothAverages);
+        Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), scope);
+
 
         var snapshotUpdate = function(){
           if(scope.mouse[0] < sizing.width){
@@ -155,7 +147,7 @@ angular.module('dashboardGraphics', [])
             var xPos = (smoothAverages.length - 1) * xRatio + 0.2;
             var xIndex = Math.floor(xPos);
             var date = smoothAverages[xIndex].date;
-            var dateStr = timeFormat.format(date);
+            var dateStr = TimeFormat.format(date);
 
             //set snapshotDate
             scope.snapshotDate = dateStr;            
@@ -182,49 +174,27 @@ angular.module('dashboardGraphics', [])
             };
 
             var height = 0;
+            var h1 = PathMethods.getYFromX(lineX, scope.mouse[0]);
+            var h2 = PathMethods.getYFromX(lineY, scope.mouse[0]);
+            if(h1 < h2){
+              height = h1;
+            }else{
+              height = h2;
+            }
 
             snapshotLine.data(scope.mouse)
               .attr("x1", scope.mouse[0])
               .attr("x2", scope.mouse[0])
               .attr("y1", sizing.height)
-              .attr("y2", function(d, i){
-                height = Math.min(xHeight(d, i), yHeight(d, i)); 
-                return height;
-              });
-              
+              .attr("y2", height);
+
             fisheyeLines.selectAll('.fisheye-line')
               .attr('x1', scope.mouse[0] + sizing.margin.left)
               .attr('y1', height + sizing.margin.top);
 
-            //xText tag
-            svg.select('#xText')
-                .attr('x', function(d, i){
-                  var mx = scope.mouse[0];
-                  return mx > sizing.width - 160 ? mx - 5 : mx + 5;
-                })
-                .attr('y', function(d, i){
-                  return xHeight(d, i) - 10;
-                })
-                .style('text-anchor', function(d, i){
-                  return scope.mouse[0] > scope.sizing.width - 160 ? 'end' : 'start';
-                })
-                .text('Company success: ' + smoothAverages[xIndex].x.toFixed(1));
-
-            //yText tag
-            svg.select('#yText')
-                .attr('x', function(d, i){
-                  var mx = scope.mouse[0];
-                  return mx > sizing.width - 160 ? mx - 5 : mx + 5;
-                })
-                .attr('y', function(d, i){
-                  return yHeight(d, i) - 10;
-                })
-                .style('text-anchor', function(d, i){
-                  return scope.mouse[0] > scope.sizing.width - 160 ? 'end' : 'start';
-                })
-                .text('Personal success: ' + smoothAverages[xIndex].y.toFixed(1));
-
             fisheyeChart.render(date, users, scope);
+            Datestamp.render(date, scope.dateRange, smoothAverages);
+            Scorestamp.render(smoothAverages[xIndex].x.toFixed(1), smoothAverages[xIndex].y.toFixed(1), scope);
           }
         };
 
@@ -232,7 +202,7 @@ angular.module('dashboardGraphics', [])
     };
   }])
 
-  .factory('fisheyeChart', ['timeFormat', function(timeFormat){
+  .factory('fisheyeChart', ['TimeFormat', function(TimeFormat){
     return {
       render: function(date, users, scope){
 
@@ -285,9 +255,6 @@ angular.module('dashboardGraphics', [])
               .attr('x', 8)
               .attr('y', sizing.height / 2);
         }
-        //create timestamp in board
-        d3.select('.board').append('text')
-          .attr('class', 'datestamp');
 
         //show or hide fisheye display
         var updateDisplay = function(){
@@ -297,12 +264,6 @@ angular.module('dashboardGraphics', [])
             });
         };
         updateDisplay();
-
-        d3.select('.board .datestamp')
-          .attr("x", 5)
-          .attr("y", 15)
-          .style("text-anchor", "start")
-          .text(timeFormat.format(date));
 
         var scorePoints = fisheye.selectAll('.fisheye-dot')
           .data(users);
@@ -330,7 +291,8 @@ angular.module('dashboardGraphics', [])
               }
             }
           })
-          .attr('r', 5);
+          .attr('r', 3)
+          .attr('opacity', 0.75);
 
         //score updates
         scorePoints.transition()
@@ -362,10 +324,13 @@ angular.module('dashboardGraphics', [])
                 var diff = dx + dy;
 
                 //redness and blueness of dot
-                var redness = Math.max(0, Math.min(255, (100-diff) * (255/200)));
-                var blueness = Math.max(0, Math.min(255, (diff+100) * (255/200)));
+                // var redness = Math.max(0, Math.min(255, (100-diff) * (255/200)));
+                // var blueness = Math.max(0, Math.min(255, (diff+100) * (255/200)));
 
-                return 'rgb(' + redness + ',0,' + blueness + ')';
+                //sensitive setting
+                var blueness = Math.max(0, Math.min(255, (diff+15) * (255/30)));
+
+                return 'rgb(' + (255 - blueness) + ',0,' + blueness + ')';
               }
             }
           }) 
@@ -381,28 +346,135 @@ angular.module('dashboardGraphics', [])
     };
   }])
 
-  .factory('SmoothAverages', function(){
-    return function(averages){
-      var smoothAverages = [];
-      for(var i = 0; i < averages.length; i++){
-        var avgNumber = Math.min(i+1, 7);
-        var weekAverageX = 0;
-        var weekAverageY = 0;
-        for(var j = i - avgNumber + 1; j <= i; j++){
-          weekAverageX += averages[j].x / avgNumber;
-          weekAverageY += averages[j].y / avgNumber;
+  .factory('Datestamp', ['TimeFormat', function(TimeFormat){
+    return {
+      render: function(date, range, smoothAverages){
+        //create datestamp in board if it is not there yet
+        if(!d3.select('.board').select('.datestamp')[0][0]){
+          d3.select('.board').append('text')
+            .attr('class', 'datestamp');          
         }
-        smoothAverages.push({
-          x: weekAverageX,
-          y: weekAverageY,
-          date: averages[i].date
-        });
+        d3.select('.board .datestamp')
+          .attr("x", 5)
+          .attr("y", 15)
+          .style("text-anchor", "start")
+          .text(function(){
+            if(range <= 31){
+              return TimeFormat.format(date);
+            }else{
+              var lastDate = new Date(Date.parse(date) - 86400000 * 6);
+              return TimeFormat.format(lastDate) + ' - ' + TimeFormat.format(date) + ': '
+              ;
+            }
+          });
+      }
+    };
+  }])
+
+  .factory('Scorestamp', [function(){
+    return {
+      render: function(x, y, scope){
+        console.log(x);
+        if(!d3.select('.xText')[0][0]){
+          d3.select('#board').append("text")
+            .attr('text-anchor', 'end')
+            .attr('class', 'xText')
+            .attr('x', scope.sizing.width)
+            .attr('y', 30)
+            .text('Company success: ' + x);          
+        }else{
+        d3.select('.xText').text('Company success: ' + x);          
+        }
+        if(!d3.select('.yText')[0][0]){
+          d3.select('#board').append("text")
+            .attr('text-anchor', 'end')
+            .attr('class', 'yText')
+            .attr('x', scope.sizing.width)
+            .attr('y', 60)
+            .text('Personal success: ' + y);          
+        }else{
+          d3.select('.yText').text('Personal success: ' + y);          
+        }
+      }
+    }
+  }])
+
+  .factory('SmoothAverages', function(){
+    return function(averages, range, scope){
+      if(range){
+        var firstDate = new Date() - range * 86400000;
+      }else{
+        var firstDate = averages[0].date;
+      }
+      var filteredAverages = averages.filter(function(average){
+        return Date.parse(average.date) >= firstDate;
+      });
+      var smoothAverages = [];
+
+      if(!range){
+        scope.dateRange = filteredAverages.length;
+        range = scope.dateRange;
+      }
+
+      if(range < 31){
+        //1 month; show every day
+        return filteredAverages;
+      }else{
+        for(var i = (range - 1) % 7; i < filteredAverages.length; i += 7){
+          console.log(i);
+          var avgNumber = Math.min(i+1, 7);
+          var weekAverageX = 0;
+          var weekAverageY = 0;
+          for(var j = i; j > i - avgNumber; j--){
+            weekAverageX += filteredAverages[j].x / avgNumber;
+            weekAverageY += filteredAverages[j].y / avgNumber;
+          }
+          smoothAverages.push({
+            x: weekAverageX,
+            y: weekAverageY,
+            date: averages[i].date
+          });
+        }
       }
       return smoothAverages;
     };
   })
 
-  .factory('timeFormat', function(){
+  .factory('PathMethods', function(){
+    return {
+      getYFromX: function(el, x){
+        var path = el[0][0];
+        var finalX = 0;
+        var point;
+        var len = 0;
+
+        //binary search
+        var x0 = 0;
+        var x1 = 1;
+
+        var steps = 0;
+        var totalLength = path.getTotalLength();
+
+        point = path.getPointAtLength(len);
+
+        while(Math.abs(finalX - x) > 1){
+          len = (x0 + x1) / 2 * totalLength;
+          point = path.getPointAtLength(len);
+          console.log(point);
+          finalX = point.x;
+          if(finalX > x){
+            x1 = x1 - (x1 - x0) / 2;
+          }else{
+            x0 = x0 + (x1 - x0) / 2;
+          }
+          steps++;
+        }
+        return point.y;
+      }
+    };
+  })
+
+  .factory('TimeFormat', function(){
     return {
       parse: d3.time.format(""),
       format: d3.time.format("%d-%b-%y")

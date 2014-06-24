@@ -5,8 +5,19 @@
     <button class='show-sidebox' ng-hide='showSidebox' ng-click='toggleSidebox()'>►</button>
     <div class="sidebox-wrapper col-sm-3" ng-show='showSidebox'>
       <div class='sidebox'>
-        <h3>Dashboard Settings</h3>
-        <h3>Analytics</h3>
+        <h4>Dashboard Configurations</h4>
+        <p>Date Range</p>
+        <div class="btn-group btn-group-sm buttons-date-range">
+          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(30)'>1 Month</button>
+          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(182)'>6 Months</button>
+          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(365)'>1 Year</button>
+          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange()'>Max</button>
+        </div>
+        <p>Display Mode</p>
+
+
+        <h4>Account Settings</h4>
+        <h4>Invite your friends!</h4>
       </div>
       <button class='hide-sidebox' ng-click='toggleSidebox()'>◄</button>
     </div>

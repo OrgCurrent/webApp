@@ -12,6 +12,15 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     //mouse position listener for fisheye
     $scope.mouse = [0, 0];
 
+    $scope.setDateRange = function(days){
+      if(days){
+        $scope.dateRange = days;  
+      }else{
+        $scope.dateRange = undefined;
+      }
+      $scope.renderChart();
+    };
+
     $scope.renderChart = function(){
       //margin sizing subject to changes
       $scope.sizing.margin = {top: 40, right: 40, bottom: 40, left: 40};

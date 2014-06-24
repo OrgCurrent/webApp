@@ -33,3 +33,4 @@ angular.module('happyMeterApp')
       return route === $location.path();
     };
   }]);
+
