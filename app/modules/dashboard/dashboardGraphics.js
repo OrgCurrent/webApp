@@ -14,8 +14,6 @@ angular.module('dashboardGraphics', [])
         var scores = data[1];
         var averages = data[2];
 
-        console.log(users);
-
         //create smoothAverages array for line chart
         var smoothAverages = SmoothAverages(averages, options);
         options.snapshotDate = TimeFormat.format(smoothAverages[0].date);
@@ -50,7 +48,6 @@ angular.module('dashboardGraphics', [])
             .attr("transform", "translate(" + sizing.margin.left + "," + sizing.margin.top + ")")
             .on("mousemove", function(){
               options.mousePos = d3.mouse(this);
-              // snapshotUpdate();
               that.updateSnapshot(users, smoothAverages, sizing, options);
             })
             .on('click', function(){
@@ -83,25 +80,6 @@ angular.module('dashboardGraphics', [])
             .attr("class", "y axis")
             .attr("transform", "translate(" + sizing.width + ",0)")
             .call(yAxis);
-
-        // //Add the 3 fisheye-box lines
-        // var fisheyeLines = d3.select('#board')
-        //   .append("g")
-        //     .attr('class', 'fisheye-lines');
-
-        // fisheyeLines.selectAll('.fisheye-line')
-        // //hard-coded positions of 3 corners of fisheye chart
-        //   .data([[8, 190], [158, 190], [158, 40]])
-        //   .enter()
-        //     .append('line')
-        //     .attr("class", "fisheye-line")
-        //     .attr('x1', options.mousePos[0] + sizing.margin.left)
-        //     .attr('y1', Math.min(
-        //       sizing.height * (100 - smoothAverages[0].x) / 100,
-        //       sizing.height * (100 - smoothAverages[0].y) / 100
-        //     ) + sizing.margin.top)
-        //     .attr('x2', function(d, i){return d[0];})
-        //     .attr('y2', function(d, i){return d[1];});
 
         // Add the lineX path.
         var lineX = svg.append("path")
@@ -245,8 +223,6 @@ angular.module('dashboardGraphics', [])
               .attr('y2', function(d, i){return d[1];});          
         }
 
-        console.log(users);
-
         var scorePoints = fisheye.selectAll('.fisheye-dot')
           .data(users);
         //new score entry
@@ -268,8 +244,6 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                console.log(d.scores);
-                // console.log(fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100);
                 return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100;
               }
             }
