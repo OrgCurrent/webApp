@@ -3,9 +3,42 @@
   margin: 0;
 }
 */
-.sidebox-wrapper, .board-wrapper{
-  padding-top: 15px;
+.row{
+  box-shadow: 0 5px 1px rgba(255,0,0,0.8);
 }
+.row-header{
+  padding: 10px 10px 0 10px;
+}
+.row-board{
+  padding: 0px 10px 10px 10px;
+}
+.dashboard-header{
+  display: inline;
+}
+.dashboard-header > div{
+  display: inline;
+  color: rgba(240,240,240);
+}
+.dashboard-header, .board-wrapper{
+  /*padding: 15px;*/
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.dashboard-title{
+  font-size: 1.8em;
+  font-weight: bold;
+}
+.board-wrapper{
+  padding: 10px 5px 5px 5px;
+}
+.dashboard-header{
+  display: inline;
+
+  padding: 5px;
+
+  background-color: rgb(240,240,240);
+  vertical-align: middle;
+}
+.board-wrapper
 .sidebox{
   position: relative;
   overflow: auto;

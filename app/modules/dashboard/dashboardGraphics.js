@@ -40,8 +40,8 @@ angular.module('dashboardGraphics', [])
         x.domain([smoothAverages[0].date, smoothAverages[smoothAverages.length - 1].date]);
         y.domain([0, 100]).nice();
 
-        //clear html of .board before updating new SVG
-        var svg = d3.select('.board').html('').append('svg').attr("id", "board")
+        //clear html of .board-wrapper before updating new SVG
+        var svg = d3.select('.board-wrapper').html('').append('svg').attr("id", "board")
             .attr("width", sizing.width + sizing.margin.left + sizing.margin.right)
             .attr("height", sizing.height + sizing.margin.top + sizing.margin.bottom)
           .append("g")
@@ -158,7 +158,7 @@ angular.module('dashboardGraphics', [])
 
         var fisheye = d3.select('.fisheye');
         if(fisheye[0][0] === null){
-          fisheye = d3.select('.board').append('svg')
+          fisheye = d3.select('.board-wrapper').append('svg')
             .attr('display', function(){
               return options.showFisheye ? 'static' : 'none';
             })
@@ -314,11 +314,11 @@ angular.module('dashboardGraphics', [])
     return {
       render: function(date, range, smoothAverages){
         //create datestamp in board if it is not there yet
-        if(!d3.select('.board').select('.datestamp')[0][0]){
-          d3.select('.board').append('text')
+        if(!d3.select('.board-wrapper').select('.datestamp')[0][0]){
+          d3.select('.board-wrapper').append('text')
             .attr('class', 'datestamp');          
         }
-        d3.select('.board .datestamp')
+        d3.select('.board-wrapper .datestamp')
           .attr("x", 5)
           .attr("y", 15)
           .style("text-anchor", "start")
