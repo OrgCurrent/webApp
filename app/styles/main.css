@@ -51,7 +51,9 @@ body {
 
 .logout{
   background-color: #e87352;
-  border-color: #e5613b 
+  border-color: #e5613b;
+  border-radius: 5px;
+  color: white;
 }
 
 .logout:active{
@@ -59,12 +61,18 @@ body {
   border-color: #c9411b;
 }
 
-.login {
-  background-color: #60cd9b;
-  border-color: #4dc78f;
+.logoutIcon{
+  position: relative;
+  left: 15px;
+  color: white;
 }
 
-.login > a, .logout > a {
+.login {
+  background-color: #60cd9b;
+  border-color: #4dc78f;  
+}
+
+.logout {
   color: white;
 }
 

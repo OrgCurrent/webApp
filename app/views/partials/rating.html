@@ -1,16 +1,21 @@
 <div ng-include="'partials/navbar.html'"></div>
 	<div ng-include="'partials/sidebox.html'"></div>
-	<div class="key">
-		<circle-key user="true"></circle-key> <i >Your sentiment</i>
-	</div>
-	<div class="key">
-		<circle-key user="false"></circle-key><i >Your co-workers' most recent sentiment</i>
-	</div>
-	<div class="ratingContent">
+<!-- 	<div class="ratingContent"> -->
 		<div class="ratingBoard">
 		</div>
-<!-- 		<button class="btn shad" ng-click="displayHistory()">
-			<i class="fa fa-history"></i>
-		</button> -->
+		<div class="legend" >
+				<div> <b>Key to graph</b> </div>
+<!-- 			<div class="key"> -->
+				<circle-key user="true"></circle-key>Your vote
+<!-- 			</div> -->
+<!-- 			<div class="key"> -->
+				<circle-key user="false"></circle-key>Your co-workers' votes
+<!-- 			</div> -->
+	  </div>
+<!-- 	</div> -->
+	<div class = "history">
+		<button class="btn shad" ng-click="displayHistory()">
+			<i class="fa fa-history"></i> See your past votes
+		</button>
 	</div>
 

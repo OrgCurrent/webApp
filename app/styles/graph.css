@@ -71,8 +71,8 @@
 .sidebarMenu{
   display: block;
   padding: 15px 15px;
-  transition: all 0.2s ease-in-out;
-  border: 0.1px solid #e5e5e5;
+    transition: all 0.2s ease-in-out;
+    border: 0.1px solid #e5e5e5;
   font-size: 16px;
 }
 
@@ -99,6 +99,12 @@
   background-color: transparent;
   line-height: 0.8em;
   font-size: 2.4em;
+}
+
+.legend {
+  position: relative;
+  top: -30px;
+  text-align: center;
 }
 
   /*.show-sidebox .ratingContent{
@@ -183,14 +189,13 @@ circle.click {
   font-size: 13px;
 }
 
-.key {
+.key, .history {
   text-align: center;
 }
 
 .shad {
   box-shadow: #851518 0px 2px 0px 0px;
   border-radius: 3px;
-  display: inline-block;
   zoom: 1;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;

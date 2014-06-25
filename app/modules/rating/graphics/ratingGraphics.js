@@ -12,7 +12,7 @@ angular.module('ratingGraphics', [])
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
         var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8};
         var height = pageHeight - margin.top - margin.bottom - 150;
-        var width =   pageWidth - margin.left - margin.right - 50;
+        var width =   pageWidth - margin.left - margin.right - 30;
 
         // options for graph behaviour
         var defaultPostHistory = 7; // will show last posts days by default
@@ -54,7 +54,6 @@ angular.module('ratingGraphics', [])
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .on('mousedown', function( ){
-              console.log('hello');
               // handles a user click to post a rating, if user hasn't scored today
               if(!scope.scored){
                 var mousePos = d3.mouse(this);

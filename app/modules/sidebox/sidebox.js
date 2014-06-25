@@ -5,7 +5,7 @@ angular.module('happyMeterApp')
    function ($rootScope, $scope, $location, Auth) {
 
     var role = $scope.currentUser ? $scope.currentUser.role : undefined;
-
+    console.log($location.path());
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
@@ -14,14 +14,25 @@ angular.module('happyMeterApp')
       'link': '/dashboard',
       'hide': (role === 'employee')
     }, {
+      'title': 'Analytics',
+      'hide': ($location.path() !== '/dashboard')
+    }, {
       'title': 'Rating',
       'link': '/rating',
+      'hide': (role === 'executive')
+    }, {
+      'title': 'Rating History',
+      'link' : '/ratinghistory',
+      'hide': (role === 'executive')
+    }, {
+      'title': 'Rewards',
+      'link' : '/rewards',
       'hide': (role === 'executive')
     }, {
       'title': 'Settings',
       'link': '/settings'
     }, {
-      'title': 'Invite',
+      'title': 'Invite Colleagues',
       'link': '/invite'
     }];
 
