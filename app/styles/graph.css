@@ -71,8 +71,8 @@
 .sidebarMenu{
   display: block;
   padding: 15px 15px;
-    transition: all 0.2s ease-in-out;
-    border: 0.1px solid #e5e5e5;
+  transition: all 0.2s ease-in-out;
+  border: 0.1px solid #e5e5e5;
   font-size: 16px;
 }
 

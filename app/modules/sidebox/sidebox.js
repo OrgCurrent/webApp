@@ -5,7 +5,7 @@ angular.module('happyMeterApp')
    function ($rootScope, $scope, $location, Auth) {
 
     var role = $scope.currentUser ? $scope.currentUser.role : undefined;
-    console.log($location.path());
+
     $scope.menu = [{
       'title': 'Home',
       'link': '/'

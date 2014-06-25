@@ -4,10 +4,14 @@
     <div class='sidebox'>
       <a ng-repeat="item in menu" ng-hide="!currentUser || item.hide" ng-href="{{item.link}}" class ="sidebarMenu">
        {{item.title}}<i style="float:right"class="fa fa-caret-right icon-has-ul"></i>
- 	    </a>
+      </a>
+      <a class="sidebarMenu help">
+        <i class="fa fa-question fa-3"></i>
+        <span class="helpText">Help</span>
+      </a>
       <a href="/" ng-click="logout()" class="logout sidebarMenu" ng-show="currentUser" ng-class="{active: isActive('/logout')}">
         <i class="fa fa-power-off fa-3"></i>
-        <span class ="logoutIcon">Logout</span>
+        <span class ="logoutText">Logout</span>
       </a>
     </div>
   </div>

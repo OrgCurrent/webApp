@@ -7,6 +7,10 @@ body {
   background-color: rgb(255, 255, 255);
 }
 /*UNDO BOOTSTRAP*/
+.navTitle > a{
+  color: black;
+}
+
 .row{
   margin: 0;
   position: relative;
@@ -51,8 +55,7 @@ body {
 
 .logout{
   background-color: #e87352;
-  border-color: #e5613b;
-  border-radius: 5px;
+  border-color: #e5613
   color: white;
 }
 
@@ -61,10 +64,21 @@ body {
   border-color: #c9411b;
 }
 
-.logoutIcon{
+.logoutText, .helpText{
   position: relative;
   left: 15px;
   color: white;
+}
+
+.helpText {
+  left: 19px;
+}
+
+
+.help{
+  background-color: #60cd9b;
+  color: white;
+  position: relative;
 }
 
 .login {
