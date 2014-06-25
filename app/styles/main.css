@@ -1,12 +1,10 @@
 /* Space out content a bit */
 body {
-
-  padding-top: 20px;
   padding-bottom: 20px;
 
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-  font-weight: 300;
-  background-color: rgb(250, 255, 250);
+  font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  background-color: rgb(255, 255, 255);
 }
 /*UNDO BOOTSTRAP*/
 .row{
@@ -14,6 +12,13 @@ body {
   position: relative;
 }
 
+.container-header{
+  vertical-align: middle;
+}
+/* fade out soon-to-be-deprecated navbar */
+.nav{
+  opacity: 0.3;
+}
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -21,7 +26,9 @@ body {
   padding-left: 15px;
   padding-right: 15px;
 }
-
+.logo{
+  height: 4em;
+}
 /* Custom page header */
 .header {
   border-bottom: 1px solid #e5e5e5;

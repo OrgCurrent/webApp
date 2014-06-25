@@ -10,7 +10,7 @@
 .fisheye, .fisheye-dots-show{
   position: absolute;
   left: 8px;
-  top: 40px;
+  top: 75px;
   background-color: rgba(245,245,245, 0.8);
   border: 1px solid black;
   border-radius: 4px;
