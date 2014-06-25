@@ -210,7 +210,7 @@ angular.module('dashboardGraphics', [])
               .attr('class', 'fisheye-lines');
           fisheyeLines.selectAll('.fisheye-line')
           //hard-coded positions of 3 corners of fisheye chart
-            .data([[8, 190], [158, 190], [158, 40]])
+            .data([[8, 220], [158, 220], [158, 70]])
             .enter()
               .append('line')
               .attr("class", "fisheye-line")
@@ -338,25 +338,42 @@ angular.module('dashboardGraphics', [])
   .factory('Scorestamp', [function(){
     return {
       render: function(x, y, sizing){
+
         if(!d3.select('.xText')[0][0]){
+          //legend label for x
+          d3.select('#board').append('rect')
+            .attr('fill', 'rgb(150,50,50)')
+            .attr('x', 5)
+            .attr('y', 25)
+            .attr('width', 10)
+            .attr('height', 10);
+
           d3.select('#board').append("text")
-            .attr('text-anchor', 'end')
+            .attr('text-anchor', 'start')
             .attr('class', 'xText')
-            .attr('x', sizing.width)
-            .attr('y', 30)
-            .text('Company success: ' + x);          
+            .attr('x', 25)
+            .attr('y', 35)
+            .text('Outlook on success of company in coming 12 months (1-10): ' + x);          
         }else{
-        d3.select('.xText').text('Company success: ' + x);          
+        d3.select('.xText').text('Outlook on success of company in coming 12 months (1-10): ' + x);          
         }
         if(!d3.select('.yText')[0][0]){
+          //legend label for y
+          d3.select('#board').append('rect')
+            .attr('fill', 'rgb(150,150,90)')
+            .attr('x', 5)
+            .attr('y', 45)
+            .attr('width', 10)
+            .attr('height', 10);
+
           d3.select('#board').append("text")
-            .attr('text-anchor', 'end')
+            .attr('text-anchor', 'start')
             .attr('class', 'yText')
-            .attr('x', sizing.width)
-            .attr('y', 60)
-            .text('Personal success: ' + y);          
+            .attr('x', 25)
+            .attr('y', 55)
+            .text('Outlook on personal success at company in coming 12 months (1-10): ' + y);          
         }else{
-          d3.select('.yText').text('Personal success: ' + y);          
+          d3.select('.yText').text('Outlook on personal success at company in coming 12 months (1-10): ' + y);          
         }
       }
     }

@@ -4,7 +4,7 @@
 }
 */
 .row{
-  box-shadow: 0 5px 1px rgba(255,0,0,0.8);
+  /*box-shadow: 0 5px 1px rgba(255,0,0,0.8);*/
 }
 .row-header{
   padding: 10px 10px 0 10px;
@@ -38,7 +38,6 @@
   background-color: rgb(240,240,240);
   vertical-align: middle;
 }
-.board-wrapper
 .sidebox{
   position: relative;
   overflow: auto;
@@ -71,15 +70,6 @@
   line-height: 0.8em;
   font-size: 2.4em;
 }
-.board{
-  position: relative;
-
-  /*padding: 5px;*/
-  border: 1px solid rgb(0,50,0);
-  border-radius: 5px;
-
-  background-color: rgb(240,250,240)
-}
 
 .fisheye-lines{
   stroke: black;
@@ -89,7 +79,7 @@
 }
 
 .xText, .yText{
-  font-size: 20px;
+  font-size: 1.2em;
 }
 
 /****/
@@ -100,11 +90,11 @@ path.line {
 }
 
 #lineA{
-  stroke: rgb(60,184,120);
+  stroke: rgb(150,50,50);
 }
 
 #lineB{
-  stroke: rgb(0,110,110);
+  stroke: rgb(150,150,90);
 }
 
 path.area {
@@ -118,7 +108,7 @@ path.area {
 /*axis path*/
 .x.axis path, .y.axis path {
   fill: none;
-  stroke: rgb(120,150,120);
+  stroke: rgb(150,150,150);
   stroke-width: 2;
 }
 /*Rating CSS*/
@@ -202,7 +192,7 @@ color: #fff;
 
 /*ticks*/
 .x.axis .tick text, .y.axis .tick text {
-  fill: rgb(120,150,120);
+  fill: rgb(150,150,150);
   font-weight: bold;
 }
 

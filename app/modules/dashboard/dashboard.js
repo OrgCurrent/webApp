@@ -6,7 +6,7 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     //container for sizing parameters
     $scope.sizing = {};
     $scope.resize = function(){
-      $scope.sizing.margin = {top: 40, right: 40, bottom: 40, left: 40};
+      $scope.sizing.margin = {top: 30, right: 40, bottom: 30, left: 30};
       $scope.sizing.width = $('.board-wrapper').width() - $scope.sizing.margin.left - $scope.sizing.margin.right;
       $scope.sizing.height = ($window.innerHeight - 160) - $scope.sizing.margin.top - $scope.sizing.margin.bottom;
     };
