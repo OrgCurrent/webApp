@@ -55,9 +55,15 @@
   opacity: 0.2;
 }
 
+.xText, .yText{
+  font-size: 20px;
+}
+
+/****/
+
 path.line {
   fill: none;
-  stroke-width: 1.5px;
+  stroke-width: 4px;
 }
 
 #lineA{

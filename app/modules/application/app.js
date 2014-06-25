@@ -6,6 +6,7 @@ angular.module('happyMeterApp', [
   'ngSanitize',
   'ngRoute',
   'app.dashboard',
+  'app.dashboard.chart',
   'app.rating'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
