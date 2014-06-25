@@ -2,8 +2,11 @@
 
 <div class='container'>
   <div class="row">
-    <button class='show-sidebox' ng-hide='showSidebox' ng-click='toggleSidebox()'>►</button>
-    <div class="sidebox-wrapper col-sm-3" ng-show='showSidebox'>
+    Bar
+  </div>
+  <div class="row">
+    <button class='show-sidebox' ng-hide='options.showSidebox' ng-click='toggleSidebox()'>►</button>
+    <div class="sidebox-wrapper col-sm-3" ng-show='options.showSidebox'>
       <div class='sidebox'>
         <h4>Dashboard Configurations</h4>
         <p>Date Range</p>
@@ -27,6 +30,6 @@
     <div class="board-wrapper col-sm-9">
       <div class='board'></div>
     </div>
-    <div d3-bars bar-height="20" bar-padding="5"></div>
+    <div ng-controller='DashboardChartCtrl'></div>
   </div>
 </div>

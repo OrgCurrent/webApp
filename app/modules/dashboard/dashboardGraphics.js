@@ -2,21 +2,23 @@
 
 angular.module('dashboardGraphics', [])
 
-  .factory('mainChart', ['$window', 'fisheyeChart', 'FisheyeLines', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, fisheyeChart, FisheyeLines, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
+  .factory('MainChart', ['$window', 'FisheyeChart', 'FisheyeLines', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, FisheyeChart, FisheyeLines, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
+
     return {
-      render: function(data, sizing, scope){
+
+      render: function(data, sizing, options){
+        var that = this;
 
         //separate data
         var users = data[0];
         var scores = data[1];
         var averages = data[2];
-        console.log(averages);
+
+        console.log(users);
 
         //create smoothAverages array for line chart
-        var smoothAverages = SmoothAverages(averages, scope.dateRange, scope);
-
-        scope.snapshotDate = TimeFormat.format(smoothAverages[0].date);
-
+        var smoothAverages = SmoothAverages(averages, options);
+        options.snapshotDate = TimeFormat.format(smoothAverages[0].date);
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),
@@ -47,25 +49,17 @@ angular.module('dashboardGraphics', [])
           .append("g")
             .attr("transform", "translate(" + sizing.margin.left + "," + sizing.margin.top + ")")
             .on("mousemove", function(){
-              scope.mouse = d3.mouse(this);
-              snapshotUpdate();
+              options.mousePos = d3.mouse(this);
+              // snapshotUpdate();
+              that.updateSnapshot(users, smoothAverages, sizing, options);
             })
             .on('click', function(){
-              scope.showFisheye = !scope.showFisheye;
-              updateDisplay();
+              options.showFisheye = !options.showFisheye;
+              FisheyeChart.updateDisplay(options);
             });
 
         //show or hide fisheye display
-        var updateDisplay = function(){
-          if(!scope.showFisheye){
-            d3.selectAll('.fisheye, .fisheye-dot, .fisheye-line')
-              .attr('display', 'none');
-          }else{
-            d3.selectAll('.fisheye, .fisheye-dot, .fisheye-line')
-              .attr('display', 'static');
-          }
-        };
-        updateDisplay();
+        FisheyeChart.updateDisplay(options);
 
         // Add the clip path.
         var clip = svg.append("clipPath")
@@ -90,24 +84,24 @@ angular.module('dashboardGraphics', [])
             .attr("transform", "translate(" + sizing.width + ",0)")
             .call(yAxis);
 
-        //Add the 3 fisheye-box lines
-        var fisheyeLines = d3.select('#board')
-          .append("g")
-            .attr('class', 'fisheye-lines');
+        // //Add the 3 fisheye-box lines
+        // var fisheyeLines = d3.select('#board')
+        //   .append("g")
+        //     .attr('class', 'fisheye-lines');
 
-        fisheyeLines.selectAll('.fisheye-line')
-        //hard-coded positions of 3 corners of fisheye chart
-          .data([[8, 190], [158, 190], [158, 40]])
-          .enter()
-            .append('line')
-            .attr("class", "fisheye-line")
-            .attr('x1', scope.mouse[0] + sizing.margin.left)
-            .attr('y1', Math.min(
-              sizing.height * (100 - smoothAverages[0].x) / 100,
-              sizing.height * (100 - smoothAverages[0].y) / 100
-            ) + sizing.margin.top)
-            .attr('x2', function(d, i){return d[0];})
-            .attr('y2', function(d, i){return d[1];});
+        // fisheyeLines.selectAll('.fisheye-line')
+        // //hard-coded positions of 3 corners of fisheye chart
+        //   .data([[8, 190], [158, 190], [158, 40]])
+        //   .enter()
+        //     .append('line')
+        //     .attr("class", "fisheye-line")
+        //     .attr('x1', options.mousePos[0] + sizing.margin.left)
+        //     .attr('y1', Math.min(
+        //       sizing.height * (100 - smoothAverages[0].x) / 100,
+        //       sizing.height * (100 - smoothAverages[0].y) / 100
+        //     ) + sizing.margin.top)
+        //     .attr('x2', function(d, i){return d[0];})
+        //     .attr('y2', function(d, i){return d[1];});
 
         // Add the lineX path.
         var lineX = svg.append("path")
@@ -115,7 +109,6 @@ angular.module('dashboardGraphics', [])
             .attr("id", "lineA")
             .attr("clip-path", "url(#clip)")
             .attr("d", lineA(smoothAverages));
-
 
         // Add the lineY path.
         var lineY = svg.append("path")
@@ -126,66 +119,61 @@ angular.module('dashboardGraphics', [])
 
         var snapshotLine = svg.append("line")
             .attr("class", "snapshot-line")
-            .attr("x1", scope.mouse[0])
-            .attr("x2", scope.mouse[0])
+            .attr("x1", options.mousePos[0])
+            .attr("x2", options.mousePos[0])
             .attr("y1", sizing.height)
             .attr("y2", Math.min(
               sizing.height * (100 - smoothAverages[0].x) / 100,
               sizing.height * (100 - smoothAverages[0].y) / 100
             ));
 
-        Datestamp.render(smoothAverages[0].date, scope.dateRange, smoothAverages);
-        Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), scope);
-        if(scope.displayMode === 'fisheye') fisheyeChart.render(smoothAverages[0].date, users, scope);
+        Datestamp.render(smoothAverages[0].date, options.dateRange, smoothAverages);
+        Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), sizing);
+        if(options.displayMode === 'fisheye'){
+          FisheyeChart.render(smoothAverages[0].date, users, smoothAverages, sizing, options);
+        }
+      },
 
+      updateSnapshot: function(users, smoothAverages, sizing, options){
+        if(options.displayMode === 'fisheye' && options.mousePos[0] < sizing.width){
 
-        var snapshotUpdate = function(){
-          if(scope.displayMode === 'fisheye' && scope.mouse[0] < sizing.width){
+          var xRatio = options.mousePos[0] / sizing.width;
+          //swift xPos left slightly to accommodate last date
+          var xPos = (smoothAverages.length - 1) * xRatio + 0.2;
+          var xIndex = Math.floor(xPos);
+          var date = smoothAverages[xIndex].date;
+          var dateStr = TimeFormat.format(date);
 
-            var xRatio = scope.mouse[0] / sizing.width;
-            //swift xPos left slightly to accommodate last date
-            var xPos = (smoothAverages.length - 1) * xRatio + 0.2;
-            var xIndex = Math.floor(xPos);
-            var date = smoothAverages[xIndex].date;
-            var dateStr = TimeFormat.format(date);
+          options.snapshotDate = dateStr;
 
-            //set snapshotDate
-            scope.snapshotDate = dateStr;            
+          var h1 = PathMethods.getYFromX(d3.select('#lineA'), options.mousePos[0]);
+          var h2 = PathMethods.getYFromX(d3.select('#lineB'), options.mousePos[0]);
+          var height = Math.min(h1, h2);
 
-            var height = 0;
-            var h1 = PathMethods.getYFromX(lineX, scope.mouse[0]);
-            var h2 = PathMethods.getYFromX(lineY, scope.mouse[0]);
-            if(h1 < h2){
-              height = h1;
-            }else{
-              height = h2;
-            }
+          d3.select('.snapshot-line').data(options.mousePos)
+            .attr("x1", options.mousePos[0])
+            .attr("x2", options.mousePos[0])
+            .attr("y1", sizing.height)
+            .attr("y2", height);
 
-            snapshotLine.data(scope.mouse)
-              .attr("x1", scope.mouse[0])
-              .attr("x2", scope.mouse[0])
-              .attr("y1", sizing.height)
-              .attr("y2", height);
+          d3.selectAll('.fisheye-line')
+            .attr('x1', options.mousePos[0] + sizing.margin.left)
+            .attr('y1', height + sizing.margin.top);
 
-            fisheyeLines.selectAll('.fisheye-line')
-              .attr('x1', scope.mouse[0] + sizing.margin.left)
-              .attr('y1', height + sizing.margin.top);
-
-            fisheyeChart.render(date, users, scope);
-            Datestamp.render(date, scope.dateRange, smoothAverages);
-            Scorestamp.render(smoothAverages[xIndex].x.toFixed(1), smoothAverages[xIndex].y.toFixed(1), scope);
-          }
-        };
-
+          FisheyeChart.render(date, users, smoothAverages, sizing, options);
+          Datestamp.render(date, options.dateRange, smoothAverages);
+          Scorestamp.render(smoothAverages[xIndex].x.toFixed(1), smoothAverages[xIndex].y.toFixed(1), sizing);
+        }
       }
+
     };
   }])
 
-  .factory('fisheyeChart', ['TimeFormat', function(TimeFormat){
+  .factory('FisheyeChart', ['TimeFormat', function(TimeFormat){
     return {
-      render: function(date, users, scope){
+      render: function(date, users, smoothAverages, sizing, options){
 
-        var sizing = {
+        var fisheyeSizing = {
           width: 150,
           height: 150
         };
@@ -194,24 +182,24 @@ angular.module('dashboardGraphics', [])
         if(fisheye[0][0] === null){
           fisheye = d3.select('.board').append('svg')
             .attr('display', function(){
-              return scope.showFisheye ? 'static' : 'none';
+              return options.showFisheye ? 'static' : 'none';
             })
             .attr('class', 'fisheye')
-            .attr('width', sizing.width)
-            .attr('height', sizing.height);
+            .attr('width', fisheyeSizing.width)
+            .attr('height', fisheyeSizing.height);
             //fisheye labels
             fisheye.append('text')
               .attr('class', 'fisheye-label')
               .text('100')
               .style('text-anchor', 'end')
-              .attr('x', sizing.width - 2)
-              .attr('y', sizing.height - 2);
+              .attr('x', fisheyeSizing.width - 2)
+              .attr('y', fisheyeSizing.height - 2);
             fisheye.append('text')
               .attr('class', 'fisheye-label')
               .text('0')
               .style('text-anchor', 'start')
               .attr('x', 2)
-              .attr('y', sizing.height - 2);
+              .attr('y', fisheyeSizing.height - 2);
             fisheye.append('text')
               .attr('class', 'fisheye-label')
               .text('100')
@@ -224,29 +212,43 @@ angular.module('dashboardGraphics', [])
               .attr('class', 'fisheye-legend')
               .text('Company success')
               .style('text-anchor', 'middle')
-              .attr('x', sizing.width / 2)
-              .attr('y', sizing.height - 2);
+              .attr('x', fisheyeSizing.width / 2)
+              .attr('y', fisheyeSizing.height - 2);
             fisheye.append('text')
               .attr('class', 'fisheye-legend')
               .text('Personal success')
               .style('text-anchor', 'middle')
               .attr('transform', 'rotate(270, 8, 75)')
               .attr('x', 8)
-              .attr('y', sizing.height / 2);
+              .attr('y', fisheyeSizing.height / 2);
         }
 
-        //show or hide fisheye display
-        var updateDisplay = function(){
-          d3.selectAll('.fisheye, .fisheye-dot, .fisheye-line')
-            .attr('display', function(){
-              return scope.showFisheye ? 'static' : 'none';
-            });
-        };
-        updateDisplay();
+        this.updateDisplay(options);
+
+        //Add the 3 fisheye-box lines if there are not there
+        if(!d3.select('.fisheye-lines')[0][0]){
+          var fisheyeLines = d3.select('#board')
+            .append("g")
+              .attr('class', 'fisheye-lines');
+          fisheyeLines.selectAll('.fisheye-line')
+          //hard-coded positions of 3 corners of fisheye chart
+            .data([[8, 190], [158, 190], [158, 40]])
+            .enter()
+              .append('line')
+              .attr("class", "fisheye-line")
+              .attr('x1', options.mousePos[0] + sizing.margin.left)
+              .attr('y1', Math.min(
+                sizing.height * (100 - smoothAverages[0].x) / 100,
+                sizing.height * (100 - smoothAverages[0].y) / 100
+              ) + sizing.margin.top)
+              .attr('x2', function(d, i){return d[0];})
+              .attr('y2', function(d, i){return d[1];});          
+        }
+
+        console.log(users);
 
         var scorePoints = fisheye.selectAll('.fisheye-dot')
           .data(users);
-
         //new score entry
         scorePoints.enter()
           .append('circle')
@@ -257,7 +259,7 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return d.scores[i].x * sizing.width / 100;
+                return d.scores[i].x * fisheyeSizing.width / 100;
               }
             }
           })
@@ -266,7 +268,9 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return sizing.height - d.scores[i].y * sizing.height / 100;
+                console.log(d.scores);
+                // console.log(fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100);
+                return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100;
               }
             }
           })
@@ -280,20 +284,20 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return d.scores[i].x * sizing.width / 100;
+                return d.scores[i].x * fisheyeSizing.width / 100;
               }
             }
-            return d.scores[d.scores.length - 1].x * sizing.width / 100;
+            return d.scores[d.scores.length - 1].x * fisheyeSizing.width / 100;
           })
           .attr('cy', function(d){
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return sizing.height - d.scores[i].y * sizing.height / 100;
+                return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100;
               }
             }
-            return size.height - d.scores[d.scores.length - 1].y * sizing.height / 100;
+            return fisheyeSizing.height - d.scores[d.scores.length - 1].y * fisheyeSizing.height / 100;
           })
           .attr('fill', function(d){
             for(var i = d.scores.length - 1; i >= 0; i--){
@@ -317,7 +321,14 @@ angular.module('dashboardGraphics', [])
           .attr('opacity', 0)
           .duration(300)
           .remove();
-      }
+      },
+
+      updateDisplay: function(options){
+        d3.selectAll('.fisheye, .fisheye-dot, .fisheye-line')
+          .attr('display', function(){
+            return options.showFisheye ? 'static' : 'none'
+          });
+      },
     };
   }])
 
@@ -352,12 +363,12 @@ angular.module('dashboardGraphics', [])
 
   .factory('Scorestamp', [function(){
     return {
-      render: function(x, y, scope){
+      render: function(x, y, sizing){
         if(!d3.select('.xText')[0][0]){
           d3.select('#board').append("text")
             .attr('text-anchor', 'end')
             .attr('class', 'xText')
-            .attr('x', scope.sizing.width)
+            .attr('x', sizing.width)
             .attr('y', 30)
             .text('Company success: ' + x);          
         }else{
@@ -367,7 +378,7 @@ angular.module('dashboardGraphics', [])
           d3.select('#board').append("text")
             .attr('text-anchor', 'end')
             .attr('class', 'yText')
-            .attr('x', scope.sizing.width)
+            .attr('x', sizing.width)
             .attr('y', 60)
             .text('Personal success: ' + y);          
         }else{
@@ -378,28 +389,20 @@ angular.module('dashboardGraphics', [])
   }])
 
   .factory('SmoothAverages', function(){
-    return function(averages, range, scope){
-      if(range){
-        var firstDate = new Date() - range * 86400000;
-      }else{
-        var firstDate = averages[0].date;
-      }
+
+    return function(averages, options){
+      var range = options.dateRange;
+      var firstDate = new Date() - range * 86400000;
       var filteredAverages = averages.filter(function(average){
         return Date.parse(average.date) >= firstDate;
       });
+
       var smoothAverages = [];
-
-      if(!range){
-        scope.dateRange = filteredAverages.length;
-        range = scope.dateRange;
-      }
-
       if(range < 31){
         //1 month; show every day
         return filteredAverages;
       }else{
         for(var i = (range - 1) % 7; i < filteredAverages.length; i += 7){
-          console.log(i);
           var avgNumber = Math.min(i+1, 7);
           var weekAverageX = 0;
           var weekAverageY = 0;
