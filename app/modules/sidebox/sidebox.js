@@ -52,11 +52,11 @@ angular.module('happyMeterApp')
     $scope.toggleSidebox = function(){
           $scope.showSidebox = !$scope.showSidebox;
           if(!$scope.showSidebox){
-            d3.select('.board-wrapper')
+            d3.select('.header')
               .attr('class', 'board-wrapper col-sm-11 col-md-offset-1');
             // $scope.renderChart();
           }else{
-            d3.select('.board-wrapper')
+            d3.select('.header')
               .attr('class', 'board-wrapper col-sm-9');
             // $scope.renderChart();
           }

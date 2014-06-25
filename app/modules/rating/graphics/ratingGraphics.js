@@ -59,11 +59,11 @@ angular.module('ratingGraphics', [])
                 var mousePos = d3.mouse(this);
                 // if the page is wider, graph is wider, - detect clicks accurately irrespective of rescaling
 
-                var yaxis = document.getElementsByClassName('y axis')[0].getBoundingClientRect();
+                var yaxis = document.getElementsByClassName('y-rating-axis')[0].getBoundingClientRect();
                 var yaxisPosition = yaxis.left + yaxis.width / 2 
                 - document.getElementsByClassName('ratingsvg')[0].getBoundingClientRect().left;
 
-                var xaxis = document.getElementsByClassName('x axis')[0].getBoundingClientRect();
+                var xaxis = document.getElementsByClassName('x-rating-axis')[0].getBoundingClientRect();
                 var xaxisPosition = xaxis.top + xaxis.height/2; 
                 var topBoard = document.getElementsByClassName('key')[1].getBoundingClientRect().bottom;
 
@@ -102,7 +102,7 @@ angular.module('ratingGraphics', [])
 
         // x-axis
         svg.append('g')
-            .attr('class', 'x axis')
+            .attr('class', 'x-rating-axis')
             .attr('transform', 'translate(0,' + height + ')')
             .call(xAxis)
           .append('text')
@@ -114,7 +114,7 @@ angular.module('ratingGraphics', [])
 
         // y-axis
         svg.append('g')
-            .attr('class', 'y axis')
+            .attr('class', 'y-rating-axis')
             .call(yAxis)
           .append('text')
             .attr('class', 'label')

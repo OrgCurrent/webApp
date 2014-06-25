@@ -19,7 +19,7 @@
   display: inline;
   color: rgba(240,240,240);
 }
-.dashboard-header, .board-wrapper{
+.dashboard-header, .board-wrapper, .ratings-header{
   /*padding: 15px;*/
   box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
@@ -30,13 +30,14 @@
 .board-wrapper{
   padding: 10px 5px 5px 5px;
 }
-.dashboard-header{
-  display: inline;
-
+.dashboard-header, .ratings-header{
   padding: 5px;
-
   background-color: rgb(240,240,240);
   vertical-align: middle;
+}
+
+.ratings-header{
+  text-align: center;
 }
 
 .board-wrapper{
@@ -101,14 +102,13 @@
   font-size: 2.4em;
 }
 
-.legend {
-  text-align: center;
+.ratingBoard{
 }
 
-  /*.show-sidebox .ratingContent{
-    left: 220px;
+.show-sidebox .ratingContent{
+  left: 220px;
 
-  }*/
+}
 
 .fisheye-lines{
   stroke: black;
@@ -194,6 +194,7 @@ circle.click {
 .shad {
   box-shadow: #851518 0px 2px 0px 0px;
   border-radius: 3px;
+  display: inline-block;
   zoom: 1;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -220,6 +221,24 @@ circle.click {
 background: #e0393e;
 color: #fff;
 }
+
+.x-rating-axis path, .y-rating-axis path {
+ stroke: black;
+ stroke-width: 3;
+ stroke-opacity: .8;
+}
+
+/*ticks*/
+.x-rating-axis text, .y-rating-axis text {
+  fill: rgb(150,150,150);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.x-rating-axis .minor {
+  stroke-opacity: .5;
+}
+
 
 /*Rating CSS ends*/
 
