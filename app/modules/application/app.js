@@ -7,7 +7,9 @@ angular.module('happyMeterApp', [
   'ngRoute',
   'app.dashboard',
   'app.dashboard.chart',
-  'app.rating'
+  'app.rating',
+    'app.ratinghistory'
+    // 'app.rewards'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
@@ -33,6 +35,16 @@ angular.module('happyMeterApp', [
         controller: 'RatingCtrl',
         authenticate: true
       })
+      .when('/ratinghistory', {
+        templateUrl: 'partials/ratinghistory',
+        controller: 'RatingHistoryCtrl',
+        authenticate: true
+      })
+      // .when('/rewards', {
+      //   templateUrl: 'partials/rewards',
+      //   controller: 'RewardsCtrl',
+      //   authenticate: true
+      // })
       .when('/settings', {
         templateUrl: 'partials/settings',
         controller: 'SettingsCtrl',

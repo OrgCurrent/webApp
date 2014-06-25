@@ -1,22 +1,27 @@
 <div ng-include="'partials/navbar.html'"></div>
-	<div ng-include="'partials/sidebox.html'"></div>
-<!-- 	<div class="ratingContent"> -->
-		<div class="history"> <h4>Vote today to collect reward points </h4> </div>
-		<div class="ratingBoard">
-		</div>
-		<div class="legend" >
-				<div> <b>Key to graph</b> </div>
-<!-- 			<div class="key"> -->
-				<circle-key user="true"></circle-key>Your vote
-<!-- 			</div> -->
-<!-- 			<div class="key"> -->
-				<circle-key user="false"></circle-key>Your co-workers' votes
-<!-- 			</div> -->
-	  </div>
-<!-- 	</div> -->
-	<div class = "history">
-		<button class="btn shad" ng-click="displayHistory()">
-			<i class="fa fa-history"></i> See your past votes
-		</button>
-	</div>
+<div ng-include="'partials/sidebox.html'"></div>
+<div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading">Vote today to collect reward points</div>
+		<div class="ratingBoard"></div>
 
+		  <ul class="list-group">
+		    <li class="list-group-item">
+		    	<div class="legend" >
+						<circle-key user="true"></circle-key>Your vote
+						<circle-key user="false"></circle-key>Your co-workers' votes
+  				</div>
+		    </li>
+		    <li class="list-group-item">
+		    <div class = "history">
+					<button class="btn shad" ng-click="displayHistory()">
+						<i class="fa fa-history"></i> See your past votes
+					</button>
+				</div>
+		    </li>
+			</ul>
+	</div>
+</div>
+
+		
+			

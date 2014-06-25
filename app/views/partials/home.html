@@ -1,10 +1,10 @@
 <div ng-include="'partials/navbar'"></div>
-<div ng-show="currentUser" ng-include="'partials/sidebox.html'"></div>
-
+<div ng-include="'partials/sidebox.html'" ng-show="currentUser"></div>
 <div class="jumbotron">
   <div class="container">
-    <h1>Welcome To my2¢ents</h1>
-     <p><a class="btn btn-primary btn-lg" href="/signup" role="button">Sign Up</a><a class="btn btn-primary btn-lg" href="/login" style="position:relative;	left:15px;" role="button">Login</a></p>
+
+     <p><h1>Welcome to my2¢ents</h1></p>
+     <p style="text-align:center" ><a class="btn btn-primary btn-lg" href="/signup" ng-hide="currentUser" role="button">Sign Up</a><a class="btn btn-primary btn-lg" href="/login" ng-hide="currentUser" style="position:relative;	left:15px;" role="button">Login</a><a class="btn btn-primary btn-lg" href="/rating" ng-show="currentUser" role="button">Vote Today!</a></p>
   </div>
   <div class="row marketing">
     <h4>Happiness</h4>
