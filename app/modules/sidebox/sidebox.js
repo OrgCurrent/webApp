@@ -6,6 +6,9 @@ angular.module('happyMeterApp')
 
     var role = $scope.currentUser ? $scope.currentUser.role : undefined;
 
+    // ensure the sideBox is hidden when the route is changed
+    $scope.showSidebox = false;
+
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
@@ -48,7 +51,6 @@ angular.module('happyMeterApp')
       return route === $location.path();
     };
 
-    $scope.showSidebox = true;
     $scope.toggleSidebox = function(){
           $scope.showSidebox = !$scope.showSidebox;
           if(!$scope.showSidebox){
@@ -60,6 +62,7 @@ angular.module('happyMeterApp')
               .attr('class', 'board-wrapper col-sm-9');
             // $scope.renderChart();
           }
-        };
+    };
+
   }]);
 
