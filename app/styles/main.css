@@ -1,10 +1,8 @@
-/* Space out content a bit */
 body {
-  padding-bottom: 20px;
-
   font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
   font-weight: 400;
   background-color: rgb(255, 255, 255);
+  padding: 0;
 }
 /*UNDO BOOTSTRAP*/
 .navTitle > a{
@@ -17,7 +15,11 @@ body {
 }
 
 .container-header{
-  vertical-align: middle;
+  padding: 5px;
+  text-align: center;
+  vertical-align: text-bottom;
+
+  background-color: rgb(245,245,245);
 }
 /* fade out soon-to-be-deprecated navbar */
 .nav{
@@ -30,27 +32,126 @@ body {
   padding-left: 15px;
   padding-right: 15px;
 }
-.logo{
+.home-logo{
+
+  padding: 30px;
+  text-align: center;
+}
+.container-header{
+  /*hack*/
+  top: 0;
+  /**/
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.header-logo{
   height: 4em;
 }
+.header-text{
+  margin: 0 20px;
+}
+.sidebox{
+
+  width: 220px;
+  height: 100%;
+
+  padding-top: 2px;
+  float: left;
+  position: absolute;
+  z-index: 1;
+  box-shadow: 5px 1px 10px rgba(150,150,150,0.7);
+
+  background-color: rgb(100,100,100);
+
+}
+.animate-show, .animate-hide {
+  -webkit-transition:all linear 1s; /* Chrome */
+  -moz-transition:all linear 1s;
+  -ms-transition:all linear 1s;
+  -o-transition:all linear 1s;
+  transition:all linear 1s;
+}
+.animate-show{
+  opacity: 0;
+}
+.animate-show.animate-show-active{
+  opacity: 1;
+}
+.animate-hide{
+  opacity: 1;
+}
+.animate-hide.animate-hide-active{
+  opacity: 0;
+}
+
+/*.sidebox > div {
+  padding: 15px 15px;
+  transition: all 0.2s ease-in-out;
+  border: 0.1px solid #e5e5e5;
+  font-size: 16px;
+}*/
+.sidebar-menu{
+  display: block;
+  padding: 15px 15px;
+  transition: all 0.2s ease-in-out;
+  border: 0.1px solid #e5e5e5;
+  font-size: 16px;
+  color: white;
+}
+.sidebar-menu:hover{
+  background-color: white;
+  color: black;
+  /*remove underline*/
+  text-decoration: none;
+}
+
+.hide-sidebox{
+  position: absolute;
+  right: 15px;
+  top: 10px;
+
+  margin: 0;
+  border: 0;
+
+  background-color: transparent;
+  line-height: 0.8em;
+  font-size: 3em;
+}
+.show-sidebox{
+  position: absolute;
+  left: 15px;
+  top: 20px;
+
+  margin: 0;
+  border: 2px;
+
+  background-color: transparent;
+  line-height: 0.8em;
+  font-size: 2.4em;
+}
+.show-sidebox .ratingContent{
+  left: 220px;
+}
+
 /* Custom page header */
 .header {
-  border-bottom: 1px solid #e5e5e5;
+  /*border-bottom: 1px solid #e5e5e5;*/
+  /*box-shadow: 0 1px 5px rgba(0,0,0,0.5);*/
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
   /*custom font*/
-  font-family: 'Roboto Slab', serif;
+/*  font-family: 'Roboto Slab', serif;
   font-size: 36px;
-  color: rgb(0, 50, 0);
+  color: rgb(0, 50, 0);*/
 
 /*  background: -webkit-linear-gradient(red, green);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;*/
-  margin-top: 0;
+
+ /* margin-top: 0;
   margin-bottom: 0;
   line-height: 36px;
-  padding-bottom: 18px;
+  padding-bottom: 18px;*/
 }
 
 .logout{
@@ -106,7 +207,7 @@ body {
   }
 }
 */.container-narrow > hr {
-  margin: 30px 0;
+  /*margin: 30px 0;*/
 }
 
 /* Main marketing message and sign up button */

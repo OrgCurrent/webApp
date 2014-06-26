@@ -5,6 +5,7 @@ angular.module('happyMeterApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ngAnimate',
   'app.dashboard',
   'app.dashboard.chart',
   'app.rating',
