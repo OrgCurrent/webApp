@@ -71,7 +71,6 @@ angular.module('ratingGraphics', [])
                 var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
 
                 clickTimer = Date.now();
-                console.log(newX, newY);
                 // only acceps a click if it is within the bounds of the graph area
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.clickPosition =[{x: newX, y: newY}];
