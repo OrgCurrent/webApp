@@ -65,12 +65,13 @@ angular.module('ratingGraphics', [])
 
                 var xaxis = document.getElementsByClassName('x-rating-axis')[0].getBoundingClientRect();
                 var xaxisPosition = xaxis.top + xaxis.height/2; 
-                var topBoard = document.getElementsByClassName('key')[1].getBoundingClientRect().bottom;
+                var topBoard = document.getElementsByClassName('dashboard-title')[0].getBoundingClientRect().bottom;
 
                 var newX = ((mousePos[0] - yaxisPosition - 4)*100)/width;
                 var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
 
                 clickTimer = Date.now();
+                console.log(newX, newY);
                 // only acceps a click if it is within the bounds of the graph area
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.clickPosition =[{x: newX, y: newY}];

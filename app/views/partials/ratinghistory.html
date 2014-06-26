@@ -8,14 +8,14 @@
 		</div>
 		<div id="line-example"></div>
 		<div class="panel-footer key">
-			<div class="btn-group" data-toggle="buttons">
-					<label class="btn btn-default active">
-					  <input type="radio" name="options" id="week"> Week
+			<div class="btn-group" data-toggle="buttons" ng-disabled="scores">
+					<label class="btn btn-default active" ng-click="renderChart(scores)" >
+					  <input type="radio" name="options" id="week" > Week
 					</label>
-					<label class="btn btn-default">
+					<label class="btn btn-default" ng-click="renderChart(scores, 'month')">
 					  <input type="radio" name="options" id="month"> Month
 					</label>
-					<label class="btn btn-default">
+					<label class="btn btn-default" ng-click="renderChart(scores, '3months')">
 					  <input type="radio" name="options" id="3month"> 3 Month
 					</label>
 			</div>
