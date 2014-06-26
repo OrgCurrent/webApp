@@ -1,11 +1,11 @@
 <div ng-include="'partials/navbar.html'"></div>
-
+<div ng-include="'partials/sidebox.html'"></div>
 <div class="container">
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-9">
       <h1>Invite your colleagues</h1>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-9">
       <div class="alert alert-success" ng-show="inviteSuccess">Invite request sent. For privacy reasons we can't tell you whether or not that user has been signed up or not, but if they haven't already been invited, an invitation will be sent.</div>
       <form class="form" name="form" ng-submit="sendInvite(inviteEmail)" novalidate>
 
@@ -15,7 +15,7 @@
           <input type="text" name="email" class="form-control" ng-model="inviteEmail" required>
         </div>
 
-        <button type="submit" class="btn btn-lg btn-primary"> Sign in </button>
+        <button type="submit" class="btn btn-lg btn-primary"> Invite </button>
       </form>
     </div>
   </div>

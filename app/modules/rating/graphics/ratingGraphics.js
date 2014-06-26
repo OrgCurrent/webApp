@@ -7,12 +7,12 @@ angular.module('ratingGraphics', [])
       initialize: function(rootScope, scope){
 
         // options for graph size
-        var pageWidth = parseInt(d3.select('.board').style('width'));
+        var pageWidth = parseInt(d3.select('.ratingBoard').style('width'));
         var pageHeight = $window.innerHeight;
         var dotSize = Math.sqrt(pageWidth*pageWidth + pageHeight*pageHeight)/100;
         var margin = {top: pageHeight/15, right: pageWidth/10, bottom: pageHeight/10, left: pageWidth/8};
         var height = pageHeight - margin.top - margin.bottom - 150;
-        var width =   pageWidth - margin.left - margin.right - 50;
+        var width =   pageWidth - margin.left - margin.right - 30;
 
         // options for graph behaviour
         var defaultPostHistory = 7; // will show last posts days by default
@@ -48,10 +48,8 @@ angular.module('ratingGraphics', [])
             yMap = function(d){ return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient('left');
 
-
         // add the graph canvas to the body of the webpage
-
-        var svg = d3.select('.board').append('svg')
+        var svg = d3.select('.ratingBoard').append('svg')
             .attr('class', 'ratingsvg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
@@ -61,11 +59,11 @@ angular.module('ratingGraphics', [])
                 var mousePos = d3.mouse(this);
                 // if the page is wider, graph is wider, - detect clicks accurately irrespective of rescaling
 
-                var yaxis = document.getElementsByClassName('y axis')[0].getBoundingClientRect();
+                var yaxis = document.getElementsByClassName('y-rating-axis')[0].getBoundingClientRect();
                 var yaxisPosition = yaxis.left + yaxis.width / 2 
                 - document.getElementsByClassName('ratingsvg')[0].getBoundingClientRect().left;
 
-                var xaxis = document.getElementsByClassName('x axis')[0].getBoundingClientRect();
+                var xaxis = document.getElementsByClassName('x-rating-axis')[0].getBoundingClientRect();
                 var xaxisPosition = xaxis.top + xaxis.height/2; 
                 var topBoard = document.getElementsByClassName('key')[1].getBoundingClientRect().bottom;
 
@@ -77,7 +75,7 @@ angular.module('ratingGraphics', [])
                 if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
                   scope.clickPosition =[{x: newX, y: newY}];
                   updateUserDots(scope.clickPosition, true);
-                }          
+                }      
               }
             })
            .on('mouseup', function( ){
@@ -104,7 +102,7 @@ angular.module('ratingGraphics', [])
 
         // x-axis
         svg.append('g')
-            .attr('class', 'x axis')
+            .attr('class', 'x-rating-axis')
             .attr('transform', 'translate(0,' + height + ')')
             .call(xAxis)
           .append('text')
@@ -116,7 +114,7 @@ angular.module('ratingGraphics', [])
 
         // y-axis
         svg.append('g')
-            .attr('class', 'y axis')
+            .attr('class', 'y-rating-axis')
             .call(yAxis)
           .append('text')
             .attr('class', 'label')

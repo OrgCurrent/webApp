@@ -1,25 +1,21 @@
 <div ng-include="'partials/navbar'"></div>
-
-<div class="jumbotron">
+<div ng-include="'partials/sidebox.html'" ng-show="currentUser"></div>
+<div class="jumbotron" style="background-color:white">
   <div class="container">
-
-    <h1>Welcome To my2cents</h1>
+     <p><img class='logo' src='images/logo.png'></img></p>
+     <p style="text-align:center" ><a class="btn btn-warning btn-lg" href="/signup" ng-hide="currentUser" role="button">Sign Up</a><a class="btn btn-warning btn-lg" href="/login" ng-hide="currentUser" style="position:relative;	left:15px;" role="button">Login</a><a class="btn btn-warning btn-lg" href="/rating" ng-show="currentUser" role="button">Vote Today!</a></p>
+  </div>
+  <div class="row marketing" style="text-align:center">
+    <h4>Global happiness index</h4>
+  </div>
+  <div class="row marketing" style="text-align:center">
+    <h4>Votes Casts Today</h4>
+  </div>
+  <div class="row marketing" style="text-align:center">
+    <div><h4>$'s of rewards claimed</h4></div>
   </div>
 </div>
 
-<div class="container">
-  <div class="row marketing">
-  <h4>Metrics</h4>
-  <!-- <p>We provide <strong>Metrics</strong></p> -->
-  </div>
-  <div class="row marketing">
-  <h4>Satisfaction</h4>
-  </div>
-  <div class="row marketing">
-  <h4>Happiness</h4>
-  </div>
-
-  <div class="footer">
-    <p>Made at Hack Reactor</p>
-  </div>
+<div class="  footer">
+  <p>Made at Hack Reactor</p>
 </div>

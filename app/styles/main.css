@@ -7,6 +7,10 @@ body {
   background-color: rgb(255, 255, 255);
 }
 /*UNDO BOOTSTRAP*/
+.navTitle > a{
+  color: black;
+}
+
 .row{
   margin: 0;
   position: relative;
@@ -48,6 +52,44 @@ body {
   line-height: 36px;
   padding-bottom: 18px;
 }
+
+.logout{
+  background-color: #e87352;
+  border-color: #e5613
+  color: white;
+}
+
+.logout:active{
+  background-color: #e3562e;
+  border-color: #c9411b;
+}
+
+.logoutText, .helpText{
+  position: relative;
+  left: 15px;
+  color: white;
+}
+
+.helpText {
+  left: 19px;
+}
+
+
+.help{
+  background-color: #60cd9b;
+  color: white;
+  position: relative;
+}
+
+.login {
+  background-color: #60cd9b;
+  border-color: #4dc78f;  
+}
+
+.logout {
+  color: white;
+}
+
 
 /* Custom page footer */
 .footer {
