@@ -47,13 +47,35 @@ angular.module('dashboardGraphics', [])
           .append("g")
             .attr("transform", "translate(" + sizing.margin.left + "," + sizing.margin.top + ")")
             .on("mousemove", function(){
-              options.mousePos = d3.mouse(this);
-              that.updateSnapshot(users, smoothAverages, sizing, options);
+              var mousePos = d3.mouse(this);
+              if(mousePos[0] >= 0 && mousePos[0] <= sizing.width
+                && mousePos[1] >= 0 && mousePos[1] <= sizing.height){
+                options.mousePos = d3.mouse(this);                
+                that.updateSnapshot(users, smoothAverages, sizing, options);
+              }
             })
-            .on('click', function(){
-              options.showFisheye = !options.showFisheye;
-              FisheyeChart.updateDisplay(options);
+            .on('touchstart', function(){
+              var mousePos = d3.mouse(this);
+              if(mousePos[0] >= 0 && mousePos[0] <= sizing.width
+                && mousePos[1] >= 0 && mousePos[1] <= sizing.height){
+                //0 is the identifier
+                options.mousePos = d3.mouse(this, 0);                
+                that.updateSnapshot(users, smoothAverages, sizing, options);
+              }
+            })
+            .on('touchmove', function(){
+              var mousePos = d3.mouse(this);
+              if(mousePos[0] >= 0 && mousePos[0] <= sizing.width
+                && mousePos[1] >= 0 && mousePos[1] <= sizing.height){
+                //0 is the identifier
+                options.mousePos = d3.mouse(this, 0);                
+                that.updateSnapshot(users, smoothAverages, sizing, options);
+              }
             });
+            // .on('click', function(){
+            //   options.showFisheye = !options.showFisheye;
+            //   FisheyeChart.updateDisplay(options);
+            // });
 
         //show or hide fisheye display
         FisheyeChart.updateDisplay(options);
@@ -118,6 +140,7 @@ angular.module('dashboardGraphics', [])
           var xRatio = options.mousePos[0] / sizing.width;
           //swift xPos left slightly to accommodate last date
           var xPos = (smoothAverages.length - 1) * xRatio + 0.2;
+          //hack
           var xIndex = Math.floor(xPos);
           var date = smoothAverages[xIndex].date;
           var dateStr = TimeFormat.format(date);
