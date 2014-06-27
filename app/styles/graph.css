@@ -45,69 +45,7 @@
 
 }
 
-.sidebox-wrapper {
-  width: 220px;
-  height: 100%;
-  float: left;
-  position: absolute;
-  z-index: 1;
-  border-right: 1px solid #e5e5e5
-
-}
-
-.sidebox{
-  position: relative;
-  overflow: auto;
-  height: 100%;
-  border-right: 1px solid #e5e5e5;
-  background-color: white;
-}
-.sidebox > div {
-  padding: 15px 15px;
-  transition: all 0.2s ease-in-out;
-  border: 0.1px solid #e5e5e5;
-  font-size: 16px;
-}
-
-.sidebarMenu{
-  display: block;
-  padding: 15px 15px;
-  transition: all 0.2s ease-in-out;
-  border: 0.1px solid #e5e5e5;
-  font-size: 16px;
-}
-
-.hide-sidebox{
-  position: absolute;
-  right: 15px;
-  top: 10px;
-
-  margin: 0;
-  border: 0;
-
-  background-color: transparent;
-  line-height: 0.8em;
-  font-size: 3em;
-}
-.show-sidebox{
-  position: absolute;
-  left: 15px;
-  top: 20px;
-
-  margin: 0;
-  border: 2px;
-
-  background-color: transparent;
-  line-height: 0.8em;
-  font-size: 2.4em;
-}
-
 .ratingBoard{
-}
-
-.show-sidebox .ratingContent{
-  left: 220px;
-
 }
 
 .fisheye-lines{

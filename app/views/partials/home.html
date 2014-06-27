@@ -1,8 +1,16 @@
-<div ng-include="'partials/navbar'"></div>
-<div ng-include="'partials/sidebox.html'" ng-show="currentUser"></div>
+<!-- <div ng-include="'partials/navbar'"></div> -->
+<!-- <div ng-include="'partials/sidebox.html'" ng-show="currentUser"></div> -->
+
+<!--Hack Reactor Banner-->
+<a href="http://hackreactor.com">
+  <img style="position: fixed; top: 0; right: 0; border: 0;"
+  src="http://i.imgur.com/x86kKmF.png"
+  alt="Built at Hack Reactor">
+</a>
+
 <div class="jumbotron" style="background-color:white">
   <div class="container">
-     <p><img class='logo' src='images/logo.png'></img></p>
+     <div class='home-logo'><img src='images/logo1.png'></img></div>
      <p style="text-align:center" ><a class="btn btn-warning btn-lg" href="/signup" ng-hide="currentUser" role="button">Sign Up</a><a class="btn btn-warning btn-lg" href="/login" ng-hide="currentUser" style="position:relative;	left:15px;" role="button">Login</a><a class="btn btn-warning btn-lg" href="/rating" ng-show="currentUser" role="button">Vote Today!</a></p>
   </div>
   <div class="row marketing" style="text-align:center">
