@@ -1,7 +1,8 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
 <!-- responsive chart sizing -->
-<div class="container container-rating col-xs-12 col-sm-8 col-lg-6">
+<div class="container container-rating col-xs-12 col-sm-8 col-lg-6"
+ng-class="{sideboxshown: showSidebox}">
 	<!-- <div class="panel panel-default"> -->
 		<div class="row row-header">
 			<div class="rating-header">

@@ -84,6 +84,15 @@ body {
   left: 0px;
 }
 
+.sideboxshown {
+  left: 220px;
+}
+
+/*.sideboxshown.ng-add-active, .sideboxshown.ng-remove-active {
+  opacity: 0.5;
+}
+*/
+
 .sidebar-menu{
   display: block;
   padding: 15px 15px;
