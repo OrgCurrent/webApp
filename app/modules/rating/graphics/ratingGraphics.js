@@ -44,8 +44,6 @@ angular.module('ratingGraphics', [])
             yMap = function(d){ return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient('left');
 
-        console.log(sizing);
-
         // add the graph canvas to the body of the webpage
         var svg = d3.select('.ratingBoard').append('svg')
             .attr('class', 'ratingsvg')
@@ -189,8 +187,6 @@ angular.module('ratingGraphics', [])
           var finalR = 10;
           var thickness = 5;
 
-          console.log(data);
-
           var userDots = today ? svg.selectAll('.today').data(data) 
                                : svg.selectAll('.notToday').data(data);
 
@@ -317,7 +313,6 @@ angular.module('ratingGraphics', [])
         scope.initialized = true;
 
         scope.displayHistory = function(){
-          console.log('display');
           d3.selectAll('.notToday').remove();
 
           if(!scope.displayPostHistory){
