@@ -1,3 +1,6 @@
+.container-rating{
+  text-align: center;
+}
 .rating-header{
 /*  padding: 10px 10px 0 10px;
   padding: 5px;
@@ -49,11 +52,11 @@ circle.click {
   font-weight: 300;
   font-size: 13px;
 }
-
-.key, .history {
-  text-align: center;
+.key{
+  position: absolute;
+  top: 20px;
+  /*left: 20px;*/
 }
-
 .shad {
   box-shadow: #851518 0px 2px 0px 0px;
   border-radius: 3px;

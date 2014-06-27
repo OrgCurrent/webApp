@@ -4,7 +4,7 @@ angular.module('ratingGraphics', [])
   .factory('scoresGraph', ['$window', 'graphApiHelper',
     function($window, graphApiHelper){
     return {
-      initialize: function(rootScope, scope){
+      initialize: function(rootScope, scope, sizing){
 
         // options for graph size
         var pageWidth = parseInt(d3.select('.ratingBoard').style('width'));
@@ -21,11 +21,7 @@ angular.module('ratingGraphics', [])
         var clickTimer = 0;
 
         // set the height and the width to be equal (to the smaller of the two)
-        if(height > width){
-          height = width;
-        } else {
-          width = height;
-        }
+        var graphLength = Math.min(sizing.height, sizing.width);
 
         scope.scored = rootScope.currentUser.scoredToday || false;
 
@@ -38,21 +34,25 @@ angular.module('ratingGraphics', [])
 
         // setup x 
         var xValue = function(d){ return d.x;}, // data -> value
-            xScale = d3.scale.linear().range([0, width]), // value -> display
+            xScale = d3.scale.linear().range([0, graphLength]), // value -> display
             xMap = function(d){ return xScale(xValue(d));}, // data -> display
             xAxis = d3.svg.axis().scale(xScale).orient('bottom');
 
         // setup y
         var yValue = function(d){ return d.y;}, // data -> value
-            yScale = d3.scale.linear().range([height, 0]), // value -> display
+            yScale = d3.scale.linear().range([graphLength, 0]), // value -> display
             yMap = function(d){ return yScale(yValue(d));}, // data -> display
             yAxis = d3.svg.axis().scale(yScale).orient('left');
+
+        console.log(sizing);
 
         // add the graph canvas to the body of the webpage
         var svg = d3.select('.ratingBoard').append('svg')
             .attr('class', 'ratingsvg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
+            // .attr('width', width + margin.left + margin.right)
+            .attr('width', graphLength + sizing.margin.left + sizing.margin.right)
+            // .attr('height', height + margin.top + margin.bottom)
+            .attr('height', graphLength + sizing.margin.top + sizing.margin.bottom)
             .on('mousedown', function( ){
               // handles a user click to post a rating, if user hasn't scored today
               if(!scope.scored){
@@ -67,8 +67,8 @@ angular.module('ratingGraphics', [])
                 var xaxisPosition = xaxis.top + xaxis.height/2; 
                 var topBoard = document.getElementsByClassName('dashboard-title')[0].getBoundingClientRect().bottom;
 
-                var newX = ((mousePos[0] - yaxisPosition - 4)*100)/width;
-                var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/height;
+                var newX = ((mousePos[0] - yaxisPosition - 4)*100)/graphLength;
+                var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/graphLength;
 
                 clickTimer = Date.now();
                 // only acceps a click if it is within the bounds of the graph area
@@ -85,13 +85,13 @@ angular.module('ratingGraphics', [])
             clickTimer = 0;
            })
            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            .attr('transform', 'translate(' + sizing.margin.left + ',' + sizing.margin.top + ')');
 
         xScale.domain([0, 100]);
         yScale.domain([0, 100]);
 
-        xAxis.ticks(Math.max(width/50, 2));
-        yAxis.ticks(Math.max(height/50, 2));
+        xAxis.ticks(Math.max(graphLength/50, 2));
+        yAxis.ticks(Math.max(graphLength/50, 2));
 
         xAxis.tickSize(1,1);
         yAxis.tickSize(1,1);
@@ -103,11 +103,11 @@ angular.module('ratingGraphics', [])
         // x-axis
         svg.append('g')
             .attr('class', 'x-rating-axis')
-            .attr('transform', 'translate(0,' + height + ')')
+            .attr('transform', 'translate(0,' + graphLength + ')')
             .call(xAxis)
           .append('text')
             .attr('class', 'label')
-            .attr('x', width)
+            .attr('x', graphLength)
             .attr('y', -6)
             .style('text-anchor', 'end')
             .text('Company success');
@@ -188,6 +188,8 @@ angular.module('ratingGraphics', [])
           var initR = 40;
           var finalR = 10;
           var thickness = 5;
+
+          console.log(data);
 
           var userDots = today ? svg.selectAll('.today').data(data) 
                                : svg.selectAll('.notToday').data(data);
@@ -315,6 +317,7 @@ angular.module('ratingGraphics', [])
         scope.initialized = true;
 
         scope.displayHistory = function(){
+          console.log('display');
           d3.selectAll('.notToday').remove();
 
           if(!scope.displayPostHistory){

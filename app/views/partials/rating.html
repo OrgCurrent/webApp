@@ -1,7 +1,7 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
 <!-- responsive chart sizing -->
-<div class="container col-xs-12 col-sm-8 col-lg-6">
+<div class="container container-rating col-xs-12 col-sm-8 col-lg-6">
 	<!-- <div class="panel panel-default"> -->
 		<div class="row row-header">
 			<div class="rating-header">
@@ -12,9 +12,14 @@
 			</div>
 
 		</div>
-		<div class="row row-board ratingBoard board-wrapper"></div>
+		<div class="row row-board ratingBoard board-wrapper">
+    	<div class="key" ng-style='{left: sizing.keyLeft}'>
+				<circle-key user="true"></circle-key>Your vote
+				<circle-key user="false"></circle-key>Your co-workers' votes
+			</div>
+		</div>
 
-		  <ul class="list-group">
+<!-- 		  <ul class="list-group">
 		    <li class="list-group-item">
 		    	<div class="key">
 						<circle-key user="true"></circle-key>Your vote
@@ -24,7 +29,7 @@
 		    <li class="list-group-item">
 		    </li>
 			</ul>
-	<!-- </div> -->
+ -->	<!-- </div> -->
 </div>
 
 		
