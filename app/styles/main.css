@@ -63,29 +63,34 @@ body {
   background-color: rgb(100,100,100);
 
 }
-.animate-show, .animate-hide {
-  -webkit-transition:all linear 1s; /* Chrome */
-  -moz-transition:all linear 1s;
-  -ms-transition:all linear 1s;
-  -o-transition:all linear 1s;
-  transition:all linear 1s;
+
+/*.sidebox-show-setup { opacity:1; width: 220px; }
+.sidebox-show-setup.sidebox-show-start { opacity:0; width: 0px; }
+
+.sidebox-hide-setup { opacity:0; width: 0px; }
+.sidebox-hide-setup.sidebox-hide-start { opacity:1; width: 0px; }*/
+
+.sidebox.ng-hide-add, .sidebox.ng-hide-remove {
+  -webkit-transition:all ease-in 0.35s;
+  -moz-transition:all ease-in 0.35s;
+  -o-transition:all ease-in 0.35s;
+  transition:all ease-in 0.35s;
+  display:block!important;
 }
-.animate-show{
-  opacity: 0;
+
+.sidebox.ng-hide-add.ng-hide-add-active,
+.sidebox.ng-hide-remove {
+  opacity:0;
 }
-.animate-show.animate-show-active{
-  opacity: 1;
+
+.sidebox.ng-hide-add,
+.sidebox.ng-hide-remove.ng-hide-remove-active {
+  opacity:1;
 }
-.animate-hide{
-  opacity: 1;
-}
-.animate-hide.animate-hide-active{
-  opacity: 0;
-}
+
 .sidebar-menu{
   display: block;
   padding: 15px 15px;
-  transition: all 0.2s ease-in-out;
   border: 0.1px solid #e5e5e5;
   font-size: 16px;
   color: white;
