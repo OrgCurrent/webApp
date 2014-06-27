@@ -17,9 +17,6 @@ angular.module('happyMeterApp')
       'link': '/dashboard',
       'hide': (role === 'employee')
     }, {
-      'title': 'Analytics',
-      'hide': ($location.path() !== '/dashboard')
-    }, {
       'title': 'Rating',
       'link': '/rating',
       'hide': (role === 'executive')
@@ -51,8 +48,6 @@ angular.module('happyMeterApp')
       return route === $location.path();
     };
 
-    //hide by default
-    $scope.showSidebox = true;
     $scope.toggleSidebox = function(){
       $scope.showSidebox = !$scope.showSidebox;
     };
