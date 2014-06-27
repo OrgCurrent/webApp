@@ -66,8 +66,8 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     })
     .success(function(data){
       $scope.users = formatUsers(data);
-      //$scope.users[2] is array of average scores
-      $scope.options.dateRange = $scope.users[2].length;
+      // set default date range to one month
+      $scope.options.dateRange = 31;
       $scope.renderChart();
     })
     .error(function(err){
