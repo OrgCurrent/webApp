@@ -1,11 +1,25 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
-<div class="container">
-	<div class="panel panel-default">
-		<div class="ratings-header"><div class="dashboard-title">VOTE FOR REWARDS	</div></div>
-		<div class="ratingBoard board-wrapper"></div>
+<!-- responsive chart sizing -->
+<div class="container container-rating col-xs-12 col-sm-8 col-lg-6">
+	<!-- <div class="panel panel-default"> -->
+		<div class="row row-header">
+			<div class="rating-header">
+				<div class="dashboard-title">VOTE FOR REWARDS!</div>
+				<div class='rating-settings pull-right'>
+					<button type="button" class="btn btn-default" ng-click='displayHistory()'><i class="fa fa-history"></i> See your past ratings</button>
+				</div>
+			</div>
 
-		  <ul class="list-group">
+		</div>
+		<div class="row row-board ratingBoard board-wrapper">
+    	<div class="key" ng-style='{left: sizing.keyLeft}'>
+				<circle-key user="true"></circle-key>Your vote
+				<circle-key user="false"></circle-key>Your co-workers' votes
+			</div>
+		</div>
+
+<!-- 		  <ul class="list-group">
 		    <li class="list-group-item">
 		    	<div class="key">
 						<circle-key user="true"></circle-key>Your vote
@@ -13,14 +27,9 @@
   				</div>
 		    </li>
 		    <li class="list-group-item">
-		    <div class = "history">
-					<button class="btn shad" ng-click="displayHistory()">
-						<i class="fa fa-history"></i> See your past votes
-					</button>
-				</div>
 		    </li>
 			</ul>
-	</div>
+ -->	<!-- </div> -->
 </div>
 
 		

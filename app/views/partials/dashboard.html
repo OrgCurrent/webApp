@@ -1,8 +1,9 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
-<div class='container'>
+<div class='container col-sm-12'>
   <div class="row row-header">
-    <div class='dashboard-header col-sm-12'>
+
+    <div class='dashboard-header'>
       <div class='dashboard-title'>DASHBOARD</div>
       <div class='dashboard-settings pull-right'>
         <span>Date Range</span>
@@ -20,6 +21,7 @@
         </div>
       </div>
     </div>
+    
   </div>
   <div class="row row-board">
     <div ng-controller='DashboardChartCtrl' class="board-wrapper col-sm-12">
