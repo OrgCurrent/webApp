@@ -11,7 +11,7 @@
 <div class="jumbotron" style="background-color:white">
   <div class="container">
      <div class='home-logo'><img src='images/logo1.png'></img></div>
-     <p style="text-align:center" ><a class="btn btn-warning btn-lg" href="/signup" ng-hide="currentUser" role="button">Sign Up</a><a class="btn btn-warning btn-lg" href="/login" ng-hide="currentUser" style="position:relative;	left:15px;" role="button">Login</a><a class="btn btn-warning btn-lg" href="/rating" ng-show="currentUser" role="button">Vote Today!</a></p>
+     <p style="text-align:center" ><a class="btn btn-warning btn-lg" href="/signup" ng-hide="currentUser" role="button">Sign Up</a><a class="btn btn-warning btn-lg" href="/login" ng-hide="currentUser" style="position:relative;	left:15px;" role="button">Login</a><a class="btn btn-warning btn-lg" href="/rating" ng-show="isEmployee()" role="button">Vote Today!</a><a class="btn btn-warning btn-lg" href="/dashboard" ng-show="isExecutive()" role="button">View Dashboard</a></p>
   </div>
   <div class="row marketing" style="text-align:center">
     <h4>Global happiness index</h4>
