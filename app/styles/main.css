@@ -64,28 +64,24 @@ body {
 
 }
 
-/*.sidebox-show-setup { opacity:1; width: 220px; }
-.sidebox-show-setup.sidebox-show-start { opacity:0; width: 0px; }
-
-.sidebox-hide-setup { opacity:0; width: 0px; }
-.sidebox-hide-setup.sidebox-hide-start { opacity:1; width: 0px; }*/
-
 .sidebox.ng-hide-add, .sidebox.ng-hide-remove {
-  -webkit-transition:all ease-in 0.35s;
-  -moz-transition:all ease-in 0.35s;
-  -o-transition:all ease-in 0.35s;
-  transition:all ease-in 0.35s;
+  -webkit-transition:all ease-in 0.3s;
+  -moz-transition:all ease-in 0.3s;
+  -o-transition:all ease-in 0.3s;
+  transition:all ease-in 0.3s;
   display:block!important;
 }
 
 .sidebox.ng-hide-add.ng-hide-add-active,
 .sidebox.ng-hide-remove {
   opacity:0;
+  left: -220px;
 }
 
 .sidebox.ng-hide-add,
 .sidebox.ng-hide-remove.ng-hide-remove-active {
   opacity:1;
+  left: 0px;
 }
 
 .sidebar-menu{
