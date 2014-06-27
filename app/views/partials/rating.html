@@ -9,6 +9,12 @@
 				<div class='rating-settings pull-right'>
 					<button type="button" class="btn btn-default" ng-click='displayHistory()'><i class="fa fa-history"></i> See your past ratings</button>
 				</div>
+				<div class="rating-dropdown pull-right">
+					<button type="button" class="btn btn-default rating-dropdown-button" ng-click='toggleDropdown()'><i class='fa fa-cog'></i></button>
+					<div class="rating-dropdown-menu" ng-show='showDropdown' ng-blur='toggleDropdown()'>
+						<button type="button" class="btn btn-default" ng-click='displayHistory()'><i class="fa fa-history"></i> Toggle past ratings</button>
+					</div>
+				</div>
 			</div>
 
 		</div>

@@ -14,6 +14,8 @@ angular.module('app.rating', ['ratingGraphics'])
       $scope.sizing.keyLeft = Math.max(0,($scope.sizing.width-$scope.sizing.height)/2) + $scope.sizing.margin.left;
     };
 
+
+
     $scope.clickPosition = [];
 
     $scope.scored = (new Date() - new Date($scope.currentUser.lastPost)) < (86400 * 1000);
@@ -39,4 +41,12 @@ angular.module('app.rating', ['ratingGraphics'])
       // redraw the graph
       scoresGraph.initialize($rootScope, $scope, $scope.sizing);
     });
+
+    //toggling of dropdown menu for small devices
+    $scope.showDropdown = false;
+    $scope.toggleDropdown = function(){
+      console.log('toggle');
+      $scope.showDropdown = !$scope.showDropdown;
+    };
+
   }]);

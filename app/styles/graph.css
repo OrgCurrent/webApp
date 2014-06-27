@@ -32,8 +32,33 @@
   vertical-align: middle;
 }
 
-.ratings-header{
-  text-align: center;
+.dashboard-dropdown-menu{
+  position: absolute;
+  right: 5px;
+
+  background-color: white;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+
+  padding: 2px;
+
+  z-index: 100;
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-header > .dashboard-settings{
+    display: none;
+  }
+  .dashboard-header > .dashboard-dropdown{
+    display: inline;
+  }
+}
+@media screen and (min-width: 768px) {
+  .dashboard-header > .dashboard-settings{
+    display: inline;
+  }
+  .dashboard-header > .dashboard-dropdown{
+    display: none;
+  }
 }
 
 .board-wrapper{

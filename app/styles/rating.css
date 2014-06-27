@@ -1,5 +1,5 @@
 .container-rating{
-  text-align: center;
+  /*text-align: center;*/
 }
 .rating-header{
 /*  padding: 10px 10px 0 10px;
@@ -13,7 +13,34 @@
   display: inline;
   color: rgba(240,240,240);
 }
+.rating-dropdown-menu{
+  position: absolute;
+  right: 5px;
 
+  background-color: white;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+
+  padding: 2px;
+
+  z-index: 100;
+}
+
+@media screen and (max-width: 768px) {
+  .rating-header > .rating-settings{
+    display: none;
+  }
+  .rating-header > .rating-dropdown{
+    display: inline;
+  }
+}
+@media screen and (min-width: 768px) {
+  .rating-header > .rating-settings{
+    display: inline;
+  }
+  .rating-header > .rating-dropdown{
+    display: none;
+  }
+}
 
 
 /*Rating CSS*/

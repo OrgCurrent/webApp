@@ -20,12 +20,12 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
       $window.removeEventListener('resize');
     });
 
-    //display option
+    //display options
     $scope.options = {
       displayMode: 'fisheye',
       showFisheye: true,
       showSidebox: true,
-      dateRange: undefined,
+      dateRange: 31,
       snapshotDate: undefined,
       mousePos: [0, 0],
     };
@@ -50,6 +50,13 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
             'board-wrapper col-sm-11 col-md-offset-1';
         });
       $scope.renderChart();
+    };
+
+    //toggle dropdown menu for small devices
+    $scope.showDropdown = false;
+    $scope.toggleDropdown = function(){
+      console.log('toggle');
+      $scope.showDropdown = !$scope.showDropdown;
     };
 
     //fetch scores from server
