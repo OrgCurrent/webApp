@@ -64,6 +64,7 @@ body {
 
 }
 
+/*Sidebar animations*/
 .sidebox.ng-hide-add, .sidebox.ng-hide-remove {
   -webkit-transition:all ease-in 0.3s;
   -moz-transition:all ease-in 0.3s;
@@ -84,14 +85,34 @@ body {
   left: 0px;
 }
 
+.sideboxshown-add{
+  left: 0px;
+  -webkit-transition:all ease-in-out 0.3s;
+  -moz-transition:all ease-in-out 0.3s;
+  -o-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
+}
+
+.sideboxshown-add-active{
+  left: 220px;
+}
+
+.sideboxshown-remove{
+  left: 220px;
+  -webkit-transition:all ease-in-out 0.3s;
+  -moz-transition:all ease-in-out 0.3s;
+  -o-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
+}
+
+.sideboxshown-remove-active{
+  left: 0px;
+}
+
 .sideboxshown {
   left: 220px;
 }
 
-/*.sideboxshown.ng-add-active, .sideboxshown.ng-remove-active {
-  opacity: 0.5;
-}
-*/
 
 .sidebar-menu{
   display: block;
@@ -135,7 +156,7 @@ body {
   left: 220px;
 }
 
-
+/*Sidebar animations End*/
 
 
 /* Custom page header */
