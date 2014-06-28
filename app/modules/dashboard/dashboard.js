@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', function ($scope, $http, $location, $window, formatUsers) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', '$timeout', function ($scope, $http, $location, $window, formatUsers, $timeout) {
 
     //container for sizing parameters
     $scope.sizing = {};
@@ -12,7 +12,9 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     };
     $scope.renderChart = function(){
       $scope.resize();
-      $scope.$broadcast('render');      
+      $scope.$broadcast('render');    
+      //dynamic height for loading div
+      $('.board-loading').css('height', $scope.sizing.height);  
     };
     //listener for window scope resize
     $window.addEventListener('resize', $scope.renderChart);
@@ -58,20 +60,32 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
       console.log('toggle');
       $scope.showDropdown = !$scope.showDropdown;
     };
+    
+    // $scope.renderLoading = function(){
+    //   $scope.resize();
+    //   //dynamic height for loading div
+    //   $('.board-loading').css('height', $scope.sizing.height);
+    // };
 
-    //fetch scores from server
-    $http({
-      method: 'GET',
-      url: '/api/companies/' + $scope.currentUser.company + '/scores'
-    })
-    .success(function(data){
-      $scope.users = formatUsers(data);
-      //$scope.users[2] is array of average scores
-      $scope.options.dateRange = $scope.users[2].length;
-      $scope.renderChart();
-    })
-    .error(function(err){
-      console.error(err);
-    });
+    $scope.loadingChart = true;
+    // $scope.renderLoading();
+
+    //fetch scores from server; delay 1ms to let ng-include navbar load first
+    $timeout(function(){
+      $http({
+        method: 'GET',
+        url: '/api/companies/' + $scope.currentUser.company + '/scores'
+      })
+      .success(function(data){
+        $scope.loadingChart = false;
+        $scope.users = formatUsers(data);
+        //$scope.users[2] is array of average scores
+        $scope.options.dateRange = $scope.users[2].length;
+        $scope.renderChart();
+      })
+      .error(function(err){
+        console.error(err);
+      });      
+    }, 1);
 
   }]);
