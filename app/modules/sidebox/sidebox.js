@@ -8,6 +8,7 @@ angular.module('happyMeterApp')
 
     // ensure the sideBox is hidden when the route is changed
     $scope.showSidebox = false;
+    $rootScope.showSidebox = false;
 
     $scope.menu = [{
       'title': 'Home',
@@ -50,6 +51,7 @@ angular.module('happyMeterApp')
 
     $scope.toggleSidebox = function(){
       $scope.showSidebox = !$scope.showSidebox;
+      $rootScope.showSidebox = $scope.showSidebox;
     };
 
   }]);

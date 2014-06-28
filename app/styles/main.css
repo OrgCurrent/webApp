@@ -63,29 +63,60 @@ body {
   background-color: rgb(100,100,100);
 
 }
-.animate-show, .animate-hide {
-  -webkit-transition:all linear 1s; /* Chrome */
-  -moz-transition:all linear 1s;
-  -ms-transition:all linear 1s;
-  -o-transition:all linear 1s;
-  transition:all linear 1s;
+
+/*Sidebar animations*/
+.sidebox.ng-hide-add, .sidebox.ng-hide-remove {
+  -webkit-transition:all ease-in 0.3s;
+  -moz-transition:all ease-in 0.3s;
+  -o-transition:all ease-in 0.3s;
+  transition:all ease-in 0.3s;
+  display:block!important;
 }
-.animate-show{
-  opacity: 0;
+
+.sidebox.ng-hide-add.ng-hide-add-active,
+.sidebox.ng-hide-remove {
+  opacity:0;
+  left: -220px;
 }
-.animate-show.animate-show-active{
-  opacity: 1;
+
+.sidebox.ng-hide-add,
+.sidebox.ng-hide-remove.ng-hide-remove-active {
+  opacity:1;
+  left: 0px;
 }
-.animate-hide{
-  opacity: 1;
+
+.sideboxshown-add{
+  left: 0px;
+  -webkit-transition:all ease-in-out 0.3s;
+  -moz-transition:all ease-in-out 0.3s;
+  -o-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
 }
-.animate-hide.animate-hide-active{
-  opacity: 0;
+
+.sideboxshown-add-active{
+  left: 220px;
 }
+
+.sideboxshown-remove{
+  left: 220px;
+  -webkit-transition:all ease-in-out 0.3s;
+  -moz-transition:all ease-in-out 0.3s;
+  -o-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
+}
+
+.sideboxshown-remove-active{
+  left: 0px;
+}
+
+.sideboxshown {
+  left: 220px;
+}
+
+
 .sidebar-menu{
   display: block;
   padding: 15px 15px;
-  transition: all 0.2s ease-in-out;
   border: 0.1px solid #e5e5e5;
   font-size: 16px;
   color: white;
@@ -125,7 +156,7 @@ body {
   left: 220px;
 }
 
-
+/*Sidebar animations End*/
 
 
 /* Custom page header */
