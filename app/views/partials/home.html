@@ -2,28 +2,41 @@
 <!-- <div ng-include="'partials/sidebox.html'" ng-show="currentUser"></div> -->
 
 <!--Hack Reactor Banner-->
-<a href="http://hackreactor.com">
-  <img style="position: fixed; top: 0; right: 0; border: 0;"
-  src="http://i.imgur.com/x86kKmF.png"
-  alt="Built at Hack Reactor">
-</a>
-
-<div class="jumbotron" style="background-color:white">
+<nav class="navbar navbar-default" role="navigation">
   <div class="container">
-     <div class='home-logo'><img src='images/logo1.png'></img></div>
-     <p style="text-align:center" ><a class="btn btn-warning btn-lg" href="/signup" ng-hide="currentUser" role="button">Sign Up</a><a class="btn btn-warning btn-lg" href="/login" ng-hide="currentUser" style="position:relative;	left:15px;" role="button">Login</a><a class="btn btn-warning btn-lg" href="/rating" ng-show="isEmployee()" role="button">Vote Today!</a><a class="btn btn-warning btn-lg" href="/dashboard" ng-show="isExecutive()" role="button">View Dashboard</a></p>
+    <img class="header-logo" src="../images/logo_s.png" id="exifviewer-img-1">
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="login">Sign In</a></li>
+    </ul>
   </div>
-  <div class="row marketing" style="text-align:center">
-    <h4>Global happiness index</h4>
-  </div>
-  <div class="row marketing" style="text-align:center">
-    <h4>Votes Casts Today</h4>
-  </div>
-  <div class="row marketing" style="text-align:center">
-    <div><h4>$'s of rewards claimed</h4></div>
+</nav>
+<style type="text/css">
+  .jumbotron {
+    background-image: radial-gradient(farthest-corner at 30% 30% , #FF7900 10%, #ffffff 200%);
+  }
+</style>
+<div class="jumbotron" style="background-color:#ff7900">
+  <div class="container">
+   <h1>Make yourself heard</h1>
+   <p class="lead">Make yourself heard and be rewarded for it!</p>
+  <p>
+    <button type="button" class="btn btn-primary btn-lg">Register Today</button>
+  </p>
   </div>
 </div>
-
-<div class="  footer">
-  <p>Made at Hack Reactor</p>
-</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <h3><span class="glyphicon glyphicon-envelope"></span> Sign Up</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id dictum dui. Nunc eu aliquam quam, a vestibulum ante. Donec nunc sapien, lacinia non volutpat a, euismod mattis sem. Fusce sodales congue turpis, et imperdiet nunc elementum vel.</p>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1">
+        <h3><span class="glyphicon glyphicon-thumbs-up"></span> Vote</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id dictum dui. Nunc eu aliquam quam, a vestibulum ante. Donec nunc sapien, lacinia non volutpat a, euismod mattis sem. Fusce sodales congue turpis, et imperdiet nunc elementum vel.</p>
+      </div>
+      <div class="col-sm-3 col-sm-offset-1">
+        <h3><span class="glyphicon glyphicon-usd"></span> Earn Rewards</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id dictum dui. Nunc eu aliquam quam, a vestibulum ante. Donec nunc sapien, lacinia non volutpat a, euismod mattis sem. Fusce sodales congue turpis, et imperdiet nunc elementum vel.</p>
+      </div>
+    </div>
+  </div>
