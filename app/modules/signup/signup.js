@@ -22,7 +22,6 @@ angular.module('happyMeterApp')
           $location.path('/verification');
         })
         .catch( function(err) {
-          console.log(err);
           if(err.data.errorType === "Domain Name Blacklist") {
             $scope.domainError = {domain: err.data.domain};
           }
