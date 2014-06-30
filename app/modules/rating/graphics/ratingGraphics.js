@@ -131,13 +131,14 @@ angular.module('ratingGraphics', [])
         var postLabel = function(d){
             var daysAgo = dayDifference(d.date);
             var text = daysAgo ? daysAgo + ' days ago' : 'today';
+            text = daysAgo === 1 ? 'yesterday' : text;
 
             tooltip.transition()
               .duration(200)
               .style('opacity', .9);
 
-            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d)) 
-              + '<br/> Personal Success: ' + Math.floor(yValue(d)) 
+            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d))
+              + '<br/> Personal Success: ' + Math.floor(yValue(d))
               + '<br/> Posted ' + text)
               .style('left', (d3.event.pageX + 15) + 'px')
               .style('top', (d3.event.pageY - 40) + 'px');
@@ -166,7 +167,7 @@ angular.module('ratingGraphics', [])
                 .style('opacity', 0);
             })
             .transition().delay(function(d, i){ return delay * i; }).duration(duration)
-              .attr('r', dotSize)
+              .attr('r', dotSize*0.625)
               .attr('stroke-width', strokeWidth)
               .each('end', function(){
                 // have ripple around data point
