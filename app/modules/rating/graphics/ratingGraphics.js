@@ -131,13 +131,14 @@ angular.module('ratingGraphics', [])
         var postLabel = function(d){
             var daysAgo = dayDifference(d.date);
             var text = daysAgo ? daysAgo + ' days ago' : 'today';
+            text = daysAgo === 1 ? 'yesterday' : text;
 
             tooltip.transition()
               .duration(200)
               .style('opacity', .9);
 
-            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d)) 
-              + '<br/> Personal Success: ' + Math.floor(yValue(d)) 
+            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d))
+              + '<br/> Personal Success: ' + Math.floor(yValue(d))
               + '<br/> Posted ' + text)
               .style('left', (d3.event.pageX + 15) + 'px')
               .style('top', (d3.event.pageY - 40) + 'px');
@@ -145,7 +146,7 @@ angular.module('ratingGraphics', [])
 
         var loadAllDots = function(data){
           // colleague post UI / display options
-          var strokeWidth = 3;
+          var strokeWidth = 2;
           var delay = 50;
           var duration = 200;
 
@@ -166,7 +167,7 @@ angular.module('ratingGraphics', [])
                 .style('opacity', 0);
             })
             .transition().delay(function(d, i){ return delay * i; }).duration(duration)
-              .attr('r', dotSize)
+              .attr('r', dotSize*0.625)
               .attr('stroke-width', strokeWidth)
               .each('end', function(){
                 // have ripple around data point
@@ -185,7 +186,7 @@ angular.module('ratingGraphics', [])
           // user post UI / display options
           var initR = 40;
           var finalR = 10;
-          var thickness = 5;
+          var thickness = 6;
 
           var userDots = today ? svg.selectAll('.today').data(data) 
                                : svg.selectAll('.notToday').data(data);
@@ -209,7 +210,7 @@ angular.module('ratingGraphics', [])
               .attr('r', dotSize*2)
               .attr('cx', xMap)
               .attr('cy', yMap)
-              .attr({'stroke-width' : thickness});
+              .attr({'stroke-width' : thickness, 'stroke-opacity': 0.5});
 
           userDots
             .attr('r', dotSize*2)
@@ -348,7 +349,7 @@ angular.module('ratingGraphics', [])
   }])
   .directive('circleKey', function(){
   var link = function(scope, element, attr){
-    var outerRadius = 3;
+    var outerRadius = 1.5;
     var innerRadius = 3;
     var radius = 5;
 
