@@ -22,8 +22,13 @@ angular.module('happyMeterApp')
           $location.path('/verification');
         })
         .catch( function(err) {
+          console.log(err);
+          if(err.data.errorType === "Domain Name Blacklist") {
+            $scope.domainError = {domain: err.data.domain};
+          }
           err = err.data;
           $scope.errors = {};
+
 
           // Update validity of form fields that match the mongoose errors
           angular.forEach(err.errors, function(error, field) {

@@ -5,6 +5,7 @@
       <h1>Sign up</h1>
     </div>
     <div class="col-sm-12">
+    <div class="alert alert-danger" role="alert" ng-show="domainError">We are unable to register users from <strong>{{domainError.domain}}</strong> right now. Please use an email address from your employer's domain.</div>
       <form class="form" name="form" ng-submit="register(form)" novalidate>
 
         <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted,
