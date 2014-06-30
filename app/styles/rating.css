@@ -84,36 +84,6 @@ circle.click {
   top: 20px;
   /*left: 20px;*/
 }
-.shad {
-  box-shadow: #851518 0px 2px 0px 0px;
-  border-radius: 3px;
-  display: inline-block;
-  zoom: 1;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  padding: 9px 18px 7px 18px;
-  margin: 0 0 5px 0;
-/*  font-family: Roboto;"Whitney",helvetica,arial,sans-serif;*/
-  font-weight: 500;
-  font-size: 13px;
-  text-decoration: none;
-  border-width: 0;
-  -webkit-transition: none;
-  transition: none;
-  -webkit-text-shadow: none;
-  text-shadow: none;
-  color: white;
-  background-color: #ff6633;
-}
-
-.shad:focus {
-  outline:0;
-}
-
-.shad:hover {
-background: #e0393e;
-color: #fff;
-}
 
 .x-rating-axis path, .y-rating-axis path {
  stroke: black;
@@ -134,4 +104,17 @@ color: #fff;
 
 .alert-bonuspoints {
   background-color:rgb(249,159,56);
+
+.tooltip {
+  line-height: 1.4;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.tooltip-score {
+  font-weight: 600;
+  font-size: 16px;
 }

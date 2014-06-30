@@ -140,11 +140,12 @@ angular.module('ratingGraphics', [])
               .duration(200)
               .style('opacity', .9);
 
-            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d)*10)/10
-              + '<br/> Personal Success: ' + Math.floor(yValue(d)*10)/10
+            tooltip.html('Company Success: ' + Math.floor(xValue(d)*10)/10 + '</span>'
+              + '<br/> Personal Success: ' + Math.floor(yValue(d)*10)/10 + '</span>'
               + '<br/> Posted ' + text)
               .style('left', (d3.event.pageX + 15) + 'px')
-              .style('top', (d3.event.pageY - 40) + 'px');
+              .style('top', (d3.event.pageY - 40) + 'px')
+              .style('border-radius', '2px');
         };
 
         var loadAllDots = function(data){
