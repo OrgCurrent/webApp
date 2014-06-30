@@ -14,9 +14,16 @@ angular.module('dashboardGraphics', [])
         var scores = data[1];
         var averages = data[2];
 
+        console.log(users);
+
+
+        console.log(averages);
+
         //create smoothAverages array for line chart
         var smoothAverages = SmoothAverages(averages, options);
         options.snapshotDate = TimeFormat.format(smoothAverages[0].date);
+
+        console.log(smoothAverages);
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),
@@ -38,7 +45,7 @@ angular.module('dashboardGraphics', [])
 
         // Compute the minimum and maximum date, and the maximum a/b.
         x.domain([smoothAverages[0].date, smoothAverages[smoothAverages.length - 1].date]);
-        y.domain([0, 100]).nice();
+        y.domain([0, 10]).nice();
 
         //clear html of .board-wrapper before updating new SVG
         var svg = d3.select('.board-wrapper').html('').append('svg').attr("id", "board")
@@ -123,8 +130,8 @@ angular.module('dashboardGraphics', [])
             .attr("x2", options.mousePos[0])
             .attr("y1", sizing.height)
             .attr("y2", Math.min(
-              sizing.height * (100 - smoothAverages[0].x) / 100,
-              sizing.height * (100 - smoothAverages[0].y) / 100
+              sizing.height * (10 - smoothAverages[0].x) / 10,
+              sizing.height * (10 - smoothAverages[0].y) / 10
             ));
 
         Datestamp.render(smoothAverages[0].date, options.dateRange, smoothAverages);
@@ -239,8 +246,8 @@ angular.module('dashboardGraphics', [])
               .attr("class", "fisheye-line")
               .attr('x1', options.mousePos[0] + sizing.margin.left)
               .attr('y1', Math.min(
-                sizing.height * (100 - smoothAverages[0].x) / 100,
-                sizing.height * (100 - smoothAverages[0].y) / 100
+                sizing.height * (10 - smoothAverages[0].x) / 10,
+                sizing.height * (10 - smoothAverages[0].y) / 10
               ) + sizing.margin.top)
               .attr('x2', function(d, i){return d[0];})
               .attr('y2', function(d, i){return d[1];});          
@@ -258,7 +265,7 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return d.scores[i].x * fisheyeSizing.width / 100;
+                return d.scores[i].x * fisheyeSizing.width / 10;
               }
             }
           })
@@ -267,7 +274,7 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100;
+                return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 10;
               }
             }
           })
@@ -281,20 +288,20 @@ angular.module('dashboardGraphics', [])
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return d.scores[i].x * fisheyeSizing.width / 100;
+                return d.scores[i].x * fisheyeSizing.width / 10;
               }
             }
-            return d.scores[d.scores.length - 1].x * fisheyeSizing.width / 100;
+            return d.scores[d.scores.length - 1].x * fisheyeSizing.width / 10;
           })
           .attr('cy', function(d){
             //instant score
             for(var i = d.scores.length - 1; i >= 0; i--){
               if(date - d.scores[i].date < 0){
                 //same date but later
-                return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 100;
+                return fisheyeSizing.height - d.scores[i].y * fisheyeSizing.height / 10;
               }
             }
-            return fisheyeSizing.height - d.scores[d.scores.length - 1].y * fisheyeSizing.height / 100;
+            return fisheyeSizing.height - d.scores[d.scores.length - 1].y * fisheyeSizing.height / 10;
           })
           .attr('fill', function(d){
             for(var i = d.scores.length - 1; i >= 0; i--){

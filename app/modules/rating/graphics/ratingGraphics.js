@@ -51,7 +51,8 @@ angular.module('ratingGraphics', [])
             .attr('width', graphLength + sizing.margin.left + sizing.margin.right)
             // .attr('height', height + margin.top + margin.bottom)
             .attr('height', graphLength + sizing.margin.top + sizing.margin.bottom)
-            .on('mousedown', function( ){
+            .on('mousedown', function(){
+              console.log('mousedown');
               // handles a user click to post a rating, if user hasn't scored today
               if(!scope.scored){
                 var mousePos = d3.mouse(this);
@@ -65,12 +66,12 @@ angular.module('ratingGraphics', [])
                 var xaxisPosition = xaxis.top + xaxis.height/2; 
                 var topBoard = document.getElementsByClassName('dashboard-title')[0].getBoundingClientRect().bottom;
 
-                var newX = ((mousePos[0] - yaxisPosition - 4)*100)/graphLength;
-                var newY = ((xaxisPosition - topBoard - mousePos[1])*100)/graphLength;
+                var newX = ((mousePos[0] - yaxisPosition - 4)*10)/graphLength;
+                var newY = ((xaxisPosition - topBoard - mousePos[1])*10)/graphLength;
 
                 clickTimer = Date.now();
                 // only acceps a click if it is within the bounds of the graph area
-                if(newX > -0.5 && newX < 100.5 && newY > -0.5 && newY < 100.5){
+                if(newX > -0.5 && newX < 10.5 && newY > -0.5 && newY < 10.5){
                   scope.clickPosition =[{x: newX, y: newY}];
                   updateUserDots(scope.clickPosition, true);
                 }      
@@ -85,8 +86,10 @@ angular.module('ratingGraphics', [])
            .append('g')
             .attr('transform', 'translate(' + sizing.margin.left + ',' + sizing.margin.top + ')');
 
-        xScale.domain([0, 100]);
-        yScale.domain([0, 100]);
+        xScale.domain([0, 10]);
+        yScale.domain([0, 10]);
+
+        /***/
 
         xAxis.ticks(Math.max(graphLength/50, 2));
         yAxis.ticks(Math.max(graphLength/50, 2));
@@ -137,8 +140,8 @@ angular.module('ratingGraphics', [])
               .duration(200)
               .style('opacity', .9);
 
-            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d))
-              + '<br/> Personal Success: ' + Math.floor(yValue(d))
+            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d)*10)/10
+              + '<br/> Personal Success: ' + Math.floor(yValue(d)*10)/10
               + '<br/> Posted ' + text)
               .style('left', (d3.event.pageX + 15) + 'px')
               .style('top', (d3.event.pageY - 40) + 'px');
