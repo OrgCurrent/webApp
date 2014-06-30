@@ -146,7 +146,7 @@ angular.module('ratingGraphics', [])
 
         var loadAllDots = function(data){
           // colleague post UI / display options
-          var strokeWidth = 3;
+          var strokeWidth = 2;
           var delay = 50;
           var duration = 200;
 
@@ -186,7 +186,7 @@ angular.module('ratingGraphics', [])
           // user post UI / display options
           var initR = 40;
           var finalR = 10;
-          var thickness = 5;
+          var thickness = 6;
 
           var userDots = today ? svg.selectAll('.today').data(data) 
                                : svg.selectAll('.notToday').data(data);
@@ -210,7 +210,7 @@ angular.module('ratingGraphics', [])
               .attr('r', dotSize*2)
               .attr('cx', xMap)
               .attr('cy', yMap)
-              .attr({'stroke-width' : thickness});
+              .attr({'stroke-width' : thickness, 'stroke-opacity': 0.5});
 
           userDots
             .attr('r', dotSize*2)
@@ -349,7 +349,7 @@ angular.module('ratingGraphics', [])
   }])
   .directive('circleKey', function(){
   var link = function(scope, element, attr){
-    var outerRadius = 3;
+    var outerRadius = 1.5;
     var innerRadius = 3;
     var radius = 5;
 
