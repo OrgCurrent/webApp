@@ -45,6 +45,10 @@
   </div>
   <div class="row row-board">
     <div ng-controller='DashboardChartCtrl' class="board-wrapper col-sm-12">
+      <div class='board-loading' ng-show='loadingChart'>
+        <p class='board-loading-text'>Loading</p>
+        <i class="board-loading-spinner fa fa-spinner fa-spin"></i>
+      </div>
       <div class='board'></div>
     </div>
   </div>
