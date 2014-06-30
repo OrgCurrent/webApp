@@ -52,7 +52,6 @@ angular.module('ratingGraphics', [])
             // .attr('height', height + margin.top + margin.bottom)
             .attr('height', graphLength + sizing.margin.top + sizing.margin.bottom)
             .on('mousedown', function(){
-              console.log('mousedown');
               // handles a user click to post a rating, if user hasn't scored today
               if(!scope.scored){
                 var mousePos = d3.mouse(this);

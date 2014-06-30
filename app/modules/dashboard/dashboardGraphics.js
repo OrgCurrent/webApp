@@ -14,16 +14,9 @@ angular.module('dashboardGraphics', [])
         var scores = data[1];
         var averages = data[2];
 
-        console.log(users);
-
-
-        console.log(averages);
-
         //create smoothAverages array for line chart
         var smoothAverages = SmoothAverages(averages, options);
         options.snapshotDate = TimeFormat.format(smoothAverages[0].date);
-
-        console.log(smoothAverages);
 
         // Scales and axes. Note the inverted domain for the y-scale: bigger is up!
         var x = d3.time.scale().range([0, sizing.width]),

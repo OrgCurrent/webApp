@@ -45,7 +45,6 @@ angular.module('app.rating', ['ratingGraphics'])
     //toggling of dropdown menu for small devices
     $scope.showDropdown = false;
     $scope.toggleDropdown = function(){
-      console.log('toggle');
       $scope.showDropdown = !$scope.showDropdown;
     };
 

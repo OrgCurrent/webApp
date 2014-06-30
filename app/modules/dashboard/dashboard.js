@@ -57,7 +57,6 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     //toggle dropdown menu for small devices
     $scope.showDropdown = false;
     $scope.toggleDropdown = function(){
-      console.log('toggle');
       $scope.showDropdown = !$scope.showDropdown;
     };
     
