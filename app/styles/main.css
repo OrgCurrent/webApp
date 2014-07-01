@@ -1,9 +1,30 @@
-/* Space out content a bit */
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+}
+/*UNDO BOOTSTRAP*/
+.navTitle > a{
+  color: black;
 }
 
+.row{
+  margin: 0;
+  position: relative;
+}
+
+.container-header{
+  padding: 5px;
+  text-align: center;
+  vertical-align: text-bottom;
+
+  background-color: rgb(245,245,245);
+}
+/* fade out soon-to-be-deprecated navbar */
+.nav{
+  opacity: 0.3;
+}
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -11,18 +32,196 @@ body {
   padding-left: 15px;
   padding-right: 15px;
 }
+.home-logo{
+
+  padding: 30px;
+  text-align: center;
+}
+.container-header{
+  /*hack*/
+  top: 0;
+  /**/
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.header-logo{
+  height: 4em;
+}
+.header-text{
+  margin: 0 20px;
+}
+.sidebox{
+
+  width: 220px;
+  height: 100%;
+
+  padding-top: 2px;
+  float: left;
+  position: absolute;
+  z-index: 1;
+  box-shadow: 5px 1px 10px rgba(150,150,150,0.7);
+
+  background-color: rgb(100,100,100);
+
+}
+
+/*Sidebar animations*/
+.sidebox.ng-hide-add, .sidebox.ng-hide-remove {
+  -webkit-transition:all ease-in 0.3s;
+  -moz-transition:all ease-in 0.3s;
+  -o-transition:all ease-in 0.3s;
+  transition:all ease-in 0.3s;
+  display:block!important;
+}
+
+.sidebox.ng-hide-add.ng-hide-add-active,
+.sidebox.ng-hide-remove {
+  opacity:0;
+  left: -220px;
+}
+
+.sidebox.ng-hide-add,
+.sidebox.ng-hide-remove.ng-hide-remove-active {
+  opacity:1;
+  left: 0px;
+}
+
+.sideboxshown-add{
+  left: 0px;
+  -webkit-transition:all ease-in-out 0.3s;
+  -moz-transition:all ease-in-out 0.3s;
+  -o-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
+}
+
+.sideboxshown-add-active{
+  left: 220px;
+}
+
+.sideboxshown-remove{
+  left: 220px;
+  -webkit-transition:all ease-in-out 0.3s;
+  -moz-transition:all ease-in-out 0.3s;
+  -o-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
+}
+
+.sideboxshown-remove-active{
+  left: 0px;
+}
+
+.sideboxshown {
+  left: 220px;
+}
+
+
+.sidebar-menu{
+  display: block;
+  padding: 15px 15px;
+  border: 0.1px solid #e5e5e5;
+  font-size: 16px;
+  color: white;
+}
+.sidebar-menu:hover{
+  background-color: white;
+  color: black;
+  /*remove underline*/
+  text-decoration: none;
+}
+
+.help{
+  background-color: #60cd9b;
+  color: white;
+  position: relative;
+}
+.help:hover, .help:hover > .helpText{
+  color: black;
+}
+
+.logout{
+  background-color: #e87352;
+  border-color: #e5613;
+  color: white;
+}
+.logout:active{
+  background-color: #e3562e;
+  border-color: #c9411b;
+}
+
+.logout:hover, .logout:hover > .logoutText{
+  color: black;
+}
+
+.hide-sidebox{
+  position: absolute;
+  right: 15px;
+  top: 10px;
+
+  margin: 0;
+  border: 0;
+
+  background-color: transparent;
+  line-height: 0.8em;
+  font-size: 3em;
+}
+.show-sidebox{
+  position: absolute;
+  left: 15px;
+  top: 20px;
+
+  margin: 0;
+  border: 2px;
+
+  background-color: transparent;
+  line-height: 0.8em;
+  font-size: 2.4em;
+}
+.show-sidebox .ratingContent{
+  left: 220px;
+}
+
+/*Sidebar animations End*/
+
 
 /* Custom page header */
 .header {
-  border-bottom: 1px solid #e5e5e5;
+  /*border-bottom: 1px solid #e5e5e5;*/
+  /*box-shadow: 0 1px 5px rgba(0,0,0,0.5);*/
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
-  margin-top: 0;
+  /*custom font*/
+/*  font-family: 'Roboto Slab', serif;
+  font-size: 36px;
+  color: rgb(0, 50, 0);*/
+
+/*  background: -webkit-linear-gradient(red, green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;*/
+
+ /* margin-top: 0;
   margin-bottom: 0;
-  line-height: 40px;
-  padding-bottom: 19px;
+  line-height: 36px;
+  padding-bottom: 18px;*/
 }
+
+.logoutText, .helpText{
+  position: relative;
+  left: 15px;
+  color: white;
+}
+
+.helpText {
+  left: 19px;
+}
+
+
+
+.login {
+  background-color: #60cd9b;
+  border-color: #4dc78f;  
+}
+
+
 
 /* Custom page footer */
 .footer {
@@ -32,13 +231,14 @@ body {
 }
 
 /* Customize container */
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
   .container {
     max-width: 1170px;
+    /*max-width: 1400px;*/
   }
 }
-.container-narrow > hr {
-  margin: 30px 0;
+*/.container-narrow > hr {
+  /*margin: 30px 0;*/
 }
 
 /* Main marketing message and sign up button */

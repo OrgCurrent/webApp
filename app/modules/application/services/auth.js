@@ -18,7 +18,6 @@ angular.module('happyMeterApp')
        */
       login: function(user, callback) {
         var cb = callback || angular.noop;
-
         return Session.save({
           email: user.email,
           password: user.password
@@ -60,8 +59,10 @@ angular.module('happyMeterApp')
 
         return User.save(user,
           function(user) {
-            $rootScope.currentUser = user;
-            return cb(user);
+            // do nothing, we need user to verify email so we just
+            // let promise resolve without authentication, and let
+            // router handle redirect
+            return;
           },
           function(err) {
             return cb(err);

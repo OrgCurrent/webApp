@@ -1,50 +1,90 @@
 'use strict';
 
-angular.module('app.dashboard', ['dashboardGraphics','mockData'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', 'mainChart', 'generateUsers', 'formatUsers', function ($scope, $http, $location, mainChart, generateUsers, formatUsers) {
+angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', '$timeout', function ($scope, $http, $location, $window, formatUsers, $timeout) {
 
-    console.log($scope.currentUser);
-
-    var margin = {top: 10, right: 80, bottom: 80, left: 80};
-
-    //mock data
-    // var data = generateUsers(10, 20);
-    // mainChart.initialize(data, 0, $scope);
-
-    //backend data
-    $http({
-      method: 'GET',
-      url: '/api/companies/' + $scope.currentUser.company + '/scores'
-    })
-    .success(function(data){
-      console.log(data);
-      var users = formatUsers(data);
-      mainChart.initialize(users, 0, $scope);
-    })
-    .error(function(err){
-      console.error(err);
+    //container for sizing parameters
+    $scope.sizing = {};
+    $scope.resize = function(){
+      $scope.sizing.margin = {top: 30, right: 40, bottom: 30, left: 30};
+      $scope.sizing.width = $('.board-wrapper').width() - $scope.sizing.margin.left - $scope.sizing.margin.right;
+      $scope.sizing.height = ($window.innerHeight - 160) - $scope.sizing.margin.top - $scope.sizing.margin.bottom;
+    };
+    $scope.renderChart = function(){
+      $scope.resize();
+      $scope.$broadcast('render');    
+      //dynamic height for loading div
+      $('.board-loading').css('height', $scope.sizing.height);  
+    };
+    //listener for window scope resize
+    $window.addEventListener('resize', $scope.renderChart);
+    $scope.$on('$destroy', function(event){
+      $window.removeEventListener('resize');
     });
 
-    //Deprecated
-    // // On click, update the x-axis.
-    // function click(event) {
-    //   console.log(d3.mouse);
-    //   console.log(123);
-    //   var n = averages.length - 1,
-    //       i = Math.floor(Math.random() * n / 2),
-    //       j = i + Math.floor(Math.random() * n / 2) + 1;
-    //   x.domain([averages[i].date, averages[j].date]);
-    //   var t = svg.transition().duration(750);
-    //   t.select(".x.axis").call(xAxis);
-    //   t.select(".area").attr("d", area(averages));
-    //   t.select("#lineA").attr("d", lineA(averages));
-    //   t.select("#lineB").attr("d", lineB(averages));
-    // }
-  }]);
+    //display options
+    $scope.options = {
+      displayMode: 'fisheye',
+      showFisheye: true,
+      showSidebox: true,
+      dateRange: 31,
+      snapshotDate: undefined,
+      mousePos: [0, 0],
+    };
 
-  /*{
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    date: { type: Date, default: Date.now },
-    x: Number,
-    y: Number
-  }*/
+    $scope.setDisplayMode = function(mode){
+      $scope.options.displayMode = mode;
+      $scope.renderChart();
+    };
+
+    $scope.setDateRange = function(range){
+      //$scope.users[2] is array of average scores
+      $scope.options.dateRange = range || $scope.users[2].length;
+      $scope.renderChart();
+    };
+
+    $scope.toggleSidebox = function(){
+      $scope.options.showSidebox = !$scope.options.showSidebox;
+      d3.select('.board-wrapper')
+        .attr('class', function(){
+          return $scope.options.showSidebox ? 
+            'board-wrapper col-sm-9' :
+            'board-wrapper col-sm-11 col-md-offset-1';
+        });
+      $scope.renderChart();
+    };
+
+    //toggle dropdown menu for small devices
+    $scope.showDropdown = false;
+    $scope.toggleDropdown = function(){
+      $scope.showDropdown = !$scope.showDropdown;
+    };
+    
+    // $scope.renderLoading = function(){
+    //   $scope.resize();
+    //   //dynamic height for loading div
+    //   $('.board-loading').css('height', $scope.sizing.height);
+    // };
+
+    $scope.loadingChart = true;
+    // $scope.renderLoading();
+
+    //fetch scores from server; delay 1ms to let ng-include navbar load first
+    $timeout(function(){
+      $http({
+        method: 'GET',
+        url: '/api/companies/' + $scope.currentUser.company + '/scores'
+      })
+      .success(function(data){
+        $scope.loadingChart = false;
+        $scope.users = formatUsers(data);
+        //$scope.users[2] is array of average scores
+        $scope.options.dateRange = $scope.users[2].length;
+        $scope.renderChart();
+      })
+      .error(function(err){
+        console.error(err);
+      });      
+    }, 1);
+
+  }]);

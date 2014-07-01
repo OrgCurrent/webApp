@@ -5,8 +5,12 @@ angular.module('happyMeterApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ngAnimate',
   'app.dashboard',
-  'app.rating'
+  'app.dashboard.chart',
+  'app.rating',
+    'app.ratinghistory'
+    // 'app.rewards'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
@@ -32,10 +36,28 @@ angular.module('happyMeterApp', [
         controller: 'RatingCtrl',
         authenticate: true
       })
+      .when('/ratinghistory', {
+        templateUrl: 'partials/ratinghistory',
+        controller: 'RatingHistoryCtrl',
+        authenticate: true
+      })
+      // .when('/rewards', {
+      //   templateUrl: 'partials/rewards',
+      //   controller: 'RewardsCtrl',
+      //   authenticate: true
+      // })
       .when('/settings', {
         templateUrl: 'partials/settings',
         controller: 'SettingsCtrl',
         authenticate: true
+      })
+      .when('/invite', {
+        templateUrl: 'partials/invite',
+        controller: 'InviteCtrl',
+        authenticate: true
+      })
+      .when('/verification', {
+        templateUrl: 'partials/verification',
       })
       .otherwise({
         redirectTo: '/'
@@ -62,7 +84,6 @@ angular.module('happyMeterApp', [
 
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$routeChangeStart', function (event, next) {
-      
       if (next.authenticate && !Auth.isLoggedIn()) {
         $location.path('/login');
       }

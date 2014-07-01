@@ -1,11 +1,23 @@
-#fisheye {
+.datestamp{
   position: absolute;
-  left: 0;
-  top: 0;
-  background-color: white;
-  border: 2px solid black;
+  left: 8px;
+  top: 2px;
+
+  font-size: 20px;
+  font-weight: bold;
 }
 
-#fisheye circle {
-  /*fill: black;*/
+.fisheye, .fisheye-dots-show{
+  position: absolute;
+  left: 8px;
+  top: 75px;
+  background-color: rgba(245,245,245, 0.8);
+  border: 1px solid black;
+  border-radius: 4px;
 }
+
+.fisheye-label, .fisheye-legend{
+  font-weight: 300;
+  font-size: 10px;
+}
+

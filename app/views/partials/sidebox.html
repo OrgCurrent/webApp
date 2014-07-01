@@ -1,0 +1,18 @@
+<div ng-controller="SideboxCtrl">
+	<button class='show-sidebox'  ng-click='toggleSidebox()'><i class="fa fa-bars"></i></button>
+  <!-- <div class="sidebox-wrapper" ng-show='showSidebox'> -->
+    <div class='sidebox' ng-show='showSidebox'>
+      <a ng-repeat="item in menu" ng-hide="!currentUser || item.hide" ng-href="{{item.link}}" class ="sidebar-menu">
+       {{item.title}}<i style="float:right"class="fa fa-caret-right icon-has-ul"></i>
+      </a>
+      <a class="sidebar-menu help">
+        <i class="fa fa-question fa-3"></i>
+        <span class="helpText">Help</span>
+      </a>
+      <a href="/" ng-click="logout()" class="logout sidebar-menu" ng-show="currentUser" ng-class="{active: isActive('/logout')}">
+        <i class="fa fa-power-off fa-3"></i>
+        <span class ="logoutText">Logout</span>
+      </a>
+    </div>
+  <!-- </div> -->
+</div>

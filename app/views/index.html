@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title>HappyMeter</title>
+    <title>my2¢ents</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -16,9 +16,17 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <!-- endbower -->
     <!-- endbuild -->
+    <!--google fonts-->        
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.5.1.css">
+
     <!-- build:css({.tmp,app}) styles/main.css -->
+    <link hel='stylesheet' href='styles/osp-din.css'>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/graph.css">
+    <link rel="stylesheet" href="styles/rating.css">
     <link rel="stylesheet" href="styles/fisheye.css">
     <!-- endbuild -->
   </head>
@@ -45,7 +53,6 @@
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
-
     <!-- build:js(app) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -56,24 +63,30 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="http://cdn.oesmith.co.uk/morris-0.5.1.min.js"></script>
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <!-- // <script src="scripts/services/d3.js"></script> -->
 
-        <script src="modules/mockdata/mockdata.js"></script>
-
         <script src="modules/application/app.js"></script>
         <script src="modules/home/home.js"></script>
         <script src="modules/navbar/navbar.js"></script>
+        <script src="modules/sidebox/sidebox.js"></script>
         <script src="modules/login/login.js"></script>
+        <!--<script src="modules/rewards/rewards.js"></script>-->
+         <script src="modules/ratinghistory/ratinghistory.js"></script>
         <script src="modules/signup/signup.js"></script>
+        <script src="modules/invite/invite.js"></script>
         <script src="modules/dashboard/dashboard.js"></script>
-        <script src="modules/dashboard/graphics/dashboardGraphics.js"></script>
+        <script src="modules/dashboard/dashboardChart.js"></script>
+        <script src="modules/dashboard/formatUsers.js"></script>
+        <script src="modules/dashboard/dashboardGraphics.js"></script>
         <script src="modules/rating/rating.js"></script>
-        <script src="modules/rating/graphics/ratingGraphics.js"></script>
-
+        <script src="modules/rating/graphics/ratingGraphics.js"></script>     
         <script src="modules/settings/settings.js"></script>
         <script src="modules/application/services/auth.js"></script>
         <script src="modules/application/services/session.js"></script>

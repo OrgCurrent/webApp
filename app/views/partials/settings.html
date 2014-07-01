@@ -1,10 +1,12 @@
 <div ng-include="'partials/navbar.html'"></div>
+
+<div ng-include="'partials/sidebox.html'"></div>
 <div class="container">  
-  <div class="row">
-    <div class="col-sm-12">
+  <div class="row"  ng-class="{sideboxshown: showSidebox}">
+    <div class="col-sm-9">
       <h1>Change Password</h1>
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-9">
       <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
       	
         <div class="form-group">
