@@ -75,13 +75,13 @@ body {
 
 .sidebox.ng-hide-add.ng-hide-add-active,
 .sidebox.ng-hide-remove {
-  opacity:0;
+/*  opacity:0;*/
   left: -220px;
 }
 
 .sidebox.ng-hide-add,
 .sidebox.ng-hide-remove.ng-hide-remove-active {
-  opacity:1;
+/*  opacity:1;*/
   left: 0px;
 }
 
