@@ -171,6 +171,9 @@ angular.module('dashboardGraphics', [])
             .on('mouseleave', function(d){
               hideVolumeTooltip(d);
             });
+
+        this.updateVolume(options);
+        
         // Add the lineX path.
         var lineX = svg.append("path")
             .attr("class", "line")

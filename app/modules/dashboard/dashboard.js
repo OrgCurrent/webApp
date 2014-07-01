@@ -33,32 +33,24 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
       mousePos: [0, 0],
     };
 
-    $scope.toggleFisheye = function(){
+    $scope.toggleFisheye = function($event){
+      //blur button immediately after click
+      event.srcElement.blur();
       $scope.options.showFisheye = !$scope.options.showFisheye;
       // $scope.renderChart();
-      console.log(FisheyeChart);
       FisheyeChart.updateDisplay($scope.options);
     };
 
     $scope.toggleVolume = function(){
+      event.srcElement.blur();
       $scope.options.showVolume = !$scope.options.showVolume;
       MainChart.updateVolume($scope.options);
     }
 
     $scope.setDateRange = function(range){
+      event.srcElement.blur();
       //$scope.users[2] is array of average scores
       $scope.options.dateRange = range || $scope.users[2].length;
-      $scope.renderChart();
-    };
-
-    $scope.toggleSidebox = function(){
-      $scope.options.showSidebox = !$scope.options.showSidebox;
-      d3.select('.board-wrapper')
-        .attr('class', function(){
-          return $scope.options.showSidebox ? 
-            'board-wrapper col-sm-9' :
-            'board-wrapper col-sm-11 col-md-offset-1';
-        });
       $scope.renderChart();
     };
 
