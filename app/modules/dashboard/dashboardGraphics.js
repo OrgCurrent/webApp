@@ -2,7 +2,7 @@
 
 angular.module('dashboardGraphics', [])
 
-  .factory('MainChart', ['$window', 'FisheyeChart', 'FisheyeLines', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, FisheyeChart, FisheyeLines, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
+  .factory('MainChart', ['$window', '$timeout', 'FisheyeChart', 'FisheyeLines', 'Datestamp', 'Scorestamp', 'SmoothAverages', 'PathMethods' ,'TimeFormat', function($window, $timeout, FisheyeChart, FisheyeLines, Datestamp, Scorestamp, SmoothAverages, PathMethods, TimeFormat){
 
     return {
 
@@ -23,6 +23,21 @@ angular.module('dashboardGraphics', [])
             y = d3.scale.linear().range([sizing.height, 0]),
             xAxis = d3.svg.axis().scale(x).ticks(4).tickFormat(d3.time.format("%d-%b-%y")),
             yAxis = d3.svg.axis().scale(y).ticks(6).orient("right");
+
+        var volumeX = d3.scale.ordinal().rangeBands([0, sizing.width], 0.02),
+            // halve the height of volume bars
+            volumeY = d3.scale.linear().range([sizing.height, sizing.height / 2]);
+
+        //find maximum volume for y-axis
+        var maxVolume = 0;
+        for(var i = 0; i < smoothAverages.length; i++){
+          maxVolume = smoothAverages[i].count > maxVolume ? smoothAverages[i].count : maxVolume;
+        }
+
+        volumeX.domain(smoothAverages.map(function(d){
+          return d.date;
+        }));
+        volumeY.domain([0, maxVolume]).nice();
 
         // A line generator
         var lineA = d3.svg.line()
@@ -103,6 +118,65 @@ angular.module('dashboardGraphics', [])
             .attr("transform", "translate(" + sizing.width + ",0)")
             .call(yAxis);
 
+        var snapshotLine = svg.append("line")
+            .attr("class", "snapshot-line")
+            .attr("x1", options.mousePos[0])
+            .attr("x2", options.mousePos[0])
+            .attr("y1", sizing.height)
+            .attr("y2", Math.min(
+              sizing.height * (10 - smoothAverages[0].x) / 10,
+              sizing.height * (10 - smoothAverages[0].y) / 10
+            ));
+
+        var volumeTooltip = svg.append('text')
+        .attr('class', 'volume-tooltip')
+        // .attr('x', 100)
+        // .attr('y', 150)
+        .attr('font-size', '1.5em')
+        .style('opacity', 0);
+
+        var showVolumeTooltip = function(d){
+          volumeTooltip
+            .transition()
+            .attr("x", function() {
+              return volumeX(d.date);
+            })
+            .attr("y", function(){
+              //fixed relative height
+              return sizing.height * 0.8;
+            })
+            .text(d.count + ' votes')
+            .style('opacity', 1)
+            .duration(100);
+        };
+        var hideVolumeTooltip = function(d){
+          volumeTooltip
+            .transition()
+            .style('opacity', 0)
+            .duration(100);
+        };
+
+        var volumeBars = svg.selectAll(".bar")
+            .data(smoothAverages)
+          .enter().append("rect")
+            .attr("class", "volume-bar")
+            .style('opacity', 0.3)
+            .attr("x", function(d, i) {
+              return volumeX(d.date);
+            })
+            .attr("width", volumeX.rangeBand())
+            .attr("y", function(d, i){
+              return volumeY(d.count);
+            })
+            .attr("height", function(d, i) {
+              return sizing.height - volumeY(d.count);
+            })
+            .on('mouseenter', function(d){
+              showVolumeTooltip(d);                
+            })
+            .on('mouseleave', function(d){
+              hideVolumeTooltip(d);
+            });
         // Add the lineX path.
         var lineX = svg.append("path")
             .attr("class", "line")
@@ -117,15 +191,7 @@ angular.module('dashboardGraphics', [])
             .attr("clip-path", "url(#clip)")
             .attr("d", lineB(smoothAverages));
 
-        var snapshotLine = svg.append("line")
-            .attr("class", "snapshot-line")
-            .attr("x1", options.mousePos[0])
-            .attr("x2", options.mousePos[0])
-            .attr("y1", sizing.height)
-            .attr("y2", Math.min(
-              sizing.height * (10 - smoothAverages[0].x) / 10,
-              sizing.height * (10 - smoothAverages[0].y) / 10
-            ));
+
 
         Datestamp.render(smoothAverages[0].date, options.dateRange, smoothAverages);
         Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), sizing);
@@ -191,7 +257,7 @@ angular.module('dashboardGraphics', [])
             //fisheye labels
             fisheye.append('text')
               .attr('class', 'fisheye-label')
-              .text('100')
+              .text('10')
               .style('text-anchor', 'end')
               .attr('x', fisheyeSizing.width - 2)
               .attr('y', fisheyeSizing.height - 2);
@@ -203,7 +269,7 @@ angular.module('dashboardGraphics', [])
               .attr('y', fisheyeSizing.height - 2);
             fisheye.append('text')
               .attr('class', 'fisheye-label')
-              .text('100')
+              .text('10')
               .style('text-anchor', 'start')
               .attr('x', 2)
               .attr('y', 10);
@@ -304,7 +370,7 @@ angular.module('dashboardGraphics', [])
                 var diff = dx + dy;
 
                 //sensitive setting
-                var blueness = Math.max(0, Math.min(255, (diff+15) * (255/30)));
+                var blueness = Math.max(0, Math.min(255, (diff+1.5) * (255/3)));
 
                 return 'rgb(' + (255 - blueness) + ',0,' + blueness + ')';
               }
@@ -365,7 +431,7 @@ angular.module('dashboardGraphics', [])
         if(!d3.select('.xText')[0][0]){
           //legend label for x
           d3.select('#board').append('rect')
-            .attr('fill', 'rgb(150,50,50)')
+            .attr('fill', 'rgb(8,108,225)')
             .attr('x', 5)
             .attr('y', 25)
             .attr('width', 10)
@@ -383,7 +449,7 @@ angular.module('dashboardGraphics', [])
         if(!d3.select('.yText')[0][0]){
           //legend label for y
           d3.select('#board').append('rect')
-            .attr('fill', 'rgb(150,150,90)')
+            .attr('fill', 'rgb(255,121,0)')
             .attr('x', 5)
             .attr('y', 45)
             .attr('width', 10)
@@ -420,14 +486,17 @@ angular.module('dashboardGraphics', [])
           var avgNumber = Math.min(i+1, 7);
           var weekAverageX = 0;
           var weekAverageY = 0;
+          var count = 0;
           for(var j = i; j > i - avgNumber; j--){
             weekAverageX += filteredAverages[j].x / avgNumber;
             weekAverageY += filteredAverages[j].y / avgNumber;
+            count += filteredAverages[j].count;
           }
           smoothAverages.push({
             x: weekAverageX,
             y: weekAverageY,
-            date: averages[i].date
+            date: averages[i].date,
+            count: count
           });
         }
       }
