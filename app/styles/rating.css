@@ -131,3 +131,7 @@ color: #fff;
 .x-rating-axis .minor {
   stroke-opacity: .5;
 }
+
+.alert-bonuspoints {
+  background-color:rgb(249,159,56);
+}
