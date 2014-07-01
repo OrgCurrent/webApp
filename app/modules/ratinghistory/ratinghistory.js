@@ -14,6 +14,11 @@ angular.module('app.ratinghistory', [])
       $scope.renderChart($scope.scores, $scope.dateRange);
     };
 
+    var monthNames = [ "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December" ];
+
+    var dayNames = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ];
+
     $scope.renderChart = function(scores, flag) {
       console.log(scores);
       var data = [];
@@ -41,6 +46,13 @@ angular.module('app.ratinghistory', [])
         sumY = 0;
         dayCount = 0;
       };
+
+      var dateFormat =  function (x) { 
+        return flag ? 
+          new Date(x).getDate() + ' ' + monthNames[new Date(x).getMonth()]
+          : dayNames[new Date(x).getDay()];
+      };
+     
 
       scores.forEach(function(value, key){
         if(flag === 'month' && weekOrMonth === 5){
@@ -81,10 +93,19 @@ angular.module('app.ratinghistory', [])
         hideHover: true,
         xkey: 'date',
         xLabelAngle: 90,
+        xLabelMargin: 1,
         ykeys: ['x', 'y'],
         labels: dataLabels,
         lineColors: ['#ff6633', '#1255c0'],
-        pointSize: 10
+        lineWidth: 4,
+        pointSize: 10,
+        dateFormat: dateFormat,
+        grid: false,
+        gridTextColor: 'black',
+        gridTextSize: 12,
+        gridTextFamily: 'Helvetica',
+        axes: true,
+        ymax: 10
       });
     };
 

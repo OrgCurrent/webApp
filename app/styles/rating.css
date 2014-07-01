@@ -47,6 +47,7 @@
 .userScore {
   fill: #FF772C;
   stroke: #FF772C; 
+  stroke-opacity: 0.5;
 }
 
 .colleagueScores {
@@ -126,3 +127,7 @@ circle.click {
   font-weight: 600;
   font-size: 16px;
 }
+
+/*.rating-history {
+  margin: auto 10px;
+}*/
