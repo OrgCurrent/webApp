@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('ratingGraphics', [])
-  .factory('scoresGraph', ['$window', 'graphApiHelper',
-    function($window, graphApiHelper){
+  .factory('scoresGraph', ['$window', 'graphApiHelper', '$timeout',
+    function($window, graphApiHelper, $timeout){
     return {
       initialize: function(rootScope, scope, sizing){
 
@@ -16,7 +16,8 @@ angular.module('ratingGraphics', [])
 
         // options for graph behaviour
         var defaultPostHistory = 7; // will show last posts days by default
-        var postOnClickDuration = 1500 ; // duration of click to submit rating
+        var postOnClickDuration = 500 ; // duration of click to submit rating
+        var rewardGoAway = 4500; //duration until the reward alert goes away
 
         var clickTimer = 0;
 
@@ -289,6 +290,9 @@ angular.module('ratingGraphics', [])
               // after a successful POST mark set the scope scored property to true
               scope.scored = true;
               rootScope.currentUser.scoredToday = true;
+              rootScope.currentUser.rewardPoints = data.rewardPoints;
+              scope.currentUser.earnedPoints = data.earnedPoints || undefined;
+              $timeout(function(){scope.currentUser.earnedPoints = undefined}, rewardGoAway);
 
               graphApiHelper.getCompanyScores()
                 .success(function(data){
