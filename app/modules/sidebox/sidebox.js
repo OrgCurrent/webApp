@@ -11,9 +11,6 @@ angular.module('happyMeterApp')
     $rootScope.showSidebox = false;
 
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
-    }, {
       'title': 'Dashboard',
       'link': '/dashboard',
       'hide': (role === 'employee')
