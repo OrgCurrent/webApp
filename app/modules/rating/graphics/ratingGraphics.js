@@ -58,14 +58,14 @@ angular.module('ratingGraphics', [])
                 // if the page is wider, graph is wider, - detect clicks accurately irrespective of rescaling
 
                 var yaxis = document.getElementsByClassName('y-rating-axis')[0].getBoundingClientRect();
-                var yaxisPosition = yaxis.left + yaxis.width / 2 
+                var yaxisPosition = yaxis.left + yaxis.width / 2
                 - document.getElementsByClassName('ratingsvg')[0].getBoundingClientRect().left;
 
                 var xaxis = document.getElementsByClassName('x-rating-axis')[0].getBoundingClientRect();
-                var xaxisPosition = xaxis.top + xaxis.height/2; 
-                var topBoard = document.getElementsByClassName('dashboard-title')[0].getBoundingClientRect().bottom;
+                var xaxisPosition = xaxis.top + xaxis.height/1.8; 
+                var topBoard = document.getElementsByClassName('key')[0].getBoundingClientRect().bottom;
 
-                var newX = ((mousePos[0] - yaxisPosition - 4)*10)/graphLength;
+                var newX = ((mousePos[0] - yaxisPosition)*10)/graphLength;
                 var newY = ((xaxisPosition - topBoard - mousePos[1])*10)/graphLength;
 
                 clickTimer = Date.now();
