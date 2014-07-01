@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', '$timeout', function ($scope, $http, $location, $window, formatUsers, $timeout) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', '$timeout', 'MainChart', 'FisheyeChart', function ($scope, $http, $location, $window, formatUsers, $timeout, MainChart, FisheyeChart) {
 
     //container for sizing parameters
     $scope.sizing = {};
@@ -26,16 +26,24 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     $scope.options = {
       displayMode: 'fisheye',
       showFisheye: true,
-      showSidebox: true,
+      showVolume: false,
+      // showSidebox: true,
       dateRange: 31,
       snapshotDate: undefined,
       mousePos: [0, 0],
     };
 
-    $scope.setDisplayMode = function(mode){
-      $scope.options.displayMode = mode;
-      $scope.renderChart();
+    $scope.toggleFisheye = function(){
+      $scope.options.showFisheye = !$scope.options.showFisheye;
+      // $scope.renderChart();
+      console.log(FisheyeChart);
+      FisheyeChart.updateDisplay($scope.options);
     };
+
+    $scope.toggleVolume = function(){
+      $scope.options.showVolume = !$scope.options.showVolume;
+      MainChart.updateVolume($scope.options);
+    }
 
     $scope.setDateRange = function(range){
       //$scope.users[2] is array of average scores
