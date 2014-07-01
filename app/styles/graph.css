@@ -99,11 +99,11 @@ path.line {
 }
 
 #lineA{
-  stroke: rgb(150,50,50);
+  stroke: rgb(8,108,225);
 }
 
 #lineB{
-  stroke: rgb(150,150,90);
+  stroke: rgb(255,121,0);
 }
 
 path.area {
@@ -138,4 +138,8 @@ path.area {
 .snapshot-line {
   stroke: black;
   stroke-width: 2px;
+}
+
+.bar{
+  color: rgb(120,120,120);
 }

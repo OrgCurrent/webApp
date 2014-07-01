@@ -40,7 +40,8 @@ angular.module('formatUsers', [])
         averageScores.push({
           date: parse(date),
           x: xSum / count,
-          y: ySum / count
+          y: ySum / count,
+          count: count
         });
       }
 
