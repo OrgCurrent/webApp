@@ -9,7 +9,8 @@ angular.module('happyMeterApp', [
   'app.dashboard',
   'app.dashboard.chart',
   'app.rating',
-    'app.ratinghistory'
+    'app.ratinghistory',
+    'fx.animations'
     // 'app.rewards'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
