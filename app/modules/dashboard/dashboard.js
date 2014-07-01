@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
-  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', '$timeout', function ($scope, $http, $location, $window, formatUsers, $timeout) {
+  .controller('DashboardCtrl', ['$scope', '$http', '$location', '$window', 'formatUsers', '$timeout', 'MainChart', 'FisheyeChart', function ($scope, $http, $location, $window, formatUsers, $timeout, MainChart, FisheyeChart) {
 
     //container for sizing parameters
     $scope.sizing = {};
@@ -26,31 +26,31 @@ angular.module('app.dashboard', ['dashboardGraphics', 'formatUsers'])
     $scope.options = {
       displayMode: 'fisheye',
       showFisheye: true,
-      showSidebox: true,
+      showVolume: false,
+      // showSidebox: true,
       dateRange: 31,
       snapshotDate: undefined,
       mousePos: [0, 0],
     };
 
-    $scope.setDisplayMode = function(mode){
-      $scope.options.displayMode = mode;
-      $scope.renderChart();
+    $scope.toggleFisheye = function($event){
+      //blur button immediately after click
+      event.srcElement.blur();
+      $scope.options.showFisheye = !$scope.options.showFisheye;
+      // $scope.renderChart();
+      FisheyeChart.updateDisplay($scope.options);
     };
+
+    $scope.toggleVolume = function(){
+      event.srcElement.blur();
+      $scope.options.showVolume = !$scope.options.showVolume;
+      MainChart.updateVolume($scope.options);
+    }
 
     $scope.setDateRange = function(range){
+      event.srcElement.blur();
       //$scope.users[2] is array of average scores
       $scope.options.dateRange = range || $scope.users[2].length;
-      $scope.renderChart();
-    };
-
-    $scope.toggleSidebox = function(){
-      $scope.options.showSidebox = !$scope.options.showSidebox;
-      d3.select('.board-wrapper')
-        .attr('class', function(){
-          return $scope.options.showSidebox ? 
-            'board-wrapper col-sm-9' :
-            'board-wrapper col-sm-11 col-md-offset-1';
-        });
       $scope.renderChart();
     };
 

@@ -150,7 +150,7 @@ angular.module('dashboardGraphics', [])
             .duration(200);
         };
 
-        var volumeBars = svg.selectAll(".bar")
+        var volumeBars = svg.selectAll(".volume-bar")
             .data(smoothAverages)
           .enter().append("rect")
             .attr("class", "volume-bar")
@@ -171,6 +171,9 @@ angular.module('dashboardGraphics', [])
             .on('mouseleave', function(d){
               hideVolumeTooltip(d);
             });
+
+        this.updateVolume(options);
+        
         // Add the lineX path.
         var lineX = svg.append("path")
             .attr("class", "line")
@@ -196,7 +199,8 @@ angular.module('dashboardGraphics', [])
 
         Datestamp.render(smoothAverages[0].date, options.dateRange, smoothAverages);
         Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), sizing);
-        if(options.displayMode === 'fisheye'){
+        // if(options.displayMode === 'fisheye'){
+        if(options.showFisheye){
           FisheyeChart.render(smoothAverages[0].date, users, smoothAverages, sizing, options);
         }
 
@@ -228,13 +232,21 @@ angular.module('dashboardGraphics', [])
           Datestamp.render(date, options.dateRange, smoothAverages);
           Scorestamp.render(smoothAverages[xIndex].x.toFixed(1), smoothAverages[xIndex].y.toFixed(1), sizing);
 
-          if(options.displayMode === 'fisheye'){
+          // if(options.displayMode === 'fisheye'){
+          if(options.showFisheye){
             d3.selectAll('.fisheye-line')
               .attr('x1', options.mousePos[0] + sizing.margin.left)
               .attr('y1', height + sizing.margin.top);            
             FisheyeChart.render(date, users, smoothAverages, sizing, options);
           }
         }
+      },
+
+      updateVolume: function(options){
+        d3.selectAll('.volume-bar')
+          .attr('display', function(){
+            return options.showVolume ? 'static' : 'none'
+          });
       }
 
     };

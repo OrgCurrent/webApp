@@ -321,6 +321,7 @@ angular.module('ratingGraphics', [])
         scope.initialized = true;
 
         scope.displayHistory = function(){
+          event.srcElement.blur();
           d3.selectAll('.notToday').remove();
 
           if(!scope.displayPostHistory){
