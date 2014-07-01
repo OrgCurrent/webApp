@@ -1,10 +1,16 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
-			<div class="alert alert-bonuspoints text-center fx-zoom-normal fx-speed-500 fx-easing-bounce" role="alert" ng-show="currentUser.earnedPoints">
+		
+
+<div class="container container-rating col-xs-12 col-sm-4 col-lg-6"
+ng-class="{sideboxshown: showSidebox}">
+		<div class="alert alert-bonuspoints text-center fx-zoom-normal fx-speed-500 fx-easing-bounce" role="alert" ng-show="currentUser.earnedPoints">
 				<h4>	
 				You just earned <strong>{{currentUser.earnedPoints}}</strong> points!
 				</h4>
-			</div>
+		</div>
+</div>
+
 <!-- responsive chart sizing -->
 <div class="container container-rating col-xs-12 col-sm-8 col-lg-6"
 ng-class="{sideboxshown: showSidebox}">

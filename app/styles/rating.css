@@ -105,6 +105,9 @@ circle.click {
 .alert-bonuspoints {
   background-color:rgb(249,159,56);
   color: white;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  height: 54px;
 }
 
 .tooltip {
