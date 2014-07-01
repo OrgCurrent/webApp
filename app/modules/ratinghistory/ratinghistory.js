@@ -105,7 +105,8 @@ angular.module('app.ratinghistory', [])
         gridTextSize: 12,
         gridTextFamily: 'Helvetica',
         axes: true,
-        ymax: 10
+        ymax: 10,
+        fillOpacity: 0.5  
       });
     };
 
