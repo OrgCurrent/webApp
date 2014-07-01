@@ -291,12 +291,10 @@ angular.module('ratingGraphics', [])
               scope.scored = true;
               rootScope.currentUser.scoredToday = true;
               rootScope.currentUser.rewardPoints = data.rewardPoints;
-<<<<<<< HEAD
+
               scope.currentUser.earnedPoints = data.earnedPoints || undefined;
               $timeout(function(){scope.currentUser.earnedPoints = undefined}, rewardGoAway);
 
-=======
->>>>>>> Removed opacity change sidebar transition
               graphApiHelper.getCompanyScores()
                 .success(function(data){
                   var scores = [];

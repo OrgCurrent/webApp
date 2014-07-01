@@ -104,6 +104,26 @@ circle.click {
 
 .alert-bonuspoints {
   background-color:rgb(249,159,56);
+}
+
+.alert-bonuspoints.ng-hide-add, .alert-bonuspoints.ng-hide-remove {
+  -webkit-transition:all ease-in-out 0.6s;
+  -moz-transition:all ease-in-out 0.6s;
+  -o-transition:all ease-in-out 0.6s;
+  transition:all ease-in-out 0.6s;
+  display:block!important;
+}
+
+.alert-bonuspoints.ng-hide-add.ng-hide-add-active,
+.alert-bonuspoints.ng-hide-remove {
+  opacity: 0.1;
+}
+
+.alert-bonuspoints.ng-hide-add,
+.alert-bonuspoints.ng-hide-remove.ng-hide-remove-active {
+/*  opacity:1;*/
+  opacity: 0.9;
+}
 
 .tooltip {
   line-height: 1.4;
