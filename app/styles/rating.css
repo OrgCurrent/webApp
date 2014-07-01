@@ -77,11 +77,12 @@ circle.click {
 .label, .key {
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 16px;
+  text-align: center;
 }
 .key{
-  position: absolute;
-  top: 20px;
+  top: 13px;
+  font-size: 14px;
   /*left: 20px;*/
 }
 
@@ -108,6 +109,7 @@ circle.click {
   margin-top: 15px;
   margin-bottom: 10px;
   height: 54px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5)
 }
 
 .tooltip {
@@ -116,7 +118,8 @@ circle.click {
   padding: 12px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
-  border-radius: 2px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .tooltip-score {

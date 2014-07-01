@@ -3,7 +3,7 @@
 		
 <div class="container container-rating col-xs-12 col-sm-12 col-lg-12"
 ng-class="{sideboxshown: showSidebox}">
-		<div class="alert alert-bonuspoints text-center fx-zoom-normal fx-speed-500 fx-easing-bounce" role="alert" ng-show="currentUser.earnedPoints">
+		<div class="alert alert-bonuspoints text-center fx-fade-up fx-speed-500 fx-easing-bounce" role="alert" ng-show="currentUser.earnedPoints">
 				<h4>	
 				You just earned <strong>{{currentUser.earnedPoints}}</strong> points!
 				</h4>
@@ -11,9 +11,9 @@ ng-class="{sideboxshown: showSidebox}">
 </div>
 
 <!-- responsive chart sizing -->
-<div class="container container-rating col-xs-12 col-sm-8 col-lg-6"
+<div class="container container-rating col-xs-12 col-sm-8 col-lg-6 fx-bounce-up"
 ng-class="{sideboxshown: showSidebox}">
-	<!-- <div class="panel panel-default"> -->
+
 		<div class="row row-header">
 			<div class="rating-header">
 				<div class="dashboard-title">RATING</div>
@@ -27,14 +27,15 @@ ng-class="{sideboxshown: showSidebox}">
 					</div>
 				</div>
 			</div>
-
 		</div>
+
 		<div class="row row-board ratingBoard board-wrapper">
     	<div class="key" ng-style='{left: sizing.keyLeft}'>
-				<circle-key user="true"></circle-key>Your vote
-				<circle-key user="false"></circle-key>Your co-workers' votes
+				<circle-key user="true"><span>Your vote</span></circle-key> 
+				<circle-key user="false"><span>Your co-workers' votes</span></circle-key>
 			</div>
 		</div>
+
 </div>
 
 <div class="container container-rating col-xs-12 col-sm-4 col-lg-6"

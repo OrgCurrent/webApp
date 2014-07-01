@@ -356,19 +356,19 @@ angular.module('ratingGraphics', [])
   }])
   .directive('circleKey', function(){
   var link = function(scope, element, attr){
-    var outerRadius = 1.5;
-    var innerRadius = 3;
-    var radius = 5;
+    var outerRadius = 2;
+    var innerRadius = 8;
+    var radius = 8;
 
     var svg = d3.select(element[0])
       .append('svg')
       .attr({
-        'height': 10,
-        'width': 10
+        'height': 25,
+        'width': 25
       })
       .append('circle')
-      .attr('cx', 5)
-      .attr('cy', 5)
+      .attr('cx', 15)
+      .attr('cy', 15)
       .attr('r', innerRadius)
       .style('stroke-width', outerRadius);
 
