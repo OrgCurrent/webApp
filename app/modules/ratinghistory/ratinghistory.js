@@ -6,7 +6,16 @@ angular.module('app.ratinghistory', [])
         return Math.floor((new Date() - new Date(date)) /  (86400 * 1000));
     };
 
+    $scope.dateRange = undefined;
+
+    $scope.changeDateRange = function(flag){
+      // event.srcElement.blur();
+      $scope.dateRange = flag;
+      $scope.renderChart($scope.scores, $scope.dateRange);
+    };
+
     $scope.renderChart = function(scores, flag) {
+      console.log(scores);
       var data = [];
       //if chart remove chart and render
       d3.select('#line-example').html("");

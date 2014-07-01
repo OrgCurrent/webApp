@@ -134,10 +134,8 @@ body {
 .button-chart-settings:hover{
   background-color: rgb(249,169,75);
 }
-.button-active{
-  background-color: rgb(255,220,170);
-}
 .button-chart-settings.button-active{
+  background-color: rgb(255,220,170);
 }
 
 .help{

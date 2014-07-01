@@ -6,17 +6,30 @@
 		<div class="rating-header">
 			<div class="dashboard-title">VOTING HISTORY</div>
 		</div>
-		<div class="btn-group pull-right" data-toggle="buttons" ng-disabled="scores">
-				<label class="btn btn-default active" ng-click="renderChart(scores)" >
+<!-- 		<div class="btn-group btn-group-sm pull-right" data-toggle="buttons" ng-disabled="scores">
+				<label class="btn btn-default" ng-click="changeDateRange()" ng-class='{"button-active": dateRange===undefined}'>
 				  <input type="radio" name="options" id="week" > Week
 				</label>
-				<label class="btn btn-default" ng-click="renderChart(scores, 'month')">
+				<label class="btn btn-default button-chart-settings" ng-click="changeDateRange('1month')"  ng-class='{"button-active": dateRange==="month"}'>
 				  <input type="radio" name="options" id="month"> Month
 				</label>
-				<label class="btn btn-default" ng-click="renderChart(scores, '3months')">
-				  <input type="radio" name="options" id="3month"> 3 Month
+				<label class="btn btn-default button-chart-settings" ng-click="changeDateRange('3months')" ng-class='{"button-active": dateRange==="3months"}'>
+				  <input type="radio" name="options" id="3month"> 3 Months
 				</label>
+		</div> -->
+
+		<div class="btn-group btn-group-sm pull-right"  ng-disabled="scores">
+				<button class="btn btn-default" ng-click="changeDateRange()" ng-class='{"button-active": dateRange===undefined}'>
+				  Week
+				</button>
+				<button class="btn btn-default button-chart-settings" ng-click="changeDateRange('month')"  ng-class='{"button-active": dateRange==="month"}'>
+				  Month
+				</button>
+				<button class="btn btn-default button-chart-settings" ng-click="changeDateRange('3months')" ng-class='{"button-active": dateRange==="3months"}'>
+				  3 Months
+				</button>
 		</div>
+
 	</div>
 	<div class='row row-board'>
 		<div id="line-example"></div>
