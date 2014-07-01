@@ -20,7 +20,6 @@ angular.module('ratingGraphics', [])
         var rewardGoAway = 4500; //duration until the reward alert goes away
 
         var clickTimer = 0;
-
         // set the height and the width to be equal (to the smaller of the two)
         var graphLength = Math.min(sizing.height, sizing.width);
 
@@ -140,11 +139,12 @@ angular.module('ratingGraphics', [])
               .duration(200)
               .style('opacity', .9);
 
-            tooltip.html('<br/> Company Success: ' + Math.floor(xValue(d)*10)/10
-              + '<br/> Personal Success: ' + Math.floor(yValue(d)*10)/10
+            tooltip.html('Company Success: ' + Math.floor(xValue(d)*10)/10 + '</span>'
+              + '<br/> Personal Success: ' + Math.floor(yValue(d)*10)/10 + '</span>'
               + '<br/> Posted ' + text)
               .style('left', (d3.event.pageX + 15) + 'px')
-              .style('top', (d3.event.pageY - 40) + 'px');
+              .style('top', (d3.event.pageY - 40) + 'px')
+              .style('border-radius', '2px');
         };
 
         var loadAllDots = function(data){
@@ -291,6 +291,7 @@ angular.module('ratingGraphics', [])
               scope.scored = true;
               rootScope.currentUser.scoredToday = true;
               rootScope.currentUser.rewardPoints = data.rewardPoints;
+
               scope.currentUser.earnedPoints = data.earnedPoints || undefined;
               $timeout(function(){scope.currentUser.earnedPoints = undefined}, rewardGoAway);
 
@@ -355,19 +356,19 @@ angular.module('ratingGraphics', [])
   }])
   .directive('circleKey', function(){
   var link = function(scope, element, attr){
-    var outerRadius = 1.5;
-    var innerRadius = 3;
-    var radius = 5;
+    var outerRadius = 2;
+    var innerRadius = 8;
+    var radius = 8;
 
     var svg = d3.select(element[0])
       .append('svg')
       .attr({
-        'height': 10,
-        'width': 10
+        'height': 25,
+        'width': 25
       })
       .append('circle')
-      .attr('cx', 5)
-      .attr('cy', 5)
+      .attr('cx', 15)
+      .attr('cy', 15)
       .attr('r', innerRadius)
       .style('stroke-width', outerRadius);
 
