@@ -1,21 +1,16 @@
 my2cents
 ============
 
-**my2cents** is a platform that aims to make employee engagement a vital metric in business strategy by making feedback more accurate, precise, and real-time.
+**[my2cents](http://my2cents-app.azurewebsites.net)** is an application that aims to make employee engagement a vital metric in business strategy by making feedback more accurate, precise, and real-time.
 
-The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate
+The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate.
+
+**[my2cents](http://my2cents-app.azurewebsites.net)** is a mobile optimized web application, built using the MEAN stack, and is currently deployed at **[http://my2cents-app.azurewebsites.net](http://my2cents-app.azurewebsites.net)**.
 
 
 Instructions to get started
 ==============================
 
-
-
-A link to a deployed version
-==============================
-
-my2cents.io
-my2cents-app.azurewebsites.net
 
 Screenshots
 ==================
@@ -25,7 +20,6 @@ Screenshots
 Technology stack
 ============
 
- d3.js, Morris.js, Grunt, HTML5/CSS3, Azure, JavaScript, Mocha + supertest, Responsive web design (mobile optimized)
 
 * **[MongoDB](http://neo4j.org)** *Schema-less NoSQL Database*
 
