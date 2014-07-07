@@ -1,7 +1,7 @@
-Description
+my2cents
 ============
 
-‘my2cents’ is a platform that aims to make employee engagement a vital metric in business strategy by making feedback more accurate, precise, and real-time.
+**my2cents** is a platform that aims to make employee engagement a vital metric in business strategy by making feedback more accurate, precise, and real-time.
 
 The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate
 
@@ -22,10 +22,29 @@ Screenshots
 
 
 
-Tech stack
+Technology stack
 ============
 
-Node/Express, MongoDB, AngularJS, d3.js, Morris.js, Grunt, HTML5/CSS3, Azure, JavaScript, Mocha + supertest, Responsive web design (mobile optimized)
+ d3.js, Morris.js, Grunt, HTML5/CSS3, Azure, JavaScript, Mocha + supertest, Responsive web design (mobile optimized)
+
+* **[MongoDB](http://neo4j.org)** *Schema-less NoSQL Database*
+
+* **[express](http://expressjs.com)** *Web application framework wrapping node*
+
+* **[angular](http://angularjs.org)** *HTML/JS application framework*
+
+* **[node](http://nodejs.org)** *Server-side JS*
+
+* **[d3.js](http://d3js.org)** *Data-visualization framework*
+
+* **[Morris.js](http://morrisjs.github.io/morris.js/index.html)** *Charting library* 
+
+* **[Grunt](http://gruntjs.com/)** *Javascript task runner*
+
+* **[mocha](http://visionmedia.github.io/mocha/)** *Testing framework, used to run tests*
+
+* **[Microsoft Azure](https://www.npmjs.org/package/supertest)** *HTTP-request assertion library used with mocha* 
+
 
 
 Challenges
