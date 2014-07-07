@@ -122,16 +122,10 @@ angular.module('dashboardGraphics', [])
             .attr("class", "snapshot-line")
             .attr("x1", options.mousePos[0])
             .attr("x2", options.mousePos[0])
-            .attr("y1", sizing.height)
-            .attr("y2", Math.min(
-              sizing.height * (10 - smoothAverages[0].x) / 10,
-              sizing.height * (10 - smoothAverages[0].y) / 10
-            ));
+            .attr("y1", sizing.height);
 
         var volumeTooltip = svg.append('text')
         .attr('class', 'volume-tooltip')
-        // .attr('x', 100)
-        // .attr('y', 150)
         .attr('font-size', '1.5em')
         .style('opacity', 0);
 
@@ -153,10 +147,10 @@ angular.module('dashboardGraphics', [])
           volumeTooltip
             .transition()
             .style('opacity', 0)
-            .duration(100);
+            .duration(200);
         };
 
-        var volumeBars = svg.selectAll(".bar")
+        var volumeBars = svg.selectAll(".volume-bar")
             .data(smoothAverages)
           .enter().append("rect")
             .attr("class", "volume-bar")
@@ -177,6 +171,9 @@ angular.module('dashboardGraphics', [])
             .on('mouseleave', function(d){
               hideVolumeTooltip(d);
             });
+
+        this.updateVolume(options);
+        
         // Add the lineX path.
         var lineX = svg.append("path")
             .attr("class", "line")
@@ -191,17 +188,26 @@ angular.module('dashboardGraphics', [])
             .attr("clip-path", "url(#clip)")
             .attr("d", lineB(smoothAverages));
 
-
+        //set height of snapshotLine
+        snapshotLine
+          .attr("y2", function(){
+            var h1 = PathMethods.getYFromX(d3.select('#lineA'), options.mousePos[0]);
+            var h2 = PathMethods.getYFromX(d3.select('#lineB'), options.mousePos[0]);
+            var height = Math.min(h1, h2);
+            return height;
+          });
 
         Datestamp.render(smoothAverages[0].date, options.dateRange, smoothAverages);
         Scorestamp.render(smoothAverages[0].x.toFixed(1), smoothAverages[0].y.toFixed(1), sizing);
-        if(options.displayMode === 'fisheye'){
+        // if(options.displayMode === 'fisheye'){
+        if(options.showFisheye){
           FisheyeChart.render(smoothAverages[0].date, users, smoothAverages, sizing, options);
         }
+
       },
 
       updateSnapshot: function(users, smoothAverages, sizing, options){
-        if(options.displayMode === 'fisheye' && options.mousePos[0] < sizing.width){
+        if(options.mousePos[0] < sizing.width){
 
           var xRatio = options.mousePos[0] / sizing.width;
           //swift xPos left slightly to accommodate last date
@@ -223,14 +229,24 @@ angular.module('dashboardGraphics', [])
             .attr("y1", sizing.height)
             .attr("y2", height);
 
-          d3.selectAll('.fisheye-line')
-            .attr('x1', options.mousePos[0] + sizing.margin.left)
-            .attr('y1', height + sizing.margin.top);
-
-          FisheyeChart.render(date, users, smoothAverages, sizing, options);
           Datestamp.render(date, options.dateRange, smoothAverages);
           Scorestamp.render(smoothAverages[xIndex].x.toFixed(1), smoothAverages[xIndex].y.toFixed(1), sizing);
+
+          // if(options.displayMode === 'fisheye'){
+          if(options.showFisheye){
+            d3.selectAll('.fisheye-line')
+              .attr('x1', options.mousePos[0] + sizing.margin.left)
+              .attr('y1', height + sizing.margin.top);            
+            FisheyeChart.render(date, users, smoothAverages, sizing, options);
+          }
         }
+      },
+
+      updateVolume: function(options){
+        d3.selectAll('.volume-bar')
+          .attr('display', function(){
+            return options.showVolume ? 'static' : 'none'
+          });
       }
 
     };

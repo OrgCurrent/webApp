@@ -1,23 +1,23 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
+
 <div class='container col-sm-12' ng-class="{sideboxshown: showSidebox}">
   <div class="row row-header">
 
     <div class='dashboard-header'>
       <div class='dashboard-title'>DASHBOARD</div>
       <div class='dashboard-settings pull-right'>
-        <span>Date Range</span>
+        <span>Date Range </span>
         <div class="btn-group btn-group-sm buttons-date-range">
-          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(30)' ng-clas"">1 Month</button>
-          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(182)'>6 Months</button>
-          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(365)'>1 Year</button>
-          <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange()'>Max</button>
+          <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange(30)' ng-class='{"button-active": options.dateRange===30}'>1 Month</button>
+          <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange(182)' ng-class='{"button-active": options.dateRange===182}'>6 Months</button>
+          <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange(365)' ng-class='{"button-active": options.dateRange===365}'>1 Year</button>
+          <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange()' ng-class='{"button-active": [30,182,365].indexOf(options.dateRange)===-1}'>Max</button>
         </div>
-        <span>Overlays</span>
-        <div class="btn-group btn-group-sm buttons-display-mode">
-          <button type="button" class="btn btn-default button-display-mode" ng-click='setDisplayMode("fisheye")'>Fisheye</button>
-          <button type="button" class="btn btn-default button-display-mode" ng-click='setDisplayMode("milestone")'>Milestone</button>
-          <button type="button" class="btn btn-default button-display-mode" ng-click=''>External</button>
+        <span>Toggle Overlays </span>
+        <div class="btn-group btn-group-sm">
+          <button type="button" class="btn btn-default button-chart-settings" ng-class='{"button-active": options.showFisheye}' ng-click='toggleFisheye()'>Fisheye</button>
+          <button type="button" class="btn btn-default button-chart-settings" ng-class='{"button-active": options.showVolume}' ng-click='toggleVolume()'>Volume</button>
         </div>
       </div>
       <div class="dashboard-dropdown pull-right">
@@ -25,24 +25,23 @@
         <div class="dashboard-dropdown-menu" ng-show='showDropdown' ng-blur='toggleDropdown()'>
           <p>Date Range</p>
           <div class="btn-group btn-group-sm buttons-date-range">
-            <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(30)'>1 Month</button>
-            <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(182)'>6 Months</button>
-            <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange(365)'>1 Year</button>
-            <button type="button" class="btn btn-default button-date-range" ng-click='setDateRange()'>Max</button>
+            <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange(30)' ng-class='{"button-active": options.dateRange===30}'>1 Month</button>
+            <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange(182)' ng-class='{"button-active": options.dateRange===182}'>6 Months</button>
+            <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange(365)' ng-class='{"button-active": options.dateRange===365}'>1 Year</button>
+            <button type="button" class="btn btn-default button-chart-settings" ng-click='setDateRange()' ng-class='{"button-active": [30,182,365].indexOf(options.dateRange)===-1}'>Max</button>
           </div>
           <p>Overlays</p>
-          <div class="btn-group btn-group-sm buttons-display-mode">
-            <button type="button" class="btn btn-default button-display-mode" ng-click='setDisplayMode("fisheye")'>Fisheye</button>
-            <button type="button" class="btn btn-default button-display-mode" ng-click='setDisplayMode("milestone")'>Milestone</button>
-            <button type="button" class="btn btn-default button-display-mode" ng-click=''>External</button>
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-default button-chart-settings" ng-class='{"button-active": options.showFisheye}' ng-click='toggleFisheye()'>Fisheye</button>
+            <button type="button" class="btn btn-default button-chart-settings" ng-class='{"button-active": options.showVolume}' ng-click='toggleVolume()'>Volume</button>
           </div>
-
         </div>
       </div>
 
     </div>
     
   </div>
+
   <div class="row row-board">
     <div ng-controller='DashboardChartCtrl' class="board-wrapper col-sm-12">
       <div class='board-loading' ng-show='loadingChart'>

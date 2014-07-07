@@ -1,35 +1,41 @@
 <div ng-include="'partials/navbar.html'"></div>
 <div ng-include="'partials/sidebox.html'"></div>
-			<div class="alert alert-bonuspoints" role="alert" ng-show="currentUser.earnedPoints">
-				<h3>	
-				Congratulations! You just earned <strong>{{currentUser.earnedPoints}}</strong> points!
-				</h3>
-			</div>
-<!-- responsive chart sizing -->
-<div class="container container-rating col-xs-12 col-sm-8 col-lg-6"
+		
+<div class="container container-rating col-xs-12 col-sm-12 col-lg-12"
 ng-class="{sideboxshown: showSidebox}">
-	<!-- <div class="panel panel-default"> -->
+		<div class="alert alert-bonuspoints text-center fx-fade-up fx-speed-500 fx-easing-bounce" role="alert" ng-show="currentUser.earnedPoints">
+				<h4>	
+				You just earned <strong>{{currentUser.earnedPoints}}</strong> points!
+				</h4>
+		</div>
+</div>
+
+<!-- responsive chart sizing -->
+<div class="container container-rating col-xs-12 col-sm-8 col-lg-6 fx-bounce-up"
+ng-class="{sideboxshown: showSidebox}">
+
 		<div class="row row-header">
 			<div class="rating-header">
-				<div class="dashboard-title">VOTE FOR REWARDS!</div>
+				<div class="dashboard-title">RATING</div>
 				<div class='rating-settings pull-right'>
-					<button type="button" class="btn btn-default" ng-click='displayHistory()'><i class="fa fa-history"></i> See your past ratings</button>
+					<button type="button" class="btn btn-default button-chart-settings" ng-click='displayHistory()'><i class="fa fa-history"></i> See your past ratings</button>
 				</div>
 				<div class="rating-dropdown pull-right">
 					<button type="button" class="btn btn-default rating-dropdown-button" ng-click='toggleDropdown()'><i class='fa fa-cog'></i></button>
 					<div class="rating-dropdown-menu" ng-show='showDropdown' ng-blur='toggleDropdown()'>
-						<button type="button" class="btn btn-default" ng-click='displayHistory()'><i class="fa fa-history"></i> Toggle past ratings</button>
+						<button type="button" class="btn btn-default button-chart-settings" ng-click='displayHistory()'><i class="fa fa-history"></i> Toggle past ratings</button>
 					</div>
 				</div>
 			</div>
-
 		</div>
+
 		<div class="row row-board ratingBoard board-wrapper">
     	<div class="key" ng-style='{left: sizing.keyLeft}'>
-				<circle-key user="true"></circle-key>Your vote
-				<circle-key user="false"></circle-key>Your co-workers' votes
+				<circle-key user="true"><span>Your vote</span></circle-key> 
+				<circle-key user="false"><span>Your co-workers' votes</span></circle-key>
 			</div>
 		</div>
+
 </div>
 
 <div class="container container-rating col-xs-12 col-sm-4 col-lg-6"
@@ -40,7 +46,7 @@ ng-class="{sideboxshown: showSidebox}">
 			</div>
 		</div>
 		<div class="row row-board ratingBoard board-wrapper">
-			<div class="dashboard-title">Your points: {{currentUser.rewardPoints}}</div>
+			<div class="dashboard-title">You have {{currentUser.rewardPoints}} Points</div>
 		</div>
 </div>
 
