@@ -5,7 +5,7 @@ my2cents
 
 The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate.
 
-**[my2cents](http://my2cents-app.azurewebsites.net)** is a mobile optimized web application, built using the MEAN stack, and is currently deployed at **[http://my2cents-app.azurewebsites.net](http://my2cents-app.azurewebsites.net)**.
+**[my2cents](http://my2cents-app.azurewebsites.net)** is a mobile-optimized web application, built using the MEAN stack, and is currently deployed at **[http://my2cents-app.azurewebsites.net](http://my2cents-app.azurewebsites.net)**.
 
 
 Instructions to get started
@@ -23,13 +23,13 @@ Walkthrough
 
 my2cents allows you and your co-workers to anonymously broadcast your sentiments about the workplace in real-time. Employees can submit their opinion once per day with a simple touch and hold interface.
 
-![Imgur](http://i.imgur.com/LoGoeoD.png)
+![Imgur](http://i.imgur.com/ulrAk1W.png)
 
 ### For Employers / Executives
 
 View the sentiment of the employees at your company.  Track results over time and compare data to changes in HR policy to monitor how the choices you make affect the overall happiness of your employees.
 
-![Imgur](http://i.imgur.com/IqoE4z9.png)
+![Imgur](http://i.imgur.com/L6XUqA6.png)
 
 
 Technology stack
