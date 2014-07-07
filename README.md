@@ -23,13 +23,13 @@ Walkthrough
 
 my2cents allows you and your co-workers to anonymously broadcast your sentiments about the workplace in real-time. Employees can submit their opinion once per day with a simple touch and hold interface.
 
-![Imgur](http://i.imgur.com/LoGoeoD)
+[Imgur](http://i.imgur.com/LoGoeoD)
 
 ### For Employers / Executives
 
 View the sentiment of the employees at your company.  Track results over time and compare data to changes in HR policy to monitor how the choices you make affect the overall happiness of your employees.
 
-![Imgur](http://i.imgur.com/IqoE4z9)
+[Imgur](http://i.imgur.com/IqoE4z9)
 
 
 Technology stack
