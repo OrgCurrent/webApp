@@ -11,10 +11,20 @@ The idea was born from the realization that corporations either don’t value em
 Instructions to get started
 ==============================
 
+You may demo the application by  **[visiting my2cents](http://my2cents-app.azurewebsites.net)**  at the url above.
+
+To run the application locally:
+
+
+
 
 Screenshots
 ==================
 
+Employee engage
+[Imgur](http://i.imgur.com/c8d2Ku2.png)
+
+[Imgur](http://i.imgur.com/2j5KoC4)
 
 
 Technology stack
