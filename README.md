@@ -5,6 +5,8 @@ my2cents
 
 The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate.
 
+![Imgur](http://i.imgur.com/4nde7PN.png)
+
 **[my2cents](http://my2cents-app.azurewebsites.net)** is a mobile-optimized web application, built using the MEAN stack, and is currently deployed at **[http://my2cents-app.azurewebsites.net](http://my2cents-app.azurewebsites.net)**.
 
 
