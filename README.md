@@ -15,7 +15,7 @@ Instructions to get started
 
 You may demo the application by  **[visiting my2cents](http://my2cents-app.azurewebsites.net)**  at the url above.
 
-To run the application locally:
+To run the application locally, see the *Running my2cents locally* section below.
 
 
 Walkthrough
@@ -57,7 +57,6 @@ Technology stack
 * **[Microsoft Azure](https://www.npmjs.org/package/supertest)** *HTTP-request assertion library used with mocha* 
 
 
-
 Challenges
 ==================
 
@@ -69,3 +68,40 @@ The Team
 ==================
 
 Marco Au, Vin Halbwachs, Omkar Vedpathak 
+
+
+Configuring **my2cents** on your own machine
+==================
+
+## Setting environment variables
+
+### Client side
+
+*More information coming soon!*
+
+### Server side
+
+*Server side variables are set through the shell, and accessed using* `process.env.VAR_NAME` *in* **node**. *An actual deployment may need these to be configured in a deployment script, the format of which is dependant on your hosting service.*
+
+ If you are running the server from a local machine (`http://localhost:8008`), this can be skipped.
+
+
+## Bootstrapping
+
+You'll need to use **grunt** and a local instance of **Mongo DB**.
+
+#### Installing **grunt**
+
+* npm install -g grunt-cli
+
+#### Installing **MongoDB**
+
+* If you use **brew**, `brew install mongodb`
+
+* If you're not using **brew**, follow the instructions on the [**Mongo DB** site](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/), following the directions under the section titled *Installing MongoDB Manually*
+
+* Once installed, start up the database with either `mongod`, or `sudo mongod` if you don't have the appropriate permissions when using the former command
+
+### Bootstrapping a client
+
+*More information coming soon!*
