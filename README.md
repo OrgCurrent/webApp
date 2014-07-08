@@ -5,7 +5,9 @@ my2cents
 
 The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate.
 
-![Imgur](http://i.imgur.com/4nde7PN.png)
+<p align="center">
+  <img src="http://i.imgur.com/4nde7PN.png"/>
+</p>
 
 **[my2cents](http://my2cents-app.azurewebsites.net)** is a mobile-optimized web application, built using the MEAN stack, and is currently deployed at **[http://my2cents-app.azurewebsites.net](http://my2cents-app.azurewebsites.net)**.
 
@@ -25,7 +27,10 @@ Walkthrough
 
 my2cents allows you and your co-workers to anonymously broadcast your sentiments about the workplace in real-time. Employees can submit their opinion once per day with a simple touch and hold interface.
 
-![Imgur](http://i.imgur.com/ulrAk1W.png)
+<p align="center">
+  <img src="http://i.imgur.com/ulrAk1W.png"/>
+</p>
+
 
 ### For Employers / Executives
 
