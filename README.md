@@ -61,7 +61,9 @@ Technology stack
 Challenges
 ==================
 
-Developing an app that looked good both on mobile and desktop platforms was challenging. Ensuring that employee data remained anonymous was a fun challenge that we had to keep revisiting with every feature we implemented. Ultimately we invested a lot of time in ensuring our backend only returned information to appropriate users. 
+* Integrating a decent size d3.js codebase with Angular.js
+* Responsive web-design, to ensure a clear and adaptable layout on both mobile and desktop platforms
+
 
 The Team
 ==================
