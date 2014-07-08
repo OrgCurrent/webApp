@@ -54,7 +54,7 @@ Technology stack
 
 * **[mocha](http://visionmedia.github.io/mocha/)** *Testing framework, used to run tests*
 
-* **[Microsoft Azure](https://www.npmjs.org/package/supertest)** *HTTP-request assertion library used with mocha* 
+* **[supertest](https://www.npmjs.org/package/supertest)** *HTTP-request assertion library used with mocha* 
 
 
 Challenges
