@@ -96,9 +96,9 @@ You'll need to use **grunt** and a local instance of **Mongo DB**.
 
 #### Installing **MongoDB**
 
-* If you use **brew**, `brew install mongodb`
+* If you use **[Homebrew](http://brew.sh/)**, `brew install mongodb`
 
-* If you're not using **brew**, follow the instructions on the [**Mongo DB** site](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/), following the directions under the section titled *Installing MongoDB Manually*
+* If you're not using **[Homebrew](http://brew.sh/)**, follow the instructions on the [**Mongo DB** site](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/), following the directions under the section titled *Installing MongoDB Manually*
 
 * Once installed, start up the database with either `mongod`, or `sudo mongod` if you don't have the appropriate permissions when using the former command
 
