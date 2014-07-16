@@ -72,7 +72,7 @@ Challenges
 The Team
 ==================
 
-Marco Au, Vin Halbwachs, Omkar Vedpathak 
+[Marco Au](https://github.com/marcoau), [Vin Halbwachs](https://github.com/vhalbhwachs), [Omkar Vedpathak](https://github.com/omkarv)
 
 
 Configuring **my2cents** on your own machine
@@ -88,7 +88,7 @@ Configuring **my2cents** on your own machine
 
 *Server side variables are set through the shell, and accessed using* `process.env.VAR_NAME` *in* **node**. *An actual deployment may need these to be configured in a deployment script, the format of which is dependant on your hosting service.*
 
- If you are running the server from a local machine (`http://localhost:8008`), this can be skipped.
+ If you are running the server from a local machine (`http://localhost:8000`), this can be skipped.
 
 
 ## Bootstrapping
