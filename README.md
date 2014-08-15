@@ -1,9 +1,10 @@
 my2cents
 ============
 
-**[my2cents](http://my2cents-app.azurewebsites.net)** is an application that aims to make employee engagement a vital metric in business strategy by making feedback more accurate, precise, and real-time.
+**[my2cents](http://my2cents-app.azurewebsites.net)** Take a moment and register your 2 cents. Company. Self. In one simple click. Change the course of leadership decisions, bring power to the people....without needing a picket line.
 
-The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing business climate.
+
+The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing economy.
 
 <p align="center">
   <img src="http://i.imgur.com/4nde7PN.png"/>
