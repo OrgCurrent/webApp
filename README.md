@@ -1,7 +1,7 @@
 my2cents
 ============
 
-**[my2cents](http://my2cents-app.azurewebsites.net)** my2cents is app with a single square. In that square there are two simple yet power dimensions. Your beleif in your professional opportunities and your belief in your organization's success. 
+**[my2cents](http://my2cents-app.azurewebsites.net)** is the most effective organizational feedback mechansim that has ever been created. 
 
 
 The idea was born from the realization that corporations either don’t value employee engagement enough to measure it, or are using ineffective methods for today’s rapidly changing economy.
